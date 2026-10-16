@@ -1,0 +1,313 @@
+"""The pipeline mirror — ONE source of truth for the place-index pipeline, two repositories.
+
+The app repository (cairoWay/) owns the pipeline: the engine reference is mirrored in Kotlin and Swift
+and the lexicon is generated from Dart, so a change lands in all of them in one commit there. The
+PUBLIC data repository (ibrahim212-wq/routemind-places) runs the weekly build on free GitHub-hosted
+minutes from `pipeline/`, a byte-exact, generated copy of
+
+    tools/__init__.py   tools/place_index/**   assets/search/egypt_lexicon.json
+
+plus `pipeline/SOURCE.json` (the app commit it came from + every file's sha256). Nothing in
+`pipeline/` is ever edited by hand. It is refreshed two ways, both overwrite the whole copy:
+
+  * every weekly run, when the public repository has the read-only secret APP_REPO_TOKEN: the
+    workflow checks out the app repository's pipeline and runs `sync` before it builds — so the
+    build ALWAYS runs the app's current code, and the copy can be at most one run old;
+  * `push` from the app repository (GitHub API, one commit) — run it after a pipeline change; it
+    also installs `ci/place-index.yml` as the public repository's workflow when the token may.
+`check` says whether the public copy equals this checkout (exit 1 on drift).
+
+    python tools/place_index/mirror.py check  [--app <cairoWay>] [--repo <owner/name>]
+    python tools/place_index/mirror.py push   [--app <cairoWay>] [--repo <owner/name>] [--message <m>]
+    python tools/place_index/mirror.py sync   --app <cairoWay> --dst <public repo>/pipeline [--commit <sha>]
+    python tools/place_index/mirror.py record --root <public repo> --summary <summary.json> --status <s>
+
+Tokens (never written anywhere): GH_TOKEN, else `gh auth token`, else PLACES_PUBLISH_TOKEN. A
+fine-grained token with Contents read/write on the data repository can push `pipeline/`; the
+workflow file also needs the Workflows permission (or a classic token's `workflow` scope).
+Standard library only: the workflow runs it before Python dependencies are installed.
+"""
+from __future__ import annotations
+
+import argparse
+import base64
+import datetime as dt
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import urllib.error
+import urllib.request
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+APP = os.path.abspath(os.path.join(HERE, "..", ".."))
+REPO = "ibrahim212-wq/routemind-places"
+APP_REPO = "ibrahim212-wq/maps-mobile-application"
+PREFIX = "pipeline/"
+WORKFLOW_SRC = "tools/place_index/ci/place-index.yml"
+WORKFLOW_DST = ".github/workflows/place-index.yml"
+README_SRC = "tools/place_index/ci/README.public.md"  # → the data repository's README.md
+SINGLE_FILES = ("tools/__init__.py", "assets/search/egypt_lexicon.json")
+TREE = "tools/place_index"
+GENERATED_README = """# pipeline/ — a generated copy. Do not edit here.
+
+This directory is a byte-exact copy of the place-index pipeline from the RouteMind app repository
+(`cairoWay/tools/place_index`, `cairoWay/tools/__init__.py`, `cairoWay/assets/search/egypt_lexicon.json`).
+`SOURCE.json` names the app commit it came from and every file's sha256. The weekly workflow
+(`.github/workflows/place-index.yml`) refreshes it from the app repository before every build, and
+`python tools/place_index/mirror.py push` in the app repository does the same after a change.
+
+    cd pipeline
+    pip install -r tools/place_index/requirements.txt
+    python -m tools.place_index.weekly --work /tmp/place-index            # build + gate (no publish)
+
+Licence of the code: the same terms as this repository's README. The data: ODbL 1.0 (each release's NOTICE.md).
+"""
+
+
+def log(*a):
+    print("[mirror]", *a, flush=True)
+
+
+BINARY = (".gz", ".sqlite", ".png", ".jpg", ".pbf", ".parquet")
+
+
+def _read(path: str) -> bytes:
+    """Text as LF whatever the checkout's line endings (a Windows clone has CRLF, the workflow's Linux
+    checkout LF) — so a push from one and a sync on the other produce the same bytes."""
+    with open(path, "rb") as f:
+        b = f.read()
+    return b if path.endswith(BINARY) else b.replace(b"\r\n", b"\n")
+
+
+def files(app: str) -> dict[str, bytes]:
+    """relative path → content, for exactly the mirrored set (no caches, sorted)."""
+    out = {}
+    for rel in SINGLE_FILES:
+        out[rel] = _read(os.path.join(app, rel))
+    base = os.path.join(app, TREE)
+    for dirpath, dirs, names in os.walk(base):
+        dirs[:] = sorted(d for d in dirs if d != "__pycache__" and not d.startswith("."))
+        for n in sorted(names):
+            if n.endswith((".pyc", ".pyo")) or n.startswith("."):
+                continue
+            p = os.path.join(dirpath, n)
+            rel = os.path.relpath(p, app).replace(os.sep, "/")
+            out[rel] = _read(p)
+    return dict(sorted(out.items()))
+
+
+def sha256(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def source_json(fs: dict[str, bytes], commit: str | None) -> bytes:
+    doc = {"app_repo": APP_REPO, "app_commit": commit, "note": "generated by tools/place_index/mirror.py — edit in the app repository",
+           "files": {k: sha256(v) for k, v in fs.items()}}
+    return (json.dumps(doc, indent=1, sort_keys=False) + "\n").encode()
+
+
+def app_commit(app: str) -> str | None:
+    try:
+        return subprocess.run(["git", "-C", app, "rev-parse", "HEAD"], capture_output=True, text=True,
+                              check=True).stdout.strip() or None
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
+# ── sync: a checkout of the app repository → <public>/pipeline (used by the workflow) ─────────────
+def sync(app: str, dst: str, commit: str | None) -> int:
+    fs = files(app)
+    if os.path.isdir(dst):
+        shutil.rmtree(dst)
+    for rel, data in fs.items():
+        p = os.path.join(dst, rel)
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with open(p, "wb") as f:
+            f.write(data)
+    with open(os.path.join(dst, "SOURCE.json"), "wb") as f:
+        f.write(source_json(fs, commit))
+    with open(os.path.join(dst, "README.md"), "w", encoding="utf-8") as f:
+        f.write(GENERATED_README)
+    wf = os.path.join(os.path.dirname(os.path.abspath(dst)), WORKFLOW_DST)
+    if os.path.exists(wf) and WORKFLOW_SRC in fs and _read(wf) != fs[WORKFLOW_SRC]:
+        # GITHUB_TOKEN may not rewrite a workflow file; say so loudly (mirror.py push installs it)
+        print(f"::warning::{WORKFLOW_DST} differs from the app's {WORKFLOW_SRC} — run `python tools/place_index/mirror.py push` "
+              "in the app repository with a token that has the workflow permission")
+    log("synced", len(fs), "files from", commit or "(unknown commit)")
+    return 0
+
+
+# ── record: one line per weekly run (public history; a commit a week keeps the schedule alive) ──
+def record(root: str, summary: str | None, status: str) -> int:
+    row = {"at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "status": status}
+    if summary and os.path.exists(summary):
+        with open(summary, encoding="utf-8") as f:
+            row.update(json.load(f))
+    src = os.path.join(root, PREFIX, "SOURCE.json")
+    if os.path.exists(src):
+        with open(src, encoding="utf-8") as f:
+            row["app_commit"] = json.load(f).get("app_commit")
+    with open(os.path.join(root, "builds.jsonl"), "a", encoding="utf-8") as f:
+        f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    log("recorded", json.dumps(row, ensure_ascii=False))
+    return 0
+
+
+# ── GitHub API (check / push) ───────────────────────────────────────────────────────────────────
+def token() -> str | None:
+    t = os.environ.get("GH_TOKEN")
+    if t:
+        return t
+    try:
+        t = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, timeout=20).stdout.strip()
+        if t:
+            return t
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return os.environ.get("PLACES_PUBLISH_TOKEN")
+
+
+def api(method: str, path: str, tok: str | None, body=None):
+    url = path if path.startswith("http") else "https://api.github.com" + path
+    hdr = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "routemind-mirror"}
+    if tok:
+        hdr["Authorization"] = f"Bearer {tok}"
+    data = None
+    if body is not None:
+        data = json.dumps(body).encode()
+        hdr["Content-Type"] = "application/json"
+    req = urllib.request.Request(url, data=data, method=method, headers=hdr)
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            raw = r.read()
+            return r.status, (json.loads(raw) if raw else None)
+    except urllib.error.HTTPError as e:
+        raw = e.read()
+        try:
+            return e.code, json.loads(raw)
+        except ValueError:
+            return e.code, {"message": raw[:300].decode(errors="replace")}
+
+
+def git_blob_sha(b: bytes) -> str:
+    return hashlib.sha1(b"blob %d\0" % len(b) + b).hexdigest()
+
+
+def remote_tree(repo: str, tok: str | None) -> tuple[str, str, dict[str, str]]:
+    code, ref = api("GET", f"/repos/{repo}/git/ref/heads/main", tok)
+    if code == 409 and tok:  # an empty repository has no tree to build on: give it its first commit
+        code, _ = api("PUT", f"/repos/{repo}/contents/{PREFIX}README.md", tok,
+                      {"message": "pipeline/: first commit", "content": base64.b64encode(GENERATED_README.encode()).decode()})
+        code, ref = api("GET", f"/repos/{repo}/git/ref/heads/main", tok)
+    if code != 200:
+        raise SystemExit(f"[mirror] {repo} main not readable ({code}: {ref})")
+    head = ref["object"]["sha"]
+    _, commit = api("GET", f"/repos/{repo}/git/commits/{head}", tok)
+    _, tree = api("GET", f"/repos/{repo}/git/trees/{commit['tree']['sha']}?recursive=1", tok)
+    return head, commit["tree"]["sha"], {e["path"]: e["sha"] for e in tree["tree"] if e["type"] == "blob"}
+
+
+def wanted(app: str) -> tuple[dict[str, bytes], dict[str, bytes]]:
+    """(pipeline/<rel> → bytes, other repo paths → bytes) for the public repository."""
+    fs = files(app)
+    pipe = {PREFIX + k: v for k, v in fs.items()}
+    pipe[PREFIX + "SOURCE.json"] = source_json(fs, app_commit(app))
+    pipe[PREFIX + "README.md"] = GENERATED_README.encode()
+    extra = {dst: fs[src] for src, dst in ((WORKFLOW_SRC, WORKFLOW_DST), (README_SRC, "README.md")) if src in fs}
+    return pipe, extra
+
+
+def diff(app: str, repo: str, tok: str | None):
+    head, tree_sha, have = remote_tree(repo, tok)
+    pipe, extra = wanted(app)
+    changed = {p: b for p, b in {**pipe, **extra}.items()
+               if have.get(p) != git_blob_sha(b) and not p.endswith("SOURCE.json")}
+    gone = [p for p in have if p.startswith(PREFIX) and p not in pipe]
+    return head, tree_sha, pipe, extra, changed, gone
+
+
+def check(app: str, repo: str) -> int:
+    _, _, _, _, changed, gone = diff(app, repo, token())
+    if not changed and not gone:
+        log(f"OK — {repo}/{PREFIX} and its workflow equal this checkout")
+        return 0
+    for p in sorted(changed):
+        log("differs:", p)
+    for p in gone:
+        log("only in the mirror:", p)
+    log("DRIFT — run: python tools/place_index/mirror.py push")
+    return 1
+
+
+def push(app: str, repo: str, message: str | None) -> int:
+    tok = token()
+    if not tok:
+        raise SystemExit("[mirror] no token: set GH_TOKEN, log in with `gh auth login`, or set PLACES_PUBLISH_TOKEN")
+    head, tree_sha, pipe, extra, changed, gone = diff(app, repo, tok)
+    if not changed and not gone:
+        log("nothing to push — the mirror is current")
+        return 0
+    changed[PREFIX + "SOURCE.json"] = pipe[PREFIX + "SOURCE.json"]
+
+    def commit_with(paths: dict[str, bytes]) -> tuple[int, object]:
+        entries = []
+        for p, b in sorted(paths.items()):
+            code, blob = api("POST", f"/repos/{repo}/git/blobs", tok,
+                             {"content": base64.b64encode(b).decode(), "encoding": "base64"})
+            if code != 201:
+                raise SystemExit(f"[mirror] blob {p}: {code} {blob}")
+            entries.append({"path": p, "mode": "100644", "type": "blob", "sha": blob["sha"]})
+        entries += [{"path": p, "mode": "100644", "type": "blob", "sha": None} for p in gone]
+        code, tree = api("POST", f"/repos/{repo}/git/trees", tok, {"base_tree": tree_sha, "tree": entries})
+        if code != 201:
+            raise SystemExit(f"[mirror] tree: {code} {tree}")
+        sha = app_commit(app)
+        msg = message or f"pipeline: mirror of {APP_REPO}@{(sha or 'working tree')[:12]}"
+        code, com = api("POST", f"/repos/{repo}/git/commits", tok, {"message": msg, "tree": tree["sha"], "parents": [head]})
+        if code != 201:
+            raise SystemExit(f"[mirror] commit: {code} {com}")
+        return api("PATCH", f"/repos/{repo}/git/refs/heads/main", tok, {"sha": com["sha"]})
+
+    code, res = commit_with(changed)
+    if code != 200 and WORKFLOW_DST in changed:
+        # a token without the workflow permission: push the rest, say what is left
+        log(f"the workflow file was refused ({code}: {str(res)[:160]}) — pushing without it")
+        code, res = commit_with({p: b for p, b in changed.items() if p != WORKFLOW_DST})
+        if code == 200:
+            log(f"{WORKFLOW_DST} NOT updated: push it with a token that has the workflow permission")
+    if code != 200:
+        raise SystemExit(f"[mirror] update ref: {code} {res}")
+    log(f"pushed {len(changed)} file(s), removed {len(gone)} → {repo}@{res['object']['sha'][:12]}")
+    return 0
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("cmd", choices=["check", "push", "sync", "record"])
+    ap.add_argument("--app", default=APP)
+    ap.add_argument("--repo", default=REPO)
+    ap.add_argument("--dst")
+    ap.add_argument("--commit")
+    ap.add_argument("--message")
+    ap.add_argument("--root")
+    ap.add_argument("--summary")
+    ap.add_argument("--status", default="unknown")
+    a = ap.parse_args(argv)
+    if a.cmd == "check":
+        return check(a.app, a.repo)
+    if a.cmd == "push":
+        return push(a.app, a.repo, a.message)
+    if a.cmd == "sync":
+        if not a.dst:
+            raise SystemExit("sync needs --dst <public repo>/pipeline")
+        return sync(a.app, a.dst, a.commit or app_commit(a.app))
+    if not a.root:
+        raise SystemExit("record needs --root <public repo>")
+    return record(a.root, a.summary, a.status)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

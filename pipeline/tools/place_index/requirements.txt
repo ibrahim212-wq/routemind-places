@@ -1,0 +1,6 @@
+# The place index pipeline (fetch → build → notice → gate → publish). Python 3.12+.
+pyarrow==26.0.0
+shapely==2.2.0
+osmium==4.3.1
+# Foursquare OS Places through its Iceberg catalog — only used when FSQ_PORTAL_TOKEN is set
+pyiceberg[pyarrow]>=0.9,<1

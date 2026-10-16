@@ -1,0 +1,135 @@
+# RouteMind place index — the weekly refresh, in the PUBLIC data repository (docs/place-search-2026-10.md §8).
+#
+# The canonical copy of this file is cairoWay/tools/place_index/ci/place-index.yml in the app repository;
+# `python tools/place_index/mirror.py push` installs it here as .github/workflows/place-index.yml.
+#
+# Why here: GitHub-hosted runners are free and unmetered for public repositories (the private app
+# repository's 2,000 free minutes ran out in October 2026 and the refresh stopped). The job publishes
+# to THIS repository's releases with its own GITHUB_TOKEN — no publish token is needed.
+#
+# Pipeline code: pipeline/ is a generated copy of the app repository's pipeline (pipeline/README.md).
+# With the read-only secret APP_REPO_TOKEN the job first refreshes that copy from the app repository,
+# so every build runs the app's current code; without it (or if the token expired) it builds from the
+# copy and says so. Every run appends one line to builds.jsonl and commits it — a public build
+# history, and a commit a week keeps GitHub from disabling the schedule after 60 quiet days.
+name: place-index
+
+on:
+  schedule:
+    - cron: "17 2 * * 1"   # Mondays 02:17 UTC (Overture releases monthly, Geofabrik daily)
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the release when the gate passes"
+        type: boolean
+        default: true
+
+concurrency:
+  group: place-index
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      WORK: /tmp/place-index
+      APP_REPO: ibrahim212-wq/maps-mobile-application
+      HAVE_APP_TOKEN: ${{ secrets.APP_REPO_TOKEN != '' }}
+      PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Pipeline code from the app repository (the one source of truth)
+        id: app
+        if: env.HAVE_APP_TOKEN == 'true'
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.APP_REPO }}
+          token: ${{ secrets.APP_REPO_TOKEN }}
+          path: app
+          fetch-depth: 1
+          sparse-checkout: |
+            cairoWay/tools/__init__.py
+            cairoWay/tools/place_index
+            cairoWay/assets/search
+          sparse-checkout-cone-mode: false
+
+      - name: Refresh pipeline/ from it
+        run: |
+          if [ -f app/cairoWay/tools/place_index/mirror.py ]; then
+            python3 app/cairoWay/tools/place_index/mirror.py sync --app app/cairoWay --dst pipeline \
+              --commit "$(git -C app rev-parse HEAD)"
+            rm -rf app
+          elif [ "$HAVE_APP_TOKEN" = "true" ]; then
+            echo "::warning::APP_REPO_TOKEN is set but the app repository could not be read (expired?) — building from the pipeline/ copy"
+          else
+            echo "::notice::No APP_REPO_TOKEN — building from the pipeline/ copy ($(python3 -c 'import json;print(json.load(open("pipeline/SOURCE.json"))["app_commit"])'))"
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/tools/place_index/requirements.txt
+
+      - name: Install
+        working-directory: pipeline
+        run: pip install -r tools/place_index/requirements.txt
+
+      - name: Fetch, build, licence bundle, release gate, publish
+        working-directory: pipeline
+        env:
+          FSQ_PORTAL_TOKEN: ${{ secrets.FSQ_PORTAL_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          ARGS="--work $WORK --repo $GITHUB_REPOSITORY --keep 3 --keep-index"
+          if [ "$PUBLISH" = "true" ]; then ARGS="$ARGS --publish"; fi
+          python -m tools.place_index.weekly $ARGS
+
+      - name: Verify the release as a phone sees it (download, sha256, open, benchmark ranks = the gate's)
+        if: env.PUBLISH == 'true'
+        working-directory: pipeline
+        run: python -m tools.place_index.verify_release --repo "$GITHUB_REPOSITORY" --city cairo
+
+      - name: Record the run (builds.jsonl) and the refreshed pipeline/
+        if: always()
+        run: |
+          python3 pipeline/tools/place_index/mirror.py record --root . --summary "$WORK/summary.json" --status "${{ job.status }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add builds.jsonl pipeline
+          git commit -q -m "build ${{ job.status }} $(date -u +%Y-%m-%d) [skip ci]" || true
+          git push -q || echo "::warning::could not push the build record"
+
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: place-index-reports
+          retention-days: 30
+          if-no-files-found: ignore
+          path: |
+            /tmp/place-index/idx/build_report.json
+            /tmp/place-index/idx/fetch_report.json
+            /tmp/place-index/idx/bench.json
+            /tmp/place-index/idx/manifest.json
+            /tmp/place-index/summary.json
+
+      - name: Keep the index (not published)
+        if: ${{ success() && env.PUBLISH != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: place-index-tiles
+          retention-days: 7
+          path: |
+            /tmp/place-index/idx/*.sqlite.gz
+            /tmp/place-index/idx/NOTICE.md
+            /tmp/place-index/idx/attribution.json
+            /tmp/place-index/idx/LICENSES

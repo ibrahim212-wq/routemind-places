@@ -1,0 +1,35 @@
+{
+ "schema": 1,
+ "norm": 1,
+ "version": "mini-2026-10-15",
+ "built": "2026-10-15T14:13:05Z",
+ "license": "ODbL-1.0",
+ "national": {
+  "id": "national",
+  "bbox": [
+   24.6,
+   21.6,
+   37.0,
+   31.8
+  ],
+  "file": "national.sqlite.gz",
+  "bytes": 440107,
+  "sha256": "08534dc3773e96c69d98312207eee2ba4956b3af1ab37412e9adb9a985d957ca",
+  "places": 2288
+ },
+ "tiles": [
+  {
+   "id": "t",
+   "bbox": [
+    31.22867,
+    30.03854,
+    31.24273,
+    30.05026
+   ],
+   "file": "t.sqlite.gz",
+   "bytes": 538982,
+   "sha256": "76e364a2ae95088ba846eea9495fa04eb856d5b947f54622d42aa051dc93b50a",
+   "places": 2799
+  }
+ ]
+}

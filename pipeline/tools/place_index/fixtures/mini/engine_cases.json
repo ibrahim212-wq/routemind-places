@@ -1,0 +1,5973 @@
+{
+"index_version": "mini-2026-10-15",
+"cases": [
+{
+"q": "مطعم",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "restaurant",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n478582334",
+"score": 0.8625280658718186,
+"text": 0.0
+},
+{
+"pid": "n2789865735",
+"score": 0.859305029847621,
+"text": 0.0
+},
+{
+"pid": "n6559687785",
+"score": 0.8485358132302954,
+"text": 0.0
+},
+{
+"pid": "n2789865194",
+"score": 0.8420027432919479,
+"text": 0.0
+},
+{
+"pid": "w768977207",
+"score": 0.8393931295022039,
+"text": 0.0
+},
+{
+"pid": "n6557076288",
+"score": 0.8315902084850098,
+"text": 0.0
+},
+{
+"pid": "v3Q9B1G6ZT7i1",
+"score": 0.8259984902970174,
+"text": 0.0
+},
+{
+"pid": "v0zvzIkYCQG6J",
+"score": 0.8080790191317317,
+"text": 0.0
+},
+{
+"pid": "n2789855480",
+"score": 0.8013884657261372,
+"text": 0.0
+},
+{
+"pid": "n13326057801",
+"score": 0.8004964808608748,
+"text": 0.0
+}
+]
+},
+{
+"q": "صيدلية",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "pharmacy",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vr9Av9xfHS7q3",
+"score": 0.7623892878738163,
+"text": 0.0
+},
+{
+"pid": "vTthnFzacRNel",
+"score": 0.758601971314653,
+"text": 0.0
+},
+{
+"pid": "vMHqoXO0CR2eO",
+"score": 0.7117368287118127,
+"text": 0.0
+},
+{
+"pid": "vi_KOV-hYSYmW",
+"score": 0.7006900895498713,
+"text": 0.0
+},
+{
+"pid": "vhAUhxDeaSKuk",
+"score": 0.6888785047899784,
+"text": 0.0
+},
+{
+"pid": "v67TrqYXtTba-",
+"score": 0.6879750246908836,
+"text": 0.0
+},
+{
+"pid": "voXg3lspvTCqk",
+"score": 0.6674100895498714,
+"text": 0.0
+},
+{
+"pid": "vZDhsBCLbSw6d",
+"score": 0.6318169695991176,
+"text": 0.0
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.6227020103745431,
+"text": 0.0
+},
+{
+"pid": "v6FmCBrWKTUGZ",
+"score": 0.6098285467400297,
+"text": 0.0
+}
+]
+},
+{
+"q": "بنزينة",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "gas_station",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n3220031878",
+"score": 0.8389909002744145,
+"text": 0.0
+},
+{
+"pid": "n1259516844",
+"score": 0.773499459463215,
+"text": 0.0
+},
+{
+"pid": "vMdDPIykwSaSF",
+"score": 0.7415137749986418,
+"text": 0.0
+},
+{
+"pid": "vHLJKsdtzQoWz",
+"score": 0.6815970621532641,
+"text": 0.0
+},
+{
+"pid": "n1259516857",
+"score": 0.6814121912637432,
+"text": 0.0
+},
+{
+"pid": "w822297475",
+"score": 0.6669513301595575,
+"text": 0.0
+},
+{
+"pid": "vhzRrsb89TwSi",
+"score": 0.6668221699496879,
+"text": 0.0
+},
+{
+"pid": "n14099157679",
+"score": 0.6029982048619162,
+"text": 0.0
+},
+{
+"pid": "n14099215952",
+"score": 0.5978293555471161,
+"text": 0.0
+},
+{
+"pid": "n387905425",
+"score": 0.5827152105533657,
+"text": 0.0
+}
+]
+},
+{
+"q": "atm",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "atm",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vUHJKRfN4Sy65",
+"score": 0.8168059964969423,
+"text": 0.0
+},
+{
+"pid": "vA4ST_didRpaP",
+"score": 0.7463675759154704,
+"text": 0.0
+},
+{
+"pid": "vxEa4pAAySxe1",
+"score": 0.7335058365506328,
+"text": 0.0
+},
+{
+"pid": "v0CiD4XfmTzq6",
+"score": 0.7065775991467191,
+"text": 0.0
+},
+{
+"pid": "n820771840",
+"score": 0.6924105499275905,
+"text": 0.0
+},
+{
+"pid": "vIltpO7WtTziq",
+"score": 0.6752386231626277,
+"text": 0.0
+},
+{
+"pid": "n4937236024",
+"score": 0.646487542100334,
+"text": 0.0
+},
+{
+"pid": "veP8ao-f2RiyU",
+"score": 0.6356075227642632,
+"text": 0.0
+},
+{
+"pid": "vhnN3z-PYSIic",
+"score": 0.6328483968293865,
+"text": 0.0
+},
+{
+"pid": "v_Cigk-tJQ_eh",
+"score": 0.613424056908642,
+"text": 0.0
+}
+]
+},
+{
+"q": "كافيه قريب",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "cafe",
+"brand": null,
+"scope": "near_me",
+"area": null,
+"entity": null,
+"street": false,
+"near": true,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vLSlnwlXDQJec",
+"score": 0.8237989483452264,
+"text": 0.0
+},
+{
+"pid": "vnxipcM5WT6ap",
+"score": 0.7470081877624764,
+"text": 0.0
+},
+{
+"pid": "vpvVkaQ5cSoKl",
+"score": 0.742890947979854,
+"text": 0.0
+},
+{
+"pid": "vshJ1TJ8nTKex",
+"score": 0.739733228637121,
+"text": 0.0
+},
+{
+"pid": "vgF3LjvooRA-H",
+"score": 0.7392581463716479,
+"text": 0.0
+},
+{
+"pid": "vg29PT9NpTaK-",
+"score": 0.7389424327392509,
+"text": 0.0
+},
+{
+"pid": "n1772677318",
+"score": 0.7265379430009686,
+"text": 0.0
+},
+{
+"pid": "vL0RyDuVsSw2r",
+"score": 0.7197160170052204,
+"text": 0.0
+},
+{
+"pid": "vE7vYKyPfR42B",
+"score": 0.7063760170052205,
+"text": 0.0
+},
+{
+"pid": "v9kkti9flTYaR",
+"score": 0.6999341587888654,
+"text": 0.0
+}
+]
+},
+{
+"q": "مستشفى",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "hospital",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "r16740885",
+"score": 0.8922841773302681,
+"text": 0.0
+},
+{
+"pid": "vxZJdbbN2Sr2Y",
+"score": 0.8678924048634875,
+"text": 0.0
+},
+{
+"pid": "w28829872",
+"score": 0.8675229746913027,
+"text": 0.0
+},
+{
+"pid": "w97145192",
+"score": 0.861352706707806,
+"text": 0.0
+},
+{
+"pid": "w1000726106",
+"score": 0.8571628836071488,
+"text": 0.0
+},
+{
+"pid": "w952653162",
+"score": 0.8563441108451415,
+"text": 0.0
+},
+{
+"pid": "n8343379230",
+"score": 0.8550426254659818,
+"text": 0.0
+},
+{
+"pid": "w48980479",
+"score": 0.8539011243118095,
+"text": 0.0
+},
+{
+"pid": "w768007963",
+"score": 0.8526312249799051,
+"text": 0.0
+},
+{
+"pid": "w169999191",
+"score": 0.8440544902797098,
+"text": 0.0
+}
+]
+},
+{
+"q": "بنك مصر",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "brand",
+"scat": null,
+"brand": "banque_misr",
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"بنك",
+"مصر"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n13230457354",
+"score": 0.9079799130606915,
+"text": 1.0
+},
+{
+"pid": "vm79r-K2cTUSS",
+"score": 0.9002279868443052,
+"text": 0.36497851023558237
+},
+{
+"pid": "viMUFhQ05RGKd",
+"score": 0.8887190532879382,
+"text": 0.36497851023558237
+},
+{
+"pid": "veXmKmeU9THiR",
+"score": 0.8853004969453921,
+"text": 0.36497851023558237
+},
+{
+"pid": "r10662384",
+"score": 0.871479507717591,
+"text": 0.8525807076089961
+},
+{
+"pid": "vOwU0c6PHT3mt",
+"score": 0.8649114331117632,
+"text": 0.36497851023558237
+},
+{
+"pid": "n4959644223",
+"score": 0.8598743298476874,
+"text": 1.0
+},
+{
+"pid": "w1116281346",
+"score": 0.8569441246944618,
+"text": 1.0
+},
+{
+"pid": "n14156095267",
+"score": 0.8545415967332437,
+"text": 0.36497851023558237
+},
+{
+"pid": "veQ_HHyzmSrqR",
+"score": 0.8461704401059329,
+"text": 0.36497851023558237
+}
+]
+},
+{
+"q": "العزبي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "brand",
+"scat": null,
+"brand": "ezaby",
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"العزبي"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vTthnFzacRNel",
+"score": 0.8915900335033585,
+"text": 0.44250000000000006
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.8683745995523192,
+"text": 0.44250000000000006
+},
+{
+"pid": "vmaTxHbe3S3W1",
+"score": 0.7991573754817058,
+"text": 0.44250000000000006
+},
+{
+"pid": "vr251yvSgT0-Z",
+"score": 0.7769594788379902,
+"text": 0.44250000000000006
+},
+{
+"pid": "n5860415668",
+"score": 0.7006444838092281,
+"text": 0.44250000000000006
+},
+{
+"pid": "voGqTUqLaShKM",
+"score": 0.691101809892212,
+"text": 0.44250000000000006
+},
+{
+"pid": "vTnRQTKb1TY-n",
+"score": 0.689932075406936,
+"text": 0.44250000000000006
+},
+{
+"pid": "v5VwPXsOAQsuQ",
+"score": 0.6813120451114515,
+"text": 0.44250000000000006
+},
+{
+"pid": "vRpUqzvLOQRi_",
+"score": 0.6616888710647024,
+"text": 0.44250000000000006
+},
+{
+"pid": "vhdzsxRLMSM-S",
+"score": 0.6363683331727519,
+"text": 0.44250000000000006
+}
+]
+},
+{
+"q": "سيف",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "brand",
+"scat": null,
+"brand": "seif",
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"سيف"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vhBy6atuQQlS7",
+"score": 0.8153761311439839,
+"text": 1.0
+},
+{
+"pid": "v26WjNwQjQim5",
+"score": 0.6608236550235984,
+"text": 0.43499999999999994
+},
+{
+"pid": "n6580038002",
+"score": 0.6196418905233708,
+"text": 0.875
+},
+{
+"pid": "veItlYL2zQnuB",
+"score": 0.6031001147700588,
+"text": 0.27749999999999997
+},
+{
+"pid": "vkZYoy6jBRRCr",
+"score": 0.5996898066964103,
+"text": 0.875
+},
+{
+"pid": "vrGbF4jZcTPC2",
+"score": 0.5779494173126357,
+"text": 0.875
+},
+{
+"pid": "vSeBx2Fx0QUey",
+"score": 0.49325836931495753,
+"text": 0.27749999999999997
+},
+{
+"pid": "w320286872",
+"score": 0.4748543704721247,
+"text": 1.0
+},
+{
+"pid": "v6cizlmwwSpCu",
+"score": 0.36296989548260966,
+"text": 0.43499999999999994
+}
+]
+},
+{
+"q": "مترو",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "metro_station",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n5218109287",
+"score": 0.49997117990928724,
+"text": 0.0
+},
+{
+"pid": "vd4_rCcgnSu6l",
+"score": 0.4961317816239723,
+"text": 0.0
+},
+{
+"pid": "n11923472313",
+"score": 0.46227862482875415,
+"text": 0.0
+},
+{
+"pid": "n5194246947",
+"score": 0.4564668834984729,
+"text": 0.0
+},
+{
+"pid": "n316634715",
+"score": 0.44213676900267346,
+"text": 0.0
+},
+{
+"pid": "vB9oleVlCQcG6",
+"score": 0.4301264959359021,
+"text": 0.0
+}
+]
+},
+{
+"q": "محطة مترو",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "metro_station",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n5218109287",
+"score": 0.49997117990928724,
+"text": 0.0
+},
+{
+"pid": "vd4_rCcgnSu6l",
+"score": 0.4961317816239723,
+"text": 0.0
+},
+{
+"pid": "n11923472313",
+"score": 0.46227862482875415,
+"text": 0.0
+},
+{
+"pid": "n5194246947",
+"score": 0.4564668834984729,
+"text": 0.0
+},
+{
+"pid": "n316634715",
+"score": 0.44213676900267346,
+"text": 0.0
+},
+{
+"pid": "vB9oleVlCQcG6",
+"score": 0.4301264959359021,
+"text": 0.0
+}
+]
+},
+{
+"q": "مترو السادات",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "metro_station",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"السادات"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n316633428",
+"score": 0.777151539749686,
+"text": 1.0
+},
+{
+"pid": "sw963933587#0",
+"score": 0.6189414519537477,
+"text": 0.8333333333333334
+},
+{
+"pid": "v_Bbd-IpHQKeB",
+"score": 0.5069319822296032,
+"text": 0.68
+}
+]
+},
+{
+"q": "ميدان التحرير",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "tahrir_square",
+"street": false,
+"near": false,
+"residual": [
+"ميدان",
+"التحرير"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n478582334",
+"score": 0.8875637345707612,
+"text": 0.96
+},
+{
+"pid": "sw10873186",
+"score": 0.8795205787290084,
+"text": 1.0
+},
+{
+"pid": "vtPjkcCDMQomM",
+"score": 0.8602090908091944,
+"text": 0.96
+},
+{
+"pid": "r10671997",
+"score": 0.8393700042540388,
+"text": 0.84
+},
+{
+"pid": "vYYLeJLRjS0ac",
+"score": 0.8253973715406331,
+"text": 0.8799999999999999
+},
+{
+"pid": "n14096994398",
+"score": 0.8189875303588439,
+"text": 0.96
+},
+{
+"pid": "vBt1PvKBVQEWf",
+"score": 0.8097557654538272,
+"text": 0.84
+},
+{
+"pid": "sw50211834",
+"score": 0.7942634793878387,
+"text": 0.84
+},
+{
+"pid": "w767933342",
+"score": 0.781688843879463,
+"text": 0.7248
+},
+{
+"pid": "v7hStt52SQVa2",
+"score": 0.764779282723333,
+"text": 0.8
+}
+]
+},
+{
+"q": "التحرير",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "tahrir_square",
+"street": false,
+"near": false,
+"residual": [
+"التحرير"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n478582334",
+"score": 0.9083637345707612,
+"text": 1.0
+},
+{
+"pid": "vtPjkcCDMQomM",
+"score": 0.8602090908091944,
+"text": 0.96
+},
+{
+"pid": "sw10873186",
+"score": 0.8587205787290082,
+"text": 0.96
+},
+{
+"pid": "r10671997",
+"score": 0.8575700042540388,
+"text": 0.875
+},
+{
+"pid": "vYYLeJLRjS0ac",
+"score": 0.8253973715406331,
+"text": 0.8799999999999999
+},
+{
+"pid": "n14096994398",
+"score": 0.8189875303588439,
+"text": 0.96
+},
+{
+"pid": "sw50211834",
+"score": 0.8124634793878387,
+"text": 0.875
+},
+{
+"pid": "vBt1PvKBVQEWf",
+"score": 0.8097557654538272,
+"text": 0.84
+},
+{
+"pid": "w767933342",
+"score": 0.781688843879463,
+"text": 0.7248
+},
+{
+"pid": "w505207330",
+"score": 0.7759543904971636,
+"text": 0.8125
+}
+]
+},
+{
+"q": "tahrir",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "tahrir_square",
+"street": false,
+"near": false,
+"residual": [
+"tahrir"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n478582334",
+"score": 0.9083637345707612,
+"text": 1.0
+},
+{
+"pid": "vtPjkcCDMQomM",
+"score": 0.8810090908091943,
+"text": 1.0
+},
+{
+"pid": "sw10873186",
+"score": 0.8587205787290082,
+"text": 0.96
+},
+{
+"pid": "n14096994398",
+"score": 0.8397875303588438,
+"text": 1.0
+},
+{
+"pid": "r10671997",
+"score": 0.8393700042540388,
+"text": 0.84
+},
+{
+"pid": "vBt1PvKBVQEWf",
+"score": 0.8279557654538272,
+"text": 0.875
+},
+{
+"pid": "vYYLeJLRjS0ac",
+"score": 0.8253973715406331,
+"text": 0.8799999999999999
+},
+{
+"pid": "sw50211834",
+"score": 0.8124634793878387,
+"text": 0.875
+},
+{
+"pid": "w767933342",
+"score": 0.797392843879463,
+"text": 0.755
+},
+{
+"pid": "w505207330",
+"score": 0.7759543904971636,
+"text": 0.8125
+}
+]
+},
+{
+"q": "المتحف المصري",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "museum",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"المصري"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w10873198",
+"score": 0.9413801393285621,
+"text": 1.0
+},
+{
+"pid": "vz3gvR5uTTPG1",
+"score": 0.8674758227035366,
+"text": 0.8125
+},
+{
+"pid": "vdaXmKpT9S4ig",
+"score": 0.8137384667876306,
+"text": 0.8333333333333334
+},
+{
+"pid": "w28829955",
+"score": 0.7800735496682578,
+"text": 0.66
+},
+{
+"pid": "w213181178",
+"score": 0.7729037091249285,
+"text": 0.66
+},
+{
+"pid": "r16868326",
+"score": 0.7690053084192696,
+"text": 0.6925
+},
+{
+"pid": "vqxfSux8DQfe8",
+"score": 0.7644531375406458,
+"text": 0.7133333333333334
+},
+{
+"pid": "v7NA4bhu4TRSk",
+"score": 0.7556268246909061,
+"text": 0.6683333333333333
+},
+{
+"pid": "r10713448",
+"score": 0.7164487814753815,
+"text": 0.875
+},
+{
+"pid": "n4563419498",
+"score": 0.701161046487705,
+"text": 0.9099999999999999
+}
+]
+},
+{
+"q": "egyptian museum",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "museum",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"egyptian"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w10873198",
+"score": 0.9413801393285621,
+"text": 1.0
+},
+{
+"pid": "vz3gvR5uTTPG1",
+"score": 0.9141740149341959,
+"text": 1.0
+},
+{
+"pid": "w213181178",
+"score": 0.8430537091249286,
+"text": 0.8125
+},
+{
+"pid": "vlpIT8k5VSSKv",
+"score": 0.8287680532968598,
+"text": 0.8333333333333334
+},
+{
+"pid": "r16868326",
+"score": 0.8242053084192695,
+"text": 0.8125
+},
+{
+"pid": "w97232304",
+"score": 0.6783716754558198,
+"text": 0.8333333333333334
+},
+{
+"pid": "w98170811",
+"score": 0.6654386883583434,
+"text": 0.8333333333333334
+},
+{
+"pid": "w97199915",
+"score": 0.6622064363294686,
+"text": 0.8125
+},
+{
+"pid": "n3143785729",
+"score": 0.6615762103624129,
+"text": 0.8
+},
+{
+"pid": "vbhCDtkMhQ--M",
+"score": 0.6459237798546434,
+"text": 0.875
+}
+]
+},
+{
+"q": "el mat7af el masry",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "museum",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"masry"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w10873198",
+"score": 0.8335068461147421,
+"text": 0.71
+},
+{
+"pid": "vz3gvR5uTTPG1",
+"score": 0.7915758227035365,
+"text": 0.6475
+},
+{
+"pid": "v7NA4bhu4TRSk",
+"score": 0.7763268246909061,
+"text": 0.7133333333333334
+},
+{
+"pid": "r16868326",
+"score": 0.7483053084192695,
+"text": 0.6475
+},
+{
+"pid": "vqxfSux8DQfe8",
+"score": 0.7437531375406459,
+"text": 0.6683333333333333
+},
+{
+"pid": "vdaXmKpT9S4ig",
+"score": 0.7378384667876305,
+"text": 0.6683333333333333
+},
+{
+"pid": "n316634158",
+"score": 0.7209532541754267,
+"text": 0.91
+},
+{
+"pid": "w28829955",
+"score": 0.7132815496682579,
+"text": 0.5148
+},
+{
+"pid": "w213181178",
+"score": 0.7061117091249285,
+"text": 0.5148
+},
+{
+"pid": "n4563419498",
+"score": 0.7011610464877052,
+"text": 0.91
+}
+]
+},
+{
+"q": "جامعة القاهرة",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "cairo_university",
+"street": false,
+"near": false,
+"residual": [
+"جامعه",
+"القاهره"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "r15072032",
+"score": 0.9251178114988445,
+"text": 1.0
+},
+{
+"pid": "r16740885",
+"score": 0.905478060098245,
+"text": 0.9166666666666666
+},
+{
+"pid": "w28850198",
+"score": 0.8768255134366035,
+"text": 0.9033773651889306
+},
+{
+"pid": "w1536109510",
+"score": 0.8692775478708389,
+"text": 0.96
+},
+{
+"pid": "w24942928",
+"score": 0.8479410674171046,
+"text": 0.8
+},
+{
+"pid": "w35574865",
+"score": 0.8333223974926759,
+"text": 0.84
+},
+{
+"pid": "w28831942",
+"score": 0.821289186313179,
+"text": 0.8
+},
+{
+"pid": "w769795083",
+"score": 0.8124344970273916,
+"text": 0.78
+},
+{
+"pid": "r16663142",
+"score": 0.7998673085742932,
+"text": 0.8
+},
+{
+"pid": "r16663450",
+"score": 0.771457094286651,
+"text": 0.85
+}
+]
+},
+{
+"q": "القصر العيني",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"القصر",
+"العيني"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vyKg9l-9iTs6c",
+"score": 0.8743191038571659,
+"text": 1.0
+},
+{
+"pid": "w28826966",
+"score": 0.8682905448947492,
+"text": 0.8610504478545131
+},
+{
+"pid": "sw306244856#1",
+"score": 0.8567053504226958,
+"text": 0.9166666666666666
+},
+{
+"pid": "v4qV3QNKSRzuJ",
+"score": 0.8304851261961413,
+"text": 0.9166666666666666
+},
+{
+"pid": "vxZFbjBD8SRis",
+"score": 0.8281751251623785,
+"text": 0.9166666666666666
+},
+{
+"pid": "v8gxUaTmTRzuK",
+"score": 0.8009088664441003,
+"text": 0.8333333333333334
+},
+{
+"pid": "vMHqoXO0CR2eO",
+"score": 0.7812207847122482,
+"text": 0.875
+},
+{
+"pid": "vTQT1l5vcRamh",
+"score": 0.7694938012288451,
+"text": 0.8610504478545131
+},
+{
+"pid": "vV4jwDCSOS56F",
+"score": 0.756470293474091,
+"text": 0.8360504478545131
+},
+{
+"pid": "w547654676",
+"score": 0.7032410002273333,
+"text": 0.6600000000000001
+}
+]
+},
+{
+"q": "kasr el aini",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"kasr",
+"aini"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w28826966",
+"score": 0.8412767839359087,
+"text": 0.8091009075490506
+},
+{
+"pid": "vxZFbjBD8SRis",
+"score": 0.7939075970878847,
+"text": 0.8507675742157172
+},
+{
+"pid": "sw306244856#1",
+"score": 0.7650881453761371,
+"text": 0.7404797338848231
+},
+{
+"pid": "vwVUKiwwoSdGy",
+"score": 0.6117135793116266,
+"text": 0.6020087986431646
+},
+{
+"pid": "vimVoW1rQSsin",
+"score": 0.5947537763588929,
+"text": 0.608983932517093
+}
+]
+},
+{
+"q": "قصر النيل",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"قصر",
+"النيل"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w98328366",
+"score": 0.8576532240616499,
+"text": 0.9166666666666666
+},
+{
+"pid": "vMeo0xu6XS-WE",
+"score": 0.8289088360300102,
+"text": 0.9166666666666666
+},
+{
+"pid": "sw50211785",
+"score": 0.8246792076935501,
+"text": 0.9166666666666666
+},
+{
+"pid": "n4764007325",
+"score": 0.7955978252919513,
+"text": 0.9166666666666666
+},
+{
+"pid": "n5112028121",
+"score": 0.7863674091390103,
+"text": 0.9166666666666666
+},
+{
+"pid": "vQy_Dxj-nTU61",
+"score": 0.7561174563257583,
+"text": 0.9166666666666666
+},
+{
+"pid": "vknq3IJV7Q4WY",
+"score": 0.731187902819871,
+"text": 0.9015097134124782
+},
+{
+"pid": "vfhJA_3_HQNeS",
+"score": 0.7056657868306284,
+"text": 0.8127653394459852
+},
+{
+"pid": "vplNEAp4YSx-h",
+"score": 0.6988780877319218,
+"text": 0.8333333333333334
+},
+{
+"pid": "vTQT1l5vcRamh",
+"score": 0.6630635972612013,
+"text": 0.6563769786859673
+}
+]
+},
+{
+"q": "كوبري قصر النيل",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": true,
+"near": false,
+"residual": [
+"كوبري",
+"قصر",
+"النيل"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "sw50211785",
+"score": 1.0804773040267088,
+"text": 1.0
+},
+{
+"pid": "vMeo0xu6XS-WE",
+"score": 0.8722421693633436,
+"text": 1.0
+},
+{
+"pid": "n4764007325",
+"score": 0.8389311586252847,
+"text": 1.0
+},
+{
+"pid": "w98328366",
+"score": 0.7509238433078774,
+"text": 0.7114178575247966
+},
+{
+"pid": "n5112028121",
+"score": 0.627979802472014,
+"text": 0.6120751153839816
+},
+{
+"pid": "vQy_Dxj-nTU61",
+"score": 0.5977298496587621,
+"text": 0.6120751153839816
+},
+{
+"pid": "vknq3IJV7Q4WY",
+"score": 0.576001194219934,
+"text": 0.6030737353356763
+},
+{
+"pid": "vfhJA_3_HQNeS",
+"score": 0.5692204235609765,
+"text": 0.5503704100812699
+},
+{
+"pid": "vplNEAp4YSx-h",
+"score": 0.5404904810649257,
+"text": 0.5287417820506484
+},
+{
+"pid": "vcfaK7KZbRXGj",
+"score": 0.49035442974980337,
+"text": 0.5199268241502608
+}
+]
+},
+{
+"q": "شارع طلعت حرب",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": true,
+"near": false,
+"residual": [
+"شارع",
+"طلعت",
+"حرب"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n474800560",
+"score": 0.8224886710149721,
+"text": 0.8325647439132353
+},
+{
+"pid": "w39700935",
+"score": 0.7977408362360005,
+"text": 0.7436956163596006
+},
+{
+"pid": "vCHgPgXlqRfO_",
+"score": 0.6775903497705975,
+"text": 0.7436956163596006
+},
+{
+"pid": "dkw84Q3snRH2b",
+"score": 0.6292841879205261,
+"text": 0.7436956163596006
+},
+{
+"pid": "vMI9LI2CTSKqb",
+"score": 0.5978244022730221,
+"text": 0.6658980772465687
+}
+]
+},
+{
+"q": "talaat harb",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"talaat",
+"harb"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n474800560",
+"score": 0.9095550041800898,
+"text": 1.0
+},
+{
+"pid": "w39700935",
+"score": 0.8876857823956749,
+"text": 0.9166666666666666
+},
+{
+"pid": "vCHgPgXlqRfO_",
+"score": 0.7675352959302717,
+"text": 0.9166666666666666
+},
+{
+"pid": "vQlZOkBoUQ02o",
+"score": 0.7587160202972034,
+"text": 0.85
+},
+{
+"pid": "veRgYS3Y5Qs2P",
+"score": 0.7459134538718499,
+"text": 0.875
+},
+{
+"pid": "vAFX1meWgS8CC",
+"score": 0.7384113904272631,
+"text": 0.85
+},
+{
+"pid": "v4BQ2SWalRdad",
+"score": 0.7309286558987124,
+"text": 0.9166666666666666
+},
+{
+"pid": "dkw84Q3snRH2b",
+"score": 0.7055849631909783,
+"text": 0.8708635751436876
+}
+]
+},
+{
+"q": "ش محمد محمود",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": true,
+"near": false,
+"residual": [
+"شارع",
+"محمد",
+"محمود"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "sw28718647",
+"score": 1.0473229026326627,
+"text": 1.0
+},
+{
+"pid": "sw24942999",
+"score": 0.9826691377151261,
+"text": 0.8787775466850081
+},
+{
+"pid": "sw28678701",
+"score": 0.9368090175094205,
+"text": 0.8665848488683406
+},
+{
+"pid": "sw28678893",
+"score": 0.9285767098389058,
+"text": 0.799918182201674
+},
+{
+"pid": "sw28718394",
+"score": 0.9276534329800267,
+"text": 0.824918182201674
+},
+{
+"pid": "sw28678703",
+"score": 0.9234639550843161,
+"text": 0.824918182201674
+},
+{
+"pid": "sw28718354",
+"score": 0.9121709183889543,
+"text": 0.824918182201674
+},
+{
+"pid": "sw28739532",
+"score": 0.8984350333266448,
+"text": 0.799918182201674
+},
+{
+"pid": "sw702262640",
+"score": 0.857761006335722,
+"text": 0.6247365433265779
+},
+{
+"pid": "sw710670510",
+"score": 0.7769730717312934,
+"text": 0.549736543326578
+}
+]
+},
+{
+"q": "شارع قصر العيني",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "in_area",
+"area": "العيني",
+"entity": null,
+"street": true,
+"near": false,
+"residual": [
+"شارع",
+"قصر"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "sw306244856#0",
+"score": 1.0408141588132818,
+"text": 0.8999291783197285
+},
+{
+"pid": "w98328366",
+"score": 0.6882024176117136,
+"text": 0.6509737981037321
+},
+{
+"pid": "vTQT1l5vcRamh",
+"score": 0.6695894669468186,
+"text": 0.6301404647703988
+},
+{
+"pid": "vKmU4kuBIQeqw",
+"score": 0.6541644235087265,
+"text": 0.6923698859756566
+},
+{
+"pid": "vWX-yQkZ-QxOj",
+"score": 0.6307364185493465,
+"text": 0.65070321930899
+},
+{
+"pid": "vFXeROJWYSRG6",
+"score": 0.6143377327995359,
+"text": 0.6923698859756566
+},
+{
+"pid": "vQy_Dxj-nTU61",
+"score": 0.5942603916177013,
+"text": 0.65070321930899
+},
+{
+"pid": "vsjYWfJ2hTYGG",
+"score": 0.5758595799088706,
+"text": 0.6173698859756567
+},
+{
+"pid": "vSJyy3UlyRTKv",
+"score": 0.556902052581939,
+"text": 0.6923698859756566
+},
+{
+"pid": "vplNEAp4YSx-h",
+"score": 0.5496880076356028,
+"text": 0.6090365526423233
+}
+]
+},
+{
+"q": "جاردن سيتي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "garden_city",
+"street": false,
+"near": false,
+"residual": [
+"جاردن",
+"سيتي"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w707036948",
+"score": 0.7680395942300137,
+"text": 1.0
+},
+{
+"pid": "vgdcXRplPQJWx",
+"score": 0.7459477232092449,
+"text": 0.875
+},
+{
+"pid": "v7dZpJ54_T4iB",
+"score": 0.7411334378931371,
+"text": 0.84
+},
+{
+"pid": "veh4iPqz-SB2E",
+"score": 0.7001772534995778,
+"text": 0.85
+},
+{
+"pid": "viuT--dbhSJS6",
+"score": 0.6921099664911632,
+"text": 0.84
+},
+{
+"pid": "vVWeQcgSyTCCZ",
+"score": 0.5292591464966119,
+"text": 0.504337820421099
+}
+]
+},
+{
+"q": "garden city",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "garden_city",
+"street": false,
+"near": false,
+"residual": [
+"garden",
+"city"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w707036948",
+"score": 0.7680395942300137,
+"text": 1.0
+},
+{
+"pid": "v7dZpJ54_T4iB",
+"score": 0.7593334378931371,
+"text": 0.875
+},
+{
+"pid": "vgdcXRplPQJWx",
+"score": 0.7277477232092449,
+"text": 0.84
+},
+{
+"pid": "viuT--dbhSJS6",
+"score": 0.7103099664911632,
+"text": 0.875
+},
+{
+"pid": "veh4iPqz-SB2E",
+"score": 0.6824972534995777,
+"text": 0.816
+},
+{
+"pid": "vVWeQcgSyTCCZ",
+"score": 0.5401864659390689,
+"text": 0.5253518962719781
+}
+]
+},
+{
+"q": "الزمالك",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "zamalek",
+"street": false,
+"near": false,
+"residual": [
+"الزمالك"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n14190032282",
+"score": 0.831077572627449,
+"text": 0.875
+},
+{
+"pid": "n472197549",
+"score": 0.8258031279064858,
+"text": 0.875
+},
+{
+"pid": "w503835270",
+"score": 0.8221019227963307,
+"text": 0.875
+},
+{
+"pid": "w738948180",
+"score": 0.8088229223715968,
+"text": 0.84
+},
+{
+"pid": "vpdjOfJkiQJ-4",
+"score": 0.7900826484185661,
+"text": 0.8736
+},
+{
+"pid": "vH9sB12kQT6mi",
+"score": 0.7861110875062236,
+"text": 0.875
+},
+{
+"pid": "vF7dyBMGjTeGW",
+"score": 0.7828052533349543,
+"text": 0.875
+},
+{
+"pid": "v8l2KTISVS3-q",
+"score": 0.776714972740545,
+"text": 0.8
+},
+{
+"pid": "dqllav6ZSTMeO",
+"score": 0.7719159592911142,
+"text": 1.0
+},
+{
+"pid": "v8ss5J20YQO-a",
+"score": 0.7492987995858127,
+"text": 0.8033333333333333
+}
+]
+},
+{
+"q": "وسط البلد",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "downtown_cairo",
+"street": false,
+"near": false,
+"residual": [
+"وسط",
+"البلد"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "v3v57Aci3TFuP",
+"score": 0.8476238741782481,
+"text": 0.96
+},
+{
+"pid": "vxZ4xrjjPQjqJ",
+"score": 0.844599562646621,
+"text": 0.96
+},
+{
+"pid": "vsMmJPmveTnyB",
+"score": 0.8398721953525664,
+"text": 0.96
+},
+{
+"pid": "vgIMJaZdHS9KA",
+"score": 0.8000382746169247,
+"text": 1.0
+},
+{
+"pid": "vdLB48orFQRCf",
+"score": 0.7853742415959398,
+"text": 1.0
+},
+{
+"pid": "vFlT99Gg6RuG0",
+"score": 0.749016119134455,
+"text": 0.8
+},
+{
+"pid": "vKHDwYa3oTYKR",
+"score": 0.7427842519402668,
+"text": 0.9166666666666666
+},
+{
+"pid": "vBhNoCTYlSiai",
+"score": 0.7410010405922514,
+"text": 0.84
+},
+{
+"pid": "vQSgeRE3dRY68",
+"score": 0.7377251944146619,
+"text": 0.84
+},
+{
+"pid": "vf1EeuNLKRxCU",
+"score": 0.737213356261062,
+"text": 0.875
+}
+]
+},
+{
+"q": "downtown",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "downtown_cairo",
+"street": false,
+"near": false,
+"residual": [
+"downtown"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "v3v57Aci3TFuP",
+"score": 0.8684238741782482,
+"text": 1.0
+},
+{
+"pid": "vsMmJPmveTnyB",
+"score": 0.8606721953525666,
+"text": 1.0
+},
+{
+"pid": "vxZ4xrjjPQjqJ",
+"score": 0.844599562646621,
+"text": 0.96
+},
+{
+"pid": "vgIMJaZdHS9KA",
+"score": 0.7792382746169246,
+"text": 0.96
+},
+{
+"pid": "vFlT99Gg6RuG0",
+"score": 0.7663494524677883,
+"text": 0.8333333333333334
+},
+{
+"pid": "vdLB48orFQRCf",
+"score": 0.7645742415959398,
+"text": 0.96
+},
+{
+"pid": "vBhNoCTYlSiai",
+"score": 0.7592010405922514,
+"text": 0.875
+},
+{
+"pid": "vQSgeRE3dRY68",
+"score": 0.7559251944146619,
+"text": 0.875
+},
+{
+"pid": "v-L5TnJipQq-J",
+"score": 0.7369542105104726,
+"text": 0.8333333333333334
+},
+{
+"pid": "vWz6oyWdMQKmU",
+"score": 0.7287615600338166,
+"text": 0.8333333333333334
+}
+]
+},
+{
+"q": "عابدين",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"عابدين"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w775886990",
+"score": 0.8593900515542465,
+"text": 0.875
+},
+{
+"pid": "n13442278363",
+"score": 0.8325376348073363,
+"text": 0.8333333333333334
+},
+{
+"pid": "w1436796245",
+"score": 0.8230678787369017,
+"text": 0.8333333333333334
+},
+{
+"pid": "vV5Pt-k3vTr6s",
+"score": 0.8175213961705026,
+"text": 0.875
+},
+{
+"pid": "vd2LSRSmtQQCe",
+"score": 0.7938780163655996,
+"text": 0.865
+},
+{
+"pid": "dXL4vvFFvTpaD",
+"score": 0.7845459128043849,
+"text": 1.0
+},
+{
+"pid": "vsj_2dX7xQ9iG",
+"score": 0.7844507717201956,
+"text": 0.875
+},
+{
+"pid": "w715041208",
+"score": 0.6898334149218819,
+"text": 0.875
+},
+{
+"pid": "dE36Xzfd6Rf24",
+"score": 0.6775326149759885,
+"text": 0.865
+},
+{
+"pid": "vskMZTAKTScyQ",
+"score": 0.65906610923128,
+"text": 0.8125
+}
+]
+},
+{
+"q": "كشري",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "koshary",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w767418990",
+"score": 0.7462324042532975,
+"text": 0.0
+},
+{
+"pid": "n7245672388",
+"score": 0.5658813017697844,
+"text": 0.0
+},
+{
+"pid": "v-uI3qTdnSWa6",
+"score": 0.47094215598433997,
+"text": 0.0
+},
+{
+"pid": "vraBADwqIQSey",
+"score": 0.4679765821839217,
+"text": 0.0
+},
+{
+"pid": "vjXamlSxpR5en",
+"score": 0.4550482803879256,
+"text": 0.0
+},
+{
+"pid": "vl7KWJvrrQpGr",
+"score": 0.4455727991806236,
+"text": 0.0
+}
+]
+},
+{
+"q": "كشري التحرير",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "koshary",
+"brand": null,
+"scope": "in_area",
+"area": "ميدان التحرير",
+"entity": "tahrir_square",
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w767418990",
+"score": 0.746313843806995,
+"text": 0.0
+},
+{
+"pid": "n7245672388",
+"score": 0.5661493988181245,
+"text": 0.0
+},
+{
+"pid": "v-uI3qTdnSWa6",
+"score": 0.4713354708084019,
+"text": 0.0
+},
+{
+"pid": "vraBADwqIQSey",
+"score": 0.4681297812143621,
+"text": 0.0
+},
+{
+"pid": "vjXamlSxpR5en",
+"score": 0.4549600839653732,
+"text": 0.0
+},
+{
+"pid": "vl7KWJvrrQpGr",
+"score": 0.4454884697594808,
+"text": 0.0
+}
+]
+},
+{
+"q": "koshary tahrir",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "koshary",
+"brand": null,
+"scope": "in_area",
+"area": "ميدان التحرير",
+"entity": "tahrir_square",
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w767418990",
+"score": 0.746313843806995,
+"text": 0.0
+},
+{
+"pid": "n7245672388",
+"score": 0.5661493988181245,
+"text": 0.0
+},
+{
+"pid": "v-uI3qTdnSWa6",
+"score": 0.4713354708084019,
+"text": 0.0
+},
+{
+"pid": "vraBADwqIQSey",
+"score": 0.4681297812143621,
+"text": 0.0
+},
+{
+"pid": "vjXamlSxpR5en",
+"score": 0.4549600839653732,
+"text": 0.0
+},
+{
+"pid": "vl7KWJvrrQpGr",
+"score": 0.4454884697594808,
+"text": 0.0
+}
+]
+},
+{
+"q": "فلفلة",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"فلفله"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n2789855480",
+"score": 0.8606587644707094,
+"text": 1.0
+}
+]
+},
+{
+"q": "felfela",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"felfela"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n2789855480",
+"score": 0.8606587644707094,
+"text": 1.0
+}
+]
+},
+{
+"q": "قهوة",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "cafe",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vLSlnwlXDQJec",
+"score": 0.8265721163752764,
+"text": 0.0
+},
+{
+"pid": "n1772677318",
+"score": 0.7781443967162014,
+"text": 0.0
+},
+{
+"pid": "vgF3LjvooRA-H",
+"score": 0.7673511712893752,
+"text": 0.0
+},
+{
+"pid": "vg29PT9NpTaK-",
+"score": 0.756847003700541,
+"text": 0.0
+},
+{
+"pid": "vnxipcM5WT6ap",
+"score": 0.7508234964184479,
+"text": 0.0
+},
+{
+"pid": "vshJ1TJ8nTKex",
+"score": 0.7507656865676151,
+"text": 0.0
+},
+{
+"pid": "vpvVkaQ5cSoKl",
+"score": 0.7500419769394264,
+"text": 0.0
+},
+{
+"pid": "n7128387486",
+"score": 0.744842865895303,
+"text": 0.0
+},
+{
+"pid": "vmSncOSdbS1at",
+"score": 0.7370143273993568,
+"text": 0.0
+},
+{
+"pid": "vL0RyDuVsSw2r",
+"score": 0.7361550246908835,
+"text": 0.0
+}
+]
+},
+{
+"q": "ahwa",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "cafe",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vLSlnwlXDQJec",
+"score": 0.8265721163752764,
+"text": 0.0
+},
+{
+"pid": "n1772677318",
+"score": 0.7781443967162014,
+"text": 0.0
+},
+{
+"pid": "vgF3LjvooRA-H",
+"score": 0.7673511712893752,
+"text": 0.0
+},
+{
+"pid": "vg29PT9NpTaK-",
+"score": 0.756847003700541,
+"text": 0.0
+},
+{
+"pid": "vnxipcM5WT6ap",
+"score": 0.7508234964184479,
+"text": 0.0
+},
+{
+"pid": "vshJ1TJ8nTKex",
+"score": 0.7507656865676151,
+"text": 0.0
+},
+{
+"pid": "vpvVkaQ5cSoKl",
+"score": 0.7500419769394264,
+"text": 0.0
+},
+{
+"pid": "n7128387486",
+"score": 0.744842865895303,
+"text": 0.0
+},
+{
+"pid": "vmSncOSdbS1at",
+"score": 0.7370143273993568,
+"text": 0.0
+},
+{
+"pid": "vL0RyDuVsSw2r",
+"score": 0.7361550246908835,
+"text": 0.0
+}
+]
+},
+{
+"q": "فندق",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "hotel",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w30925785",
+"score": 0.9204121966459751,
+"text": 0.0
+},
+{
+"pid": "r10671997",
+"score": 0.9151254675213933,
+"text": 0.0
+},
+{
+"pid": "r19531749",
+"score": 0.8902492654961158,
+"text": 0.0
+},
+{
+"pid": "vYYLeJLRjS0ac",
+"score": 0.8824734044470828,
+"text": 0.0
+},
+{
+"pid": "w768977205",
+"score": 0.8775414157218309,
+"text": 0.0
+},
+{
+"pid": "n6259174685",
+"score": 0.8769141335363797,
+"text": 0.0
+},
+{
+"pid": "w768018735",
+"score": 0.8765406063501571,
+"text": 0.0
+},
+{
+"pid": "w768980716",
+"score": 0.8722082403218472,
+"text": 0.0
+},
+{
+"pid": "w505207330",
+"score": 0.8627323582771145,
+"text": 0.0
+},
+{
+"pid": "n11161691150",
+"score": 0.860667634140472,
+"text": 0.0
+}
+]
+},
+{
+"q": "hotel",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "hotel",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w30925785",
+"score": 0.9204121966459751,
+"text": 0.0
+},
+{
+"pid": "r10671997",
+"score": 0.9151254675213933,
+"text": 0.0
+},
+{
+"pid": "r19531749",
+"score": 0.8902492654961158,
+"text": 0.0
+},
+{
+"pid": "vYYLeJLRjS0ac",
+"score": 0.8824734044470828,
+"text": 0.0
+},
+{
+"pid": "w768977205",
+"score": 0.8775414157218309,
+"text": 0.0
+},
+{
+"pid": "n6259174685",
+"score": 0.8769141335363797,
+"text": 0.0
+},
+{
+"pid": "w768018735",
+"score": 0.8765406063501571,
+"text": 0.0
+},
+{
+"pid": "w768980716",
+"score": 0.8722082403218472,
+"text": 0.0
+},
+{
+"pid": "w505207330",
+"score": 0.8627323582771145,
+"text": 0.0
+},
+{
+"pid": "n11161691150",
+"score": 0.860667634140472,
+"text": 0.0
+}
+]
+},
+{
+"q": "سميراميس",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "hardware_store",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "v5y5wykBaRfSj",
+"score": 0.8018390191317317,
+"text": 0.0
+},
+{
+"pid": "vAqqt7zuRRLu-",
+"score": 0.761488739966905,
+"text": 0.0
+},
+{
+"pid": "vq77WEnNBQ5aB",
+"score": 0.7411883012005491,
+"text": 0.0
+},
+{
+"pid": "v2lU6QS8NT9yq",
+"score": 0.7170810253212019,
+"text": 0.0
+},
+{
+"pid": "vI2sDLRfhS9aC",
+"score": 0.715139230162835,
+"text": 0.0
+},
+{
+"pid": "v3CbCw4ZwQh2f",
+"score": 0.7128880562544537,
+"text": 0.0
+},
+{
+"pid": "vy9lK8RYCS_ar",
+"score": 0.704739230162835,
+"text": 0.0
+},
+{
+"pid": "vUlIkKx9dTvan",
+"score": 0.6919860474429376,
+"text": 0.0
+},
+{
+"pid": "va__T42xhQcOD",
+"score": 0.691888301200549,
+"text": 0.0
+},
+{
+"pid": "v87Jz-E71T-2e",
+"score": 0.685959230162835,
+"text": 0.0
+}
+]
+},
+{
+"q": "semiramis",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"semiramis"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vGrQSC7oBQi2j",
+"score": 0.8372367271087457,
+"text": 1.0
+},
+{
+"pid": "w768018735",
+"score": 0.8244777119877238,
+"text": 0.875
+},
+{
+"pid": "vPJ51-w2aQlqa",
+"score": 0.7824359500055347,
+"text": 0.875
+},
+{
+"pid": "v-5wvzkKTSris",
+"score": 0.7745590022532893,
+"text": 0.875
+}
+]
+},
+{
+"q": "هيلتون",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"هيلتون"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "r19531749",
+"score": 0.8523808006555871,
+"text": 0.875
+},
+{
+"pid": "v8ss5J20YQO-a",
+"score": 0.7648987995858126,
+"text": 0.8333333333333334
+},
+{
+"pid": "w97145191",
+"score": 0.7010292012530571,
+"text": 0.5544
+},
+{
+"pid": "sw1231845352",
+"score": 0.6351779236115689,
+"text": 0.6683333333333333
+}
+]
+},
+{
+"q": "مول",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "mall",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w97145191",
+"score": 0.9045443436251739,
+"text": 0.0
+},
+{
+"pid": "w39700935",
+"score": 0.9037704492644212,
+"text": 0.0
+},
+{
+"pid": "n573794410",
+"score": 0.8664845385373809,
+"text": 0.0
+},
+{
+"pid": "w98308861",
+"score": 0.8588827315169099,
+"text": 0.0
+},
+{
+"pid": "w36052852",
+"score": 0.8380114551383953,
+"text": 0.0
+},
+{
+"pid": "v6w6GOTPlR96v",
+"score": 0.8365114312041306,
+"text": 0.0
+},
+{
+"pid": "n5108337680",
+"score": 0.8329306479588552,
+"text": 0.0
+},
+{
+"pid": "vcZInCy-tQI-2",
+"score": 0.8296096903814645,
+"text": 0.0
+},
+{
+"pid": "vtffyyooFQ7ik",
+"score": 0.8162081737607767,
+"text": 0.0
+},
+{
+"pid": "w40287031",
+"score": 0.8102130181033085,
+"text": 0.0
+}
+]
+},
+{
+"q": "مجمع التحرير",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "in_area",
+"area": "ميدان التحرير",
+"entity": "tahrir_square",
+"street": false,
+"near": false,
+"residual": [
+"مجمع"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "r10671997",
+"score": 0.9225527493465793,
+"text": 1.0
+},
+{
+"pid": "vxZJdbbN2Sr2Y",
+"score": 0.8409346318537221,
+"text": 0.8333333333333334
+},
+{
+"pid": "sw305873958",
+"score": 0.7600569088203235,
+"text": 0.8333333333333334
+},
+{
+"pid": "n14097348974",
+"score": 0.7458373845090499,
+"text": 0.8333333333333334
+},
+{
+"pid": "vw12trFkFSH6e",
+"score": 0.7446382654555197,
+"text": 0.8333333333333334
+},
+{
+"pid": "w1116281346",
+"score": 0.6898618544982239,
+"text": 0.5544
+},
+{
+"pid": "vDs3PdL8xSYG6",
+"score": 0.6693843786720057,
+"text": 0.7433333333333334
+},
+{
+"pid": "w711387162",
+"score": 0.6322859727680759,
+"text": 0.8333333333333334
+},
+{
+"pid": "vhQ50M-4KSqmc",
+"score": 0.6242991821182013,
+"text": 0.7225
+}
+]
+},
+{
+"q": "mogamma",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"mogamma"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "r10671997",
+"score": 0.9225700042540388,
+"text": 1.0
+},
+{
+"pid": "vxZJdbbN2Sr2Y",
+"score": 0.7707081745726523,
+"text": 0.6983333333333334
+},
+{
+"pid": "sw305873958",
+"score": 0.7133125582427784,
+"text": 0.7433333333333334
+},
+{
+"pid": "n14097348974",
+"score": 0.6756252217382833,
+"text": 0.6983333333333334
+},
+{
+"pid": "vw12trFkFSH6e",
+"score": 0.6744119422628261,
+"text": 0.6983333333333334
+},
+{
+"pid": "w1116281346",
+"score": 0.6692060668204395,
+"text": 0.5148000000000001
+},
+{
+"pid": "vDs3PdL8xSYG6",
+"score": 0.6459017542285876,
+"text": 0.6983333333333334
+},
+{
+"pid": "vhQ50M-4KSqmc",
+"score": 0.6008090844686228,
+"text": 0.6775
+},
+{
+"pid": "w711387162",
+"score": 0.5332697686090972,
+"text": 0.6683333333333333
+}
+]
+},
+{
+"q": "الجامعة الامريكية",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "auc_new_cairo",
+"street": false,
+"near": false,
+"residual": [
+"الجامعه",
+"الامريكيه"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w24942928",
+"score": 0.9086077340837713,
+"text": 0.9166666666666666
+},
+{
+"pid": "w28850198",
+"score": 0.8837359502050263,
+"text": 0.9166666666666666
+},
+{
+"pid": "w769795083",
+"score": 0.8618344970273917,
+"text": 0.875
+},
+{
+"pid": "vDrKAs73MQfC2",
+"score": 0.7655739599355943,
+"text": 0.8333333333333334
+},
+{
+"pid": "v7hStt52SQVa2",
+"score": 0.764779282723333,
+"text": 0.8
+},
+{
+"pid": "n4851045034",
+"score": 0.7630676564719878,
+"text": 0.84
+},
+{
+"pid": "vC4-P6Y92TPGq",
+"score": 0.7433232535610461,
+"text": 0.78
+},
+{
+"pid": "r15072032",
+"score": 0.742625063506964,
+"text": 0.649052407707922
+},
+{
+"pid": "lex:auc_new_cairo",
+"score": 0.7390633132110015,
+"text": 1.0
+},
+{
+"pid": "vLMxu9jXBSRmv",
+"score": 0.7296847848029793,
+"text": 0.768
+}
+]
+},
+{
+"q": "auc",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "auc_new_cairo",
+"street": false,
+"near": false,
+"residual": [
+"auc"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w24942928",
+"score": 0.8895410674171045,
+"text": 0.8799999999999999
+},
+{
+"pid": "w28850198",
+"score": 0.8646692835383595,
+"text": 0.8799999999999999
+},
+{
+"pid": "w769795083",
+"score": 0.8436344970273917,
+"text": 0.84
+},
+{
+"pid": "n4851045034",
+"score": 0.7812676564719878,
+"text": 0.875
+},
+{
+"pid": "v7hStt52SQVa2",
+"score": 0.764779282723333,
+"text": 0.8
+},
+{
+"pid": "vC4-P6Y92TPGq",
+"score": 0.7602232535610463,
+"text": 0.8125
+},
+{
+"pid": "vDrKAs73MQfC2",
+"score": 0.748240626602261,
+"text": 0.8
+},
+{
+"pid": "vLMxu9jXBSRmv",
+"score": 0.7463247848029793,
+"text": 0.8
+},
+{
+"pid": "vXrsiaOUiQvKA",
+"score": 0.7445186666218931,
+"text": 0.8333333333333334
+},
+{
+"pid": "lex:auc_new_cairo",
+"score": 0.7390633132110015,
+"text": 1.0
+}
+]
+},
+{
+"q": "مسجد عمر مكرم",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "mosque",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"عمر",
+"مكرم"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w769798822",
+"score": 0.8851651641479538,
+"text": 1.0
+},
+{
+"pid": "sw28850022",
+"score": 0.7093914070899436,
+"text": 0.9166666666666666
+},
+{
+"pid": "n9912724992",
+"score": 0.6588167936204015,
+"text": 0.875
+},
+{
+"pid": "sw97144239",
+"score": 0.6297350695883415,
+"text": 0.7433333333333334
+},
+{
+"pid": "w97144239",
+"score": 0.5987748030391962,
+"text": 0.7433333333333334
+}
+]
+},
+{
+"q": "صيدليه العزبى",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "brand",
+"scat": null,
+"brand": "ezaby",
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"صيدليه",
+"العزبي"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vTthnFzacRNel",
+"score": 0.8915900335033585,
+"text": 0.0
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.8683745995523192,
+"text": 0.0
+},
+{
+"pid": "vmaTxHbe3S3W1",
+"score": 0.7991573754817058,
+"text": 0.0
+},
+{
+"pid": "vr251yvSgT0-Z",
+"score": 0.7769594788379902,
+"text": 0.0
+},
+{
+"pid": "n5860415668",
+"score": 0.7006444838092281,
+"text": 0.0
+},
+{
+"pid": "voGqTUqLaShKM",
+"score": 0.691101809892212,
+"text": 0.0
+},
+{
+"pid": "vTnRQTKb1TY-n",
+"score": 0.689932075406936,
+"text": 0.0
+},
+{
+"pid": "v5VwPXsOAQsuQ",
+"score": 0.6813120451114515,
+"text": 0.0
+},
+{
+"pid": "vRpUqzvLOQRi_",
+"score": 0.6616888710647024,
+"text": 0.0
+},
+{
+"pid": "vhdzsxRLMSM-S",
+"score": 0.6363683331727519,
+"text": 0.0
+}
+]
+},
+{
+"q": "phrmacy",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "pharmacy",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vr9Av9xfHS7q3",
+"score": 0.7623892878738163,
+"text": 0.0
+},
+{
+"pid": "vTthnFzacRNel",
+"score": 0.758601971314653,
+"text": 0.0
+},
+{
+"pid": "vMHqoXO0CR2eO",
+"score": 0.7117368287118127,
+"text": 0.0
+},
+{
+"pid": "vi_KOV-hYSYmW",
+"score": 0.7006900895498713,
+"text": 0.0
+},
+{
+"pid": "vhAUhxDeaSKuk",
+"score": 0.6888785047899784,
+"text": 0.0
+},
+{
+"pid": "v67TrqYXtTba-",
+"score": 0.6879750246908836,
+"text": 0.0
+},
+{
+"pid": "voXg3lspvTCqk",
+"score": 0.6674100895498714,
+"text": 0.0
+},
+{
+"pid": "vZDhsBCLbSw6d",
+"score": 0.6318169695991176,
+"text": 0.0
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.6227020103745431,
+"text": 0.0
+},
+{
+"pid": "v6FmCBrWKTUGZ",
+"score": 0.6098285467400297,
+"text": 0.0
+}
+]
+},
+{
+"q": "مستشفي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "hospital",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "r16740885",
+"score": 0.8922841773302681,
+"text": 0.0
+},
+{
+"pid": "vxZJdbbN2Sr2Y",
+"score": 0.8678924048634875,
+"text": 0.0
+},
+{
+"pid": "w28829872",
+"score": 0.8675229746913027,
+"text": 0.0
+},
+{
+"pid": "w97145192",
+"score": 0.861352706707806,
+"text": 0.0
+},
+{
+"pid": "w1000726106",
+"score": 0.8571628836071488,
+"text": 0.0
+},
+{
+"pid": "w952653162",
+"score": 0.8563441108451415,
+"text": 0.0
+},
+{
+"pid": "n8343379230",
+"score": 0.8550426254659818,
+"text": 0.0
+},
+{
+"pid": "w48980479",
+"score": 0.8539011243118095,
+"text": 0.0
+},
+{
+"pid": "w768007963",
+"score": 0.8526312249799051,
+"text": 0.0
+},
+{
+"pid": "w169999191",
+"score": 0.8440544902797098,
+"text": 0.0
+}
+]
+},
+{
+"q": "بنزينه قريبه",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "gas_station",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": true,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n3220031878",
+"score": 0.8185149396713021,
+"text": 0.0
+},
+{
+"pid": "vMdDPIykwSaSF",
+"score": 0.7163360545579536,
+"text": 0.0
+},
+{
+"pid": "n1259516844",
+"score": 0.7155186316167945,
+"text": 0.0
+},
+{
+"pid": "vHLJKsdtzQoWz",
+"score": 0.6236151944670636,
+"text": 0.0
+},
+{
+"pid": "n1259516857",
+"score": 0.6223938770169584,
+"text": 0.0
+},
+{
+"pid": "vhzRrsb89TwSi",
+"score": 0.6093123236679039,
+"text": 0.0
+},
+{
+"pid": "w822297475",
+"score": 0.6077359183570945,
+"text": 0.0
+},
+{
+"pid": "n14099157679",
+"score": 0.506419734010487,
+"text": 0.0
+},
+{
+"pid": "n14099215952",
+"score": 0.5012928919717017,
+"text": 0.0
+},
+{
+"pid": "n387905425",
+"score": 0.48996124603119856,
+"text": 0.0
+}
+]
+},
+{
+"q": "صراف",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "atm",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vUHJKRfN4Sy65",
+"score": 0.8168059964969423,
+"text": 0.0
+},
+{
+"pid": "vA4ST_didRpaP",
+"score": 0.7463675759154704,
+"text": 0.0
+},
+{
+"pid": "vxEa4pAAySxe1",
+"score": 0.7335058365506328,
+"text": 0.0
+},
+{
+"pid": "v0CiD4XfmTzq6",
+"score": 0.7065775991467191,
+"text": 0.0
+},
+{
+"pid": "n820771840",
+"score": 0.6924105499275905,
+"text": 0.0
+},
+{
+"pid": "vIltpO7WtTziq",
+"score": 0.6752386231626277,
+"text": 0.0
+},
+{
+"pid": "n4937236024",
+"score": 0.646487542100334,
+"text": 0.0
+},
+{
+"pid": "veP8ao-f2RiyU",
+"score": 0.6356075227642632,
+"text": 0.0
+},
+{
+"pid": "vhnN3z-PYSIic",
+"score": 0.6328483968293865,
+"text": 0.0
+},
+{
+"pid": "v_Cigk-tJQ_eh",
+"score": 0.613424056908642,
+"text": 0.0
+}
+]
+},
+{
+"q": "مكتبة",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "bookshop",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n4851045034",
+"score": 0.8067842907864611,
+"text": 0.0
+},
+{
+"pid": "n1262216202",
+"score": 0.7849025576247779,
+"text": 0.0
+},
+{
+"pid": "vhD1L7yTdSVmT",
+"score": 0.7671222084049485,
+"text": 0.0
+},
+{
+"pid": "v4EFxWHPqQWWJ",
+"score": 0.7648191711099743,
+"text": 0.0
+},
+{
+"pid": "vodEByEQnTj2m",
+"score": 0.763848301200549,
+"text": 0.0
+},
+{
+"pid": "vPvruYBy0TpCb",
+"score": 0.7498510639431222,
+"text": 0.0
+},
+{
+"pid": "vMlObqrjYRk6r",
+"score": 0.7422184980578563,
+"text": 0.0
+},
+{
+"pid": "n1262216220",
+"score": 0.7348439015377766,
+"text": 0.0
+},
+{
+"pid": "vNY6M_9cqTkSr",
+"score": 0.7199913981401878,
+"text": 0.0
+},
+{
+"pid": "vcLgqe5D4T2uQ",
+"score": 0.7070483012005491,
+"text": 0.0
+}
+]
+},
+{
+"q": "مكتبة الشروق",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "bookshop",
+"brand": null,
+"scope": "in_area",
+"area": "الشروق",
+"entity": "shorouk",
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w24942928",
+"score": 0.7515174745603614,
+"text": 0.8333333333333334
+},
+{
+"pid": "lex:shorouk",
+"score": 0.7456220461310417,
+"text": 1.0
+},
+{
+"pid": "w1113392671",
+"score": 0.7119502655181628,
+"text": 0.8333333333333334
+},
+{
+"pid": "n1262216202",
+"score": 0.6865982226317037,
+"text": 0.875
+},
+{
+"pid": "r15072032",
+"score": 0.6636459962148787,
+"text": 0.6335999999999999
+},
+{
+"pid": "n1262216220",
+"score": 0.636263709800774,
+"text": 0.875
+},
+{
+"pid": "vYoVOrJQHSn29",
+"score": 0.6084908093409761,
+"text": 0.875
+},
+{
+"pid": "vTneROIyKQNmt",
+"score": 0.6077027049784326,
+"text": 0.875
+},
+{
+"pid": "vntiIwFciSaaB",
+"score": 0.5815753664500807,
+"text": 0.8
+},
+{
+"pid": "vuaF5bjODT06C",
+"score": 0.574026334057962,
+"text": 0.875
+}
+]
+},
+{
+"q": "سينما",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "cinema",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vdOS-eTB6So2O",
+"score": 0.780665007258317,
+"text": 0.0
+},
+{
+"pid": "vUu2WWI5TSROj",
+"score": 0.7556695288079083,
+"text": 0.0
+},
+{
+"pid": "n14190032282",
+"score": 0.6081749415611928,
+"text": 0.0
+},
+{
+"pid": "n331150144",
+"score": 0.5431235465432498,
+"text": 0.0
+}
+]
+},
+{
+"q": "metro station",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "metro_station",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n5218109287",
+"score": 0.49997117990928724,
+"text": 0.0
+},
+{
+"pid": "vd4_rCcgnSu6l",
+"score": 0.4961317816239723,
+"text": 0.0
+},
+{
+"pid": "n11923472313",
+"score": 0.46227862482875415,
+"text": 0.0
+},
+{
+"pid": "n5194246947",
+"score": 0.4564668834984729,
+"text": 0.0
+},
+{
+"pid": "n316634715",
+"score": 0.44213676900267346,
+"text": 0.0
+},
+{
+"pid": "vB9oleVlCQcG6",
+"score": 0.4301264959359021,
+"text": 0.0
+}
+]
+},
+{
+"q": "طلعت حرب",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"طلعت",
+"حرب"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n474800560",
+"score": 0.9095550041800898,
+"text": 1.0
+},
+{
+"pid": "w39700935",
+"score": 0.8876857823956749,
+"text": 0.9166666666666666
+},
+{
+"pid": "vCHgPgXlqRfO_",
+"score": 0.7675352959302717,
+"text": 0.9166666666666666
+},
+{
+"pid": "dkw84Q3snRH2b",
+"score": 0.7330668181047657,
+"text": 0.9166666666666666
+},
+{
+"pid": "vMI9LI2CTSKqb",
+"score": 0.6848907354381398,
+"text": 0.8333333333333334
+}
+]
+},
+{
+"q": "جروبي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"جروبي"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n1262216226",
+"score": 0.8820239822700052,
+"text": 1.0
+},
+{
+"pid": "vl6fDw2mkS_-L",
+"score": 0.7356041731781444,
+"text": 0.71
+},
+{
+"pid": "v_FvwGPMkQ4y4",
+"score": 0.7012889963949791,
+"text": 0.755
+},
+{
+"pid": "vKT552qe-Qu60",
+"score": 0.6651559097613774,
+"text": 0.6683333333333333
+},
+{
+"pid": "v5eHSWLDeRvWL",
+"score": 0.6645750274518074,
+"text": 0.755
+},
+{
+"pid": "v_IyHE8A9Q1-t",
+"score": 0.6602849318517294,
+"text": 0.6683333333333333
+},
+{
+"pid": "v6G0XErcXSCeb",
+"score": 0.6594819179648933,
+"text": 0.71
+},
+{
+"pid": "v248cgOPjTvmP",
+"score": 0.6543387306337687,
+"text": 0.755
+},
+{
+"pid": "vfIFeZf2EQwS1",
+"score": 0.6538988664924299,
+"text": 0.71
+},
+{
+"pid": "vMIkTuobvSh-Q",
+"score": 0.6528825617814814,
+"text": 0.71
+}
+]
+},
+{
+"q": "groppi",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"groppi"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n1262216226",
+"score": 0.8820239822700052,
+"text": 1.0
+},
+{
+"pid": "vl6fDw2mkS_-L",
+"score": 0.7590041731781445,
+"text": 0.755
+},
+{
+"pid": "v_FvwGPMkQ4y4",
+"score": 0.7012889963949791,
+"text": 0.755
+},
+{
+"pid": "vKT552qe-Qu60",
+"score": 0.6885559097613775,
+"text": 0.7133333333333334
+},
+{
+"pid": "v_IyHE8A9Q1-t",
+"score": 0.6836849318517295,
+"text": 0.7133333333333334
+},
+{
+"pid": "v6G0XErcXSCeb",
+"score": 0.6828819179648933,
+"text": 0.755
+},
+{
+"pid": "vfIFeZf2EQwS1",
+"score": 0.67729886649243,
+"text": 0.755
+},
+{
+"pid": "vMIkTuobvSh-Q",
+"score": 0.6762825617814815,
+"text": 0.755
+},
+{
+"pid": "v5eHSWLDeRvWL",
+"score": 0.6645750274518074,
+"text": 0.755
+},
+{
+"pid": "vBxe4zkqCRQmv",
+"score": 0.6601907826930979,
+"text": 0.7133333333333334
+}
+]
+},
+{
+"q": "cafe riche",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "cafe",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"riche"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n1262216203",
+"score": 0.8474671344600817,
+"text": 1.0
+},
+{
+"pid": "vy3inSgclQOa6",
+"score": 0.6301862003095825,
+"text": 0.8333333333333334
+},
+{
+"pid": "vmayHAOztROyz",
+"score": 0.5624290752967943,
+"text": 0.7733333333333332
+},
+{
+"pid": "w52294846",
+"score": 0.4602454466351569,
+"text": 0.43499999999999994
+},
+{
+"pid": "w28827053",
+"score": 0.45258163291065634,
+"text": 0.43499999999999994
+},
+{
+"pid": "w778205004",
+"score": 0.41169678088826733,
+"text": 0.43499999999999994
+}
+]
+},
+{
+"q": "ريش",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"ريش"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n1262216203",
+"score": 0.7824671344600816,
+"text": 0.875
+},
+{
+"pid": "w52294846",
+"score": 0.774506628315594,
+"text": 0.7824999999999999
+},
+{
+"pid": "w28827053",
+"score": 0.7471160218034401,
+"text": 0.7616666666666665
+},
+{
+"pid": "w169999191",
+"score": 0.6910394142897205,
+"text": 0.6335999999999999
+},
+{
+"pid": "w778205004",
+"score": 0.642350857649131,
+"text": 0.8033333333333332
+}
+]
+},
+{
+"q": "فيرمونت",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"فيرمونت"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vyhLMUT0ISAmf",
+"score": 0.736918454771547,
+"text": 0.8125
+}
+]
+},
+{
+"q": "nile ritz",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"nile",
+"ritz"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w30925785",
+"score": 0.867983585389772,
+"text": 0.875
+}
+]
+},
+{
+"q": "ريتز كارلتون",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"ريتز",
+"كارلتون"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w30925785",
+"score": 0.7821835853897721,
+"text": 0.71
+}
+]
+},
+{
+"q": "عمر افندي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"عمر",
+"افندي"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n5108337680",
+"score": 0.8690438637983021,
+"text": 1.0
+},
+{
+"pid": "vuOo0Mi28S6ik",
+"score": 0.4926856810886846,
+"text": 0.5560535005842607
+}
+]
+},
+{
+"q": "باب اللوق",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"باب",
+"اللوق"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w28850205",
+"score": 0.8794774521841939,
+"text": 0.9166666666666666
+},
+{
+"pid": "v8zHb1yQvQlSG",
+"score": 0.8247176432528104,
+"text": 1.0
+},
+{
+"pid": "w702835305",
+"score": 0.8045812740836427,
+"text": 1.0
+},
+{
+"pid": "w28827204",
+"score": 0.7970815684660572,
+"text": 0.875
+},
+{
+"pid": "w98244292",
+"score": 0.7893772981436915,
+"text": 0.875
+},
+{
+"pid": "vpjpdO9oeQDKd",
+"score": 0.7622743136767125,
+"text": 0.875
+},
+{
+"pid": "vcCb3Mh6AQgmc",
+"score": 0.7566884145091517,
+"text": 0.8333333333333334
+},
+{
+"pid": "vG-Fidhi5SkyL",
+"score": 0.7339673357373004,
+"text": 0.85
+},
+{
+"pid": "vByntwcMyQMSe",
+"score": 0.7306728719304577,
+"text": 0.875
+},
+{
+"pid": "vfduQY-LoQtWb",
+"score": 0.709115915558813,
+"text": 0.85
+}
+]
+},
+{
+"q": "سوق باب اللوق",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "market",
+"brand": null,
+"scope": "in_area",
+"area": "باب اللوق",
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w98244292",
+"score": 0.7783597128818498,
+"text": 0.0
+}
+]
+},
+{
+"q": "الدقي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "dokki",
+"street": false,
+"near": false,
+"residual": [
+"الدقي"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w1536109538",
+"score": 0.8790496214584392,
+"text": 0.96
+},
+{
+"pid": "v5kQvbg0lT3aB",
+"score": 0.8587041734057088,
+"text": 0.96
+},
+{
+"pid": "w486774022",
+"score": 0.7998879683741243,
+"text": 0.8333333333333334
+},
+{
+"pid": "n8492017117",
+"score": 0.794473437918414,
+"text": 0.84
+},
+{
+"pid": "vZnKi8lPmR1aX",
+"score": 0.7750479717700476,
+"text": 0.8333333333333334
+},
+{
+"pid": "dL5iaU93hQXq-",
+"score": 0.7741991508067381,
+"text": 1.0
+},
+{
+"pid": "n4563408802",
+"score": 0.7567403962967738,
+"text": 0.845
+},
+{
+"pid": "n3208430197",
+"score": 0.7128392052236125,
+"text": 0.66
+},
+{
+"pid": "vdFifwXB2TE6X",
+"score": 0.679727401715044,
+"text": 0.768
+},
+{
+"pid": "d1R8tsyXuSWGw",
+"score": 0.6558860500633441,
+"text": 0.91
+}
+]
+},
+{
+"q": "dokki",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "dokki",
+"street": false,
+"near": false,
+"residual": [
+"dokki"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w1536109538",
+"score": 0.8998496214584393,
+"text": 1.0
+},
+{
+"pid": "v5kQvbg0lT3aB",
+"score": 0.8795041734057087,
+"text": 1.0
+},
+{
+"pid": "n8492017117",
+"score": 0.812673437918414,
+"text": 0.875
+},
+{
+"pid": "w486774022",
+"score": 0.7998879683741243,
+"text": 0.8333333333333334
+},
+{
+"pid": "dL5iaU93hQXq-",
+"score": 0.7741991508067381,
+"text": 1.0
+},
+{
+"pid": "vZnKi8lPmR1aX",
+"score": 0.7577146384367143,
+"text": 0.8
+},
+{
+"pid": "n4563408802",
+"score": 0.7541403962967738,
+"text": 0.84
+},
+{
+"pid": "n3208430197",
+"score": 0.6991112052236126,
+"text": 0.6336
+},
+{
+"pid": "vdFifwXB2TE6X",
+"score": 0.696367401715044,
+"text": 0.8
+},
+{
+"pid": "d1R8tsyXuSWGw",
+"score": 0.6558860500633441,
+"text": 0.91
+}
+]
+},
+{
+"q": "المنيل",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "manial",
+"street": false,
+"near": false,
+"residual": [
+"المنيل"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vqBUH4tU1Tou6",
+"score": 0.870119624162289,
+"text": 1.0
+},
+{
+"pid": "vA50Wmrp_QMit",
+"score": 0.7474899132844741,
+"text": 0.8333333333333334
+},
+{
+"pid": "vgaupfA4LT2mo",
+"score": 0.7458149810692439,
+"text": 0.7916666666666666
+},
+{
+"pid": "v1gx1s3ZgT029",
+"score": 0.7378089514260279,
+"text": 0.8125
+},
+{
+"pid": "w701020641",
+"score": 0.6823254067835648,
+"text": 0.875
+},
+{
+"pid": "w701020640",
+"score": 0.6799040112150346,
+"text": 0.875
+},
+{
+"pid": "n14231614775",
+"score": 0.6500295223426791,
+"text": 0.8
+},
+{
+"pid": "v0tqv9QHGTu2R",
+"score": 0.6329867107796899,
+"text": 0.78125
+}
+]
+},
+{
+"q": "manial",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "manial",
+"street": false,
+"near": false,
+"residual": [
+"manial"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vqBUH4tU1Tou6",
+"score": 0.8493196241622889,
+"text": 0.96
+},
+{
+"pid": "vA50Wmrp_QMit",
+"score": 0.7301565799511408,
+"text": 0.8
+},
+{
+"pid": "vgaupfA4LT2mo",
+"score": 0.7293483144025772,
+"text": 0.7599999999999999
+},
+{
+"pid": "v1gx1s3ZgT029",
+"score": 0.7209089514260278,
+"text": 0.78
+},
+{
+"pid": "w701020641",
+"score": 0.6823254067835648,
+"text": 0.875
+},
+{
+"pid": "w701020640",
+"score": 0.6799040112150346,
+"text": 0.875
+},
+{
+"pid": "n14231614775",
+"score": 0.6673628556760124,
+"text": 0.8333333333333334
+},
+{
+"pid": "v0tqv9QHGTu2R",
+"score": 0.61673671077969,
+"text": 0.75
+}
+]
+},
+{
+"q": "كوبري الجلاء",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": true,
+"near": false,
+"residual": [
+"كوبري",
+"الجلا"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "sw33804465",
+"score": 1.016103950979477,
+"text": 1.0
+}
+]
+},
+{
+"q": "الاوبرا",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "cairo_opera_house",
+"street": false,
+"near": false,
+"residual": [
+"الاوبرا"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n316632961",
+"score": 0.9239462263507523,
+"text": 1.0
+},
+{
+"pid": "r2844528",
+"score": 0.8842710854200176,
+"text": 0.96
+},
+{
+"pid": "dwaasNEGHStqa",
+"score": 0.6671771407042035,
+"text": 0.875
+},
+{
+"pid": "v2vrGouhfQNaf",
+"score": 0.6122825764280441,
+"text": 0.768
+},
+{
+"pid": "vhzRrsb89TwSi",
+"score": 0.579840495100362,
+"text": 0.6215999999999999
+},
+{
+"pid": "w711978275",
+"score": 0.49857659829383416,
+"text": 0.5856099406381446
+}
+]
+},
+{
+"q": "دار الاوبرا",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "cairo_opera_house",
+"street": false,
+"near": false,
+"residual": [
+"دار",
+"الاوبرا"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n316632961",
+"score": 0.9031462263507521,
+"text": 0.96
+},
+{
+"pid": "r2844528",
+"score": 0.8842710854200176,
+"text": 0.96
+},
+{
+"pid": "dwaasNEGHStqa",
+"score": 0.6461771407042036,
+"text": 0.84
+},
+{
+"pid": "v2vrGouhfQNaf",
+"score": 0.6122825764280441,
+"text": 0.768
+},
+{
+"pid": "vhzRrsb89TwSi",
+"score": 0.579840495100362,
+"text": 0.6215999999999999
+},
+{
+"pid": "w711978275",
+"score": 0.5132168468097877,
+"text": 0.6100103548314006
+}
+]
+},
+{
+"q": "cairo tower",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "cairo_tower",
+"street": false,
+"near": false,
+"residual": [
+"cairo",
+"tower"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w767933342",
+"score": 0.924792843879463,
+"text": 1.0
+},
+{
+"pid": "vRwSFKoqJS8iA",
+"score": 0.8462892781856296,
+"text": 1.0
+},
+{
+"pid": "w505207330",
+"score": 0.7673599470920279,
+"text": 0.7959722242208928
+},
+{
+"pid": "v7hStt52SQVa2",
+"score": 0.7410181726515306,
+"text": 0.7543055575542261
+},
+{
+"pid": "w503835270",
+"score": 0.7403123963829834,
+"text": 0.7177124492051014
+},
+{
+"pid": "w28800674",
+"score": 0.6627026094445311,
+"text": 0.5947166783330734
+},
+{
+"pid": "n13395442620",
+"score": 0.6613167508825335,
+"text": 0.5833264458488214
+},
+{
+"pid": "vfsLMaQXxSiO3",
+"score": 0.6161914764201668,
+"text": 0.5677795216587206
+},
+{
+"pid": "r16686191",
+"score": 0.6000522849122969,
+"text": 0.5193214369045762
+},
+{
+"pid": "viv--jevEQl-k",
+"score": 0.5992848995434235,
+"text": 0.6030500116664068
+}
+]
+},
+{
+"q": "برج القاهرة",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "cairo_tower",
+"street": false,
+"near": false,
+"residual": [
+"برج",
+"القاهره"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w767933342",
+"score": 0.924792843879463,
+"text": 1.0
+},
+{
+"pid": "vRwSFKoqJS8iA",
+"score": 0.8462892781856296,
+"text": 1.0
+},
+{
+"pid": "w503835270",
+"score": 0.7558628327824274,
+"text": 0.7476171345886473
+},
+{
+"pid": "w505207330",
+"score": 0.7508037248282333,
+"text": 0.7641333352520571
+},
+{
+"pid": "v7hStt52SQVa2",
+"score": 0.7253286170544027,
+"text": 0.724133335252057
+},
+{
+"pid": "w28800674",
+"score": 0.6503325025352031,
+"text": 0.5709280111997505
+},
+{
+"pid": "n13395442620",
+"score": 0.6491835608088781,
+"text": 0.5599933880148685
+},
+{
+"pid": "vfsLMaQXxSiO3",
+"score": 0.6043816623696654,
+"text": 0.5450683407923718
+},
+{
+"pid": "viv--jevEQl-k",
+"score": 0.5867414593007623,
+"text": 0.5789280111997506
+},
+{
+"pid": "vqgelZ2VfQjmg",
+"score": 0.5856476495809325,
+"text": 0.5050683407923717
+}
+]
+},
+{
+"q": "ماكدونالدز",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "brand",
+"scat": null,
+"brand": "mcdonalds",
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"ماكدونالدز"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n6559687785",
+"score": 0.927920880185685,
+"text": 1.0
+},
+{
+"pid": "vux4sqbDjRFmr",
+"score": 0.8288962663761186,
+"text": 1.0
+},
+{
+"pid": "n4563419497",
+"score": 0.824951908502846,
+"text": 1.0
+},
+{
+"pid": "v_Wgra0_fSV6o",
+"score": 0.7988816062821462,
+"text": 0.495
+},
+{
+"pid": "n3220029222",
+"score": 0.7922248670656233,
+"text": 0.495
+},
+{
+"pid": "w769092480",
+"score": 0.75809768766048,
+"text": 1.0
+},
+{
+"pid": "vtR1S8_fBQjeU",
+"score": 0.7248241546981373,
+"text": 0.495
+},
+{
+"pid": "n689813209",
+"score": 0.696867768513575,
+"text": 1.0
+},
+{
+"pid": "v9syRmaoFTvOL",
+"score": 0.6794130489363319,
+"text": 0.495
+},
+{
+"pid": "n670108340",
+"score": 0.6587041432701259,
+"text": 1.0
+}
+]
+},
+{
+"q": "kfc",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "brand",
+"scat": null,
+"brand": "kfc",
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"kfc"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "v3Q9B1G6ZT7i1",
+"score": 0.9203087684804472,
+"text": 1.0
+},
+{
+"pid": "v_vwecX4YT7qa",
+"score": 0.8428285215001605,
+"text": 1.0
+},
+{
+"pid": "n4416387196",
+"score": 0.8419749850278441,
+"text": 1.0
+},
+{
+"pid": "vLmD0l0DfS7-v",
+"score": 0.7817737375834947,
+"text": 1.0
+},
+{
+"pid": "vrXzkyZwcR6Sm",
+"score": 0.7764197431465144,
+"text": 0.0
+},
+{
+"pid": "vd0Z5YwpHRKWC",
+"score": 0.7758908296304945,
+"text": 1.0
+},
+{
+"pid": "vqPXrsIu-TEOj",
+"score": 0.7738227572850638,
+"text": 1.0
+},
+{
+"pid": "vdJhj7NfjScKA",
+"score": 0.7537267291971068,
+"text": 0.0
+},
+{
+"pid": "vkYRwHz5mQaCT",
+"score": 0.7376972890100206,
+"text": 1.0
+},
+{
+"pid": "n670119608",
+"score": 0.717602647760893,
+"text": 1.0
+}
+]
+},
+{
+"q": "كنتاكي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "brand",
+"scat": null,
+"brand": "kfc",
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"كنتاكي"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "v3Q9B1G6ZT7i1",
+"score": 0.9203087684804472,
+"text": 0.0
+},
+{
+"pid": "v_vwecX4YT7qa",
+"score": 0.8428285215001605,
+"text": 0.0
+},
+{
+"pid": "n4416387196",
+"score": 0.8419749850278441,
+"text": 0.875
+},
+{
+"pid": "vLmD0l0DfS7-v",
+"score": 0.7817737375834947,
+"text": 0.875
+},
+{
+"pid": "vrXzkyZwcR6Sm",
+"score": 0.7764197431465144,
+"text": 0.8125
+},
+{
+"pid": "vd0Z5YwpHRKWC",
+"score": 0.7758908296304945,
+"text": 0.0
+},
+{
+"pid": "vqPXrsIu-TEOj",
+"score": 0.7738227572850638,
+"text": 1.0
+},
+{
+"pid": "vdJhj7NfjScKA",
+"score": 0.7537267291971068,
+"text": 0.8333333333333334
+},
+{
+"pid": "vkYRwHz5mQaCT",
+"score": 0.7376972890100206,
+"text": 0.0
+},
+{
+"pid": "n670119608",
+"score": 0.717602647760893,
+"text": 0.875
+}
+]
+},
+{
+"q": "بيتزا هت",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "pizza",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"هت"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n2789865735",
+"score": 0.8797198580363101,
+"text": 1.0
+},
+{
+"pid": "vAcd7r8PUT7G5",
+"score": 0.7995797072680098,
+"text": 1.0
+},
+{
+"pid": "vUjbQaxobQC29",
+"score": 0.799013363507926,
+"text": 1.0
+},
+{
+"pid": "vhUbVRwq_QhS-",
+"score": 0.7646561174931887,
+"text": 0.875
+},
+{
+"pid": "vRp1RQqRITy-Z",
+"score": 0.7579342921921766,
+"text": 0.875
+},
+{
+"pid": "vdwX_vD-9SQOY",
+"score": 0.7538933338863336,
+"text": 0.875
+},
+{
+"pid": "vR6AjSCrwSdGV",
+"score": 0.7212474022225979,
+"text": 0.755
+},
+{
+"pid": "n746025788",
+"score": 0.6100803079824278,
+"text": 0.875
+}
+]
+},
+{
+"q": "هارديز",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"هارديز"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "vasHUVVpqQZWR",
+"score": 0.817590914678821,
+"text": 1.0
+},
+{
+"pid": "ve4_eEvk5Rm-Y",
+"score": 0.6395234932758425,
+"text": 0.6683333333333333
+}
+]
+},
+{
+"q": "قسم شرطة",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "police",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "w1436796245",
+"score": 0.8636292190312607,
+"text": 0.0
+},
+{
+"pid": "n1125333299",
+"score": 0.8427597115131764,
+"text": 0.0
+},
+{
+"pid": "w768013659",
+"score": 0.8423074193646278,
+"text": 0.0
+},
+{
+"pid": "n1263180044",
+"score": 0.8379186403141818,
+"text": 0.0
+},
+{
+"pid": "n4580139392",
+"score": 0.8274966916786719,
+"text": 0.0
+},
+{
+"pid": "w486774022",
+"score": 0.8260057978333228,
+"text": 0.0
+},
+{
+"pid": "n3107349152",
+"score": 0.8188205323804467,
+"text": 0.0
+},
+{
+"pid": "v4gyYAwrhQt2j",
+"score": 0.806272903702677,
+"text": 0.0
+},
+{
+"pid": "w97228424",
+"score": 0.7995772333274633,
+"text": 0.0
+},
+{
+"pid": "n725568291",
+"score": 0.7450886649592332,
+"text": 0.0
+}
+]
+},
+{
+"q": "سجل مدني",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "civil_registry",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vBk7k9waERuae",
+"score": 0.5965501799439596,
+"text": 0.0
+},
+{
+"pid": "v4nVI7G_IRdWF",
+"score": 0.5744511002428223,
+"text": 0.0
+}
+]
+},
+{
+"q": "صيدلية فاتحة دلوقتي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "pharmacy",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": true
+},
+"top": [
+{
+"pid": "vr9Av9xfHS7q3",
+"score": 0.7623892878738163,
+"text": 0.0
+},
+{
+"pid": "vTthnFzacRNel",
+"score": 0.758601971314653,
+"text": 0.0
+},
+{
+"pid": "vMHqoXO0CR2eO",
+"score": 0.7117368287118127,
+"text": 0.0
+},
+{
+"pid": "vi_KOV-hYSYmW",
+"score": 0.7006900895498713,
+"text": 0.0
+},
+{
+"pid": "vhAUhxDeaSKuk",
+"score": 0.6888785047899784,
+"text": 0.0
+},
+{
+"pid": "v67TrqYXtTba-",
+"score": 0.6879750246908836,
+"text": 0.0
+},
+{
+"pid": "voXg3lspvTCqk",
+"score": 0.6674100895498714,
+"text": 0.0
+},
+{
+"pid": "vZDhsBCLbSw6d",
+"score": 0.6318169695991176,
+"text": 0.0
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.6227020103745431,
+"text": 0.0
+},
+{
+"pid": "v6FmCBrWKTUGZ",
+"score": 0.6098285467400297,
+"text": 0.0
+}
+]
+},
+{
+"q": "دار الاوبرا",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "cairo_opera_house",
+"street": false,
+"near": false,
+"residual": [
+"دار",
+"الاوبرا"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n316632961",
+"score": 0.9031462263507521,
+"text": 0.96
+},
+{
+"pid": "r2844528",
+"score": 0.8842710854200176,
+"text": 0.96
+},
+{
+"pid": "dwaasNEGHStqa",
+"score": 0.6461771407042036,
+"text": 0.84
+},
+{
+"pid": "v2vrGouhfQNaf",
+"score": 0.6122825764280441,
+"text": 0.768
+},
+{
+"pid": "vhzRrsb89TwSi",
+"score": 0.579840495100362,
+"text": 0.6215999999999999
+},
+{
+"pid": "w711978275",
+"score": 0.5132168468097877,
+"text": 0.6100103548314006
+}
+]
+},
+{
+"q": "kobry 6 october",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": "october",
+"street": true,
+"near": false,
+"residual": [
+"كوبري",
+"6",
+"october"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "sw1098234884#1",
+"score": 1.0606764720422857,
+"text": 1.0
+},
+{
+"pid": "n3214300154",
+"score": 0.7661868205570848,
+"text": 0.8799999999999999
+},
+{
+"pid": "lex:october",
+"score": 0.74733340442445,
+"text": 1.0
+},
+{
+"pid": "w34209128",
+"score": 0.6786703678221591,
+"text": 0.756490358027231
+},
+{
+"pid": "vR56Fudf2S6Wy",
+"score": 0.637957860784869,
+"text": 0.78
+},
+{
+"pid": "dOyhchpNeS8Wt",
+"score": 0.6020917805907722,
+"text": 0.816
+}
+]
+},
+{
+"q": "صيدلبة",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "pharmacy",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vr9Av9xfHS7q3",
+"score": 0.7623892878738163,
+"text": 0.0
+},
+{
+"pid": "vTthnFzacRNel",
+"score": 0.758601971314653,
+"text": 0.0
+},
+{
+"pid": "vMHqoXO0CR2eO",
+"score": 0.7117368287118127,
+"text": 0.0
+},
+{
+"pid": "vi_KOV-hYSYmW",
+"score": 0.7006900895498713,
+"text": 0.0
+},
+{
+"pid": "vhAUhxDeaSKuk",
+"score": 0.6888785047899784,
+"text": 0.0
+},
+{
+"pid": "v67TrqYXtTba-",
+"score": 0.6879750246908836,
+"text": 0.0
+},
+{
+"pid": "voXg3lspvTCqk",
+"score": 0.6674100895498714,
+"text": 0.0
+},
+{
+"pid": "vZDhsBCLbSw6d",
+"score": 0.6318169695991176,
+"text": 0.0
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.6227020103745431,
+"text": 0.0
+},
+{
+"pid": "v6FmCBrWKTUGZ",
+"score": 0.6098285467400297,
+"text": 0.0
+}
+]
+},
+{
+"q": "بنزنيه",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "gas_station",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n3220031878",
+"score": 0.8389909002744145,
+"text": 0.0
+},
+{
+"pid": "n1259516844",
+"score": 0.773499459463215,
+"text": 0.0
+},
+{
+"pid": "vMdDPIykwSaSF",
+"score": 0.7415137749986418,
+"text": 0.0
+},
+{
+"pid": "vHLJKsdtzQoWz",
+"score": 0.6815970621532641,
+"text": 0.0
+},
+{
+"pid": "n1259516857",
+"score": 0.6814121912637432,
+"text": 0.0
+},
+{
+"pid": "w822297475",
+"score": 0.6669513301595575,
+"text": 0.0
+},
+{
+"pid": "vhzRrsb89TwSi",
+"score": 0.6668221699496879,
+"text": 0.0
+},
+{
+"pid": "n14099157679",
+"score": 0.6029982048619162,
+"text": 0.0
+},
+{
+"pid": "n14099215952",
+"score": 0.5978293555471161,
+"text": 0.0
+},
+{
+"pid": "n387905425",
+"score": 0.5827152105533657,
+"text": 0.0
+}
+]
+},
+{
+"q": "محطة مترو السادات",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "metro_station",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"السادات"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n316633428",
+"score": 0.777151539749686,
+"text": 1.0
+},
+{
+"pid": "sw963933587#0",
+"score": 0.6189414519537477,
+"text": 0.8333333333333334
+},
+{
+"pid": "v_Bbd-IpHQKeB",
+"score": 0.5069319822296032,
+"text": 0.68
+}
+]
+},
+{
+"q": "فول وطعمية",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "foul_taameya",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vHgy5FJQOSwGC",
+"score": 0.47332815436744347,
+"text": 0.0
+},
+{
+"pid": "voXifl8FKRD6u",
+"score": 0.3011012871362725,
+"text": 0.0
+}
+]
+},
+{
+"q": "مطعم قريب",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "restaurant",
+"brand": null,
+"scope": "near_me",
+"area": null,
+"entity": null,
+"street": false,
+"near": true,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n2789865735",
+"score": 0.8447033266397457,
+"text": 0.0
+},
+{
+"pid": "n478582334",
+"score": 0.8318104066564351,
+"text": 0.0
+},
+{
+"pid": "n2789865194",
+"score": 0.8296624909256392,
+"text": 0.0
+},
+{
+"pid": "n6559687785",
+"score": 0.8277289816396083,
+"text": 0.0
+},
+{
+"pid": "v3Q9B1G6ZT7i1",
+"score": 0.815403093428285,
+"text": 0.0
+},
+{
+"pid": "v0zvzIkYCQG6J",
+"score": 0.8077319885649481,
+"text": 0.0
+},
+{
+"pid": "w768977207",
+"score": 0.7928407637538484,
+"text": 0.0
+},
+{
+"pid": "n6557076288",
+"score": 0.7838955843216577,
+"text": 0.0
+},
+{
+"pid": "vasHUVVpqQZWR",
+"score": 0.7803554261255199,
+"text": 0.0
+},
+{
+"pid": "vjNTSNIr6TP6r",
+"score": 0.7755946268477796,
+"text": 0.0
+}
+]
+},
+{
+"q": "صيدلية في جاردن سيتي",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "pharmacy",
+"brand": null,
+"scope": "in_area",
+"area": "جاردن سيتي",
+"entity": "garden_city",
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vmaTxHbe3S3W1",
+"score": 0.7201896822002269,
+"text": 0.0
+},
+{
+"pid": "vhBy6atuQQlS7",
+"score": 0.6225610814589522,
+"text": 0.0
+},
+{
+"pid": "vr251yvSgT0-Z",
+"score": 0.49103791952906023,
+"text": 0.0
+},
+{
+"pid": "vMHqoXO0CR2eO",
+"score": 0.4834651370594842,
+"text": 0.0
+},
+{
+"pid": "vTnRQTKb1TY-n",
+"score": 0.4693675980041025,
+"text": 0.0
+},
+{
+"pid": "vZDhsBCLbSw6d",
+"score": 0.45964506447876036,
+"text": 0.0
+},
+{
+"pid": "vTthnFzacRNel",
+"score": 0.44623414367336667,
+"text": 0.0
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.44118415424270835,
+"text": 0.0
+},
+{
+"pid": "vhAUhxDeaSKuk",
+"score": 0.4390292466514783,
+"text": 0.0
+},
+{
+"pid": "voGqTUqLaShKM",
+"score": 0.4281919328558769,
+"text": 0.0
+}
+]
+},
+{
+"q": "بنزينة في الزمالك",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "gas_station",
+"brand": null,
+"scope": "in_area",
+"area": "الزمالك",
+"entity": "zamalek",
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n387905425",
+"score": 0.8807146867302988,
+"text": 0.0
+},
+{
+"pid": "w1135775396",
+"score": 0.7585773466870862,
+"text": 0.0
+},
+{
+"pid": "w1121915374",
+"score": 0.645758773815575,
+"text": 0.0
+},
+{
+"pid": "vmhSEbG5MS_Gh",
+"score": 0.6141790587206082,
+"text": 0.0
+},
+{
+"pid": "vgQ3U8KiIQRO2",
+"score": 0.5972676987299335,
+"text": 0.0
+},
+{
+"pid": "n3838857157",
+"score": 0.5900050459806989,
+"text": 0.0
+},
+{
+"pid": "n4233754031",
+"score": 0.5864635629766053,
+"text": 0.0
+},
+{
+"pid": "w1066969963",
+"score": 0.555969006683426,
+"text": 0.0
+},
+{
+"pid": "n14099215952",
+"score": 0.546375963564701,
+"text": 0.0
+},
+{
+"pid": "n3220031878",
+"score": 0.5457794476411928,
+"text": 0.0
+}
+]
+},
+{
+"q": "شارع قصر النيل وسط البلد",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "name",
+"scat": null,
+"brand": null,
+"scope": "in_area",
+"area": "وسط البلد",
+"entity": "downtown_cairo",
+"street": true,
+"near": false,
+"residual": [
+"شارع",
+"قصر",
+"النيل"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "sw54920579#2",
+"score": 0.8627500951439647,
+"text": 0.6464012392243452
+},
+{
+"pid": "sw50211785",
+"score": 0.8514410708534162,
+"text": 0.7025127681500314
+},
+{
+"pid": "sw306244856#1",
+"score": 0.8272701205804326,
+"text": 0.6402753755279305
+},
+{
+"pid": "w98328366",
+"score": 0.8016250563268138,
+"text": 0.8002709882008101
+},
+{
+"pid": "sw1531396175#0",
+"score": 0.7207699610440214,
+"text": 0.6464012392243452
+},
+{
+"pid": "vMeo0xu6XS-WE",
+"score": 0.7120607740473662,
+"text": 0.7050381603651092
+},
+{
+"pid": "vQy_Dxj-nTU61",
+"score": 0.693028999799608,
+"text": 0.8002709882008101
+},
+{
+"pid": "n4764007325",
+"score": 0.6791137616015295,
+"text": 0.7050381603651092
+},
+{
+"pid": "n5112028121",
+"score": 0.6693604329947986,
+"text": 0.7050381603651092
+},
+{
+"pid": "vfhJA_3_HQNeS",
+"score": 0.6640610872968881,
+"text": 0.7256876378900783
+}
+]
+},
+{
+"q": "مكتبة الشروق التحرير",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "bookshop",
+"brand": null,
+"scope": "in_area",
+"area": "الشروق",
+"entity": "shorouk",
+"street": false,
+"near": false,
+"residual": [
+"التحرير"
+],
+"open_now": false
+},
+"top": []
+},
+{
+"q": "كشري ابو طارق",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "brand",
+"scat": "koshary",
+"brand": "koshary_abou_tarek",
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"ابو",
+"طارق"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w767418990",
+"score": 0.8580980262148478,
+"text": 0.9166666666666666
+},
+{
+"pid": "vSdhvl9NoQxun",
+"score": 0.5868201980633786,
+"text": 0.9166666666666666
+}
+]
+},
+{
+"q": "قهوة في وسط البلد",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "cafe",
+"brand": null,
+"scope": "in_area",
+"area": "وسط البلد",
+"entity": "downtown_cairo",
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n1262216226",
+"score": 0.8766168851364564,
+"text": 0.0
+},
+{
+"pid": "n3220050770",
+"score": 0.8613562211601455,
+"text": 0.0
+},
+{
+"pid": "n1262216203",
+"score": 0.8211229303057794,
+"text": 0.0
+},
+{
+"pid": "w768636298",
+"score": 0.8197681958961793,
+"text": 0.0
+},
+{
+"pid": "n331150968",
+"score": 0.7385014626428046,
+"text": 0.0
+},
+{
+"pid": "vBJCxsmurTfaU",
+"score": 0.7289809969672074,
+"text": 0.0
+},
+{
+"pid": "vmb1bx_1xQ3Ok",
+"score": 0.7253944239439072,
+"text": 0.0
+},
+{
+"pid": "w768636278",
+"score": 0.7247739863749381,
+"text": 0.0
+},
+{
+"pid": "v8a5mGHvbTl6u",
+"score": 0.719934147356416,
+"text": 0.0
+},
+{
+"pid": "vM14pWogJTxmr",
+"score": 0.7081571140849701,
+"text": 0.0
+}
+]
+}
+]
+}

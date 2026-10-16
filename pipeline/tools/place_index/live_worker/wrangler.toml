@@ -1,0 +1,5 @@
+# Optional: deploy from a terminal with `npx wrangler deploy` (or paste worker.js in the dashboard).
+name = "routemind-places"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+# Secrets (never in this file): `npx wrangler secret put TOMTOM_API_KEY`, `npx wrangler secret put APP_TOKEN`
