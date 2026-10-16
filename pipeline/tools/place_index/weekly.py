@@ -108,11 +108,16 @@ def run(work: str, repo: str | None, publish: bool, keep: int, only: str, osm: s
         # the reports stay; the tiles (≈ 100 MB gzip + ≈ 300 MB raw) are in the release now
         for fn in os.listdir(idx):
             if fn.endswith((".sqlite", ".sqlite.gz")):
-                os.remove(os.path.join(idx, fn))
+                try:
+                    os.remove(os.path.join(idx, fn))
+                except OSError:  # a file the gate still holds open (Windows): the next run's rmtree takes it
+                    pass
     return 0
 
 
 def main(argv=None):
+    for st in (sys.stdout, sys.stderr):  # a Windows console / log file is not UTF-8 by default
+        st.reconfigure(errors="replace")
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", required=True, help="working directory (data + index); multi-GB while it runs")
     ap.add_argument("--repo", default=os.environ.get("PLACES_REPO"))

@@ -48,6 +48,8 @@ def get(url: str, timeout: int = 120) -> bytes:
 
 
 def main(argv=None) -> int:
+    for st in (sys.stdout, sys.stderr):  # a Windows console / log file is not UTF-8 by default
+        st.reconfigure(errors="replace")
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", default="ibrahim212-wq/routemind-places")
     ap.add_argument("--city", default="cairo", choices=sorted(CITIES))
@@ -123,6 +125,8 @@ def main(argv=None) -> int:
             print(f"         rank {rank} vs gate {was}: «{q['q']}» @ {q['at']}")
     check(differ == 0, f"{n_q} {a.city} benchmark queries on the downloaded files: {same} ranks identical to the gate's, "
                        f"Hit@1 {hit1 / max(1, n_q):.3f}, Hit@5 {hit5 / max(1, n_q):.3f}")
+    for con in eng.ix.cons.values():  # Windows cannot delete an open SQLite file
+        con.close()
     if not a.keep:
         shutil.rmtree(work, ignore_errors=True)
     print("verify_release:", "OK" if not fails else f"{len(fails)} FAILED")

@@ -37,6 +37,7 @@ jobs:
     timeout-minutes: 180
     env:
       WORK: /tmp/place-index
+      PYTHONDONTWRITEBYTECODE: "1"   # pipeline/ is committed back every run: no __pycache__ in it
       APP_REPO: ibrahim212-wq/maps-mobile-application
       HAVE_APP_TOKEN: ${{ secrets.APP_REPO_TOKEN != '' }}
       PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
@@ -105,6 +106,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add builds.jsonl pipeline
+          git rm -r -q --cached --ignore-unmatch pipeline/tools/place_index/__pycache__ pipeline/tools/place_index/bench/__pycache__ pipeline/tools/__pycache__
           git commit -q -m "build ${{ job.status }} $(date -u +%Y-%m-%d) [skip ci]" || true
           git push -q || echo "::warning::could not push the build record"
 

@@ -17,8 +17,8 @@ plus `pipeline/SOURCE.json` (the app commit it came from + every file's sha256).
     also installs `ci/place-index.yml` as the public repository's workflow when the token may.
 `check` says whether the public copy equals this checkout (exit 1 on drift).
 
-    python tools/place_index/mirror.py check  [--app <cairoWay>] [--repo <owner/name>]
-    python tools/place_index/mirror.py push   [--app <cairoWay>] [--repo <owner/name>] [--message <m>]
+    python tools/place_index/mirror.py check  [--app <cairoWay>] [--repo <owner/name>] [--ref HEAD]
+    python tools/place_index/mirror.py push   [--app <cairoWay>] [--repo <owner/name>] [--ref HEAD] [--message <m>]
     python tools/place_index/mirror.py sync   --app <cairoWay> --dst <public repo>/pipeline [--commit <sha>]
     python tools/place_index/mirror.py record --root <public repo> --summary <summary.json> --status <s>
 
@@ -82,8 +82,22 @@ def _read(path: str) -> bytes:
     return b if path.endswith(BINARY) else b.replace(b"\r\n", b"\n")
 
 
-def files(app: str) -> dict[str, bytes]:
-    """relative path → content, for exactly the mirrored set (no caches, sorted)."""
+def _git(app: str, *args: str) -> bytes:
+    return subprocess.run(["git", "-C", app, *args], capture_output=True, check=True).stdout
+
+
+def files(app: str, ref: str | None = None) -> dict[str, bytes]:
+    """relative path → content, for exactly the mirrored set (no caches, sorted). With `ref` (push / check:
+    HEAD by default) the COMMITTED files of that commit — never a half-edited working tree."""
+    if ref:
+        names = _git(app, "ls-tree", "-r", "--name-only", ref, "--", *SINGLE_FILES, TREE).decode().splitlines()
+        out = {}
+        for rel in (n.strip() for n in names):
+            if not rel or "/__pycache__/" in rel or rel.endswith((".pyc", ".pyo")):
+                continue
+            b = _git(app, "show", f"{ref}:./{rel}")
+            out[rel] = b if rel.endswith(BINARY) else b.replace(b"\r\n", b"\n")
+        return dict(sorted(out.items()))
     out = {}
     for rel in SINGLE_FILES:
         out[rel] = _read(os.path.join(app, rel))
@@ -109,9 +123,9 @@ def source_json(fs: dict[str, bytes], commit: str | None) -> bytes:
     return (json.dumps(doc, indent=1, sort_keys=False) + "\n").encode()
 
 
-def app_commit(app: str) -> str | None:
+def app_commit(app: str, ref: str = "HEAD") -> str | None:
     try:
-        return subprocess.run(["git", "-C", app, "rev-parse", "HEAD"], capture_output=True, text=True,
+        return subprocess.run(["git", "-C", app, "rev-parse", ref], capture_output=True, text=True,
                               check=True).stdout.strip() or None
     except (OSError, subprocess.CalledProcessError):
         return None
@@ -210,29 +224,29 @@ def remote_tree(repo: str, tok: str | None) -> tuple[str, str, dict[str, str]]:
     return head, commit["tree"]["sha"], {e["path"]: e["sha"] for e in tree["tree"] if e["type"] == "blob"}
 
 
-def wanted(app: str) -> tuple[dict[str, bytes], dict[str, bytes]]:
-    """(pipeline/<rel> → bytes, other repo paths → bytes) for the public repository."""
-    fs = files(app)
+def wanted(app: str, ref: str = "HEAD") -> tuple[dict[str, bytes], dict[str, bytes]]:
+    """(pipeline/<rel> → bytes, other repo paths → bytes) for the public repository, from commit `ref`."""
+    fs = files(app, ref)
     pipe = {PREFIX + k: v for k, v in fs.items()}
-    pipe[PREFIX + "SOURCE.json"] = source_json(fs, app_commit(app))
+    pipe[PREFIX + "SOURCE.json"] = source_json(fs, app_commit(app, ref))
     pipe[PREFIX + "README.md"] = GENERATED_README.encode()
     extra = {dst: fs[src] for src, dst in ((WORKFLOW_SRC, WORKFLOW_DST), (README_SRC, "README.md")) if src in fs}
     return pipe, extra
 
 
-def diff(app: str, repo: str, tok: str | None):
+def diff(app: str, repo: str, tok: str | None, ref: str = "HEAD"):
     head, tree_sha, have = remote_tree(repo, tok)
-    pipe, extra = wanted(app)
+    pipe, extra = wanted(app, ref)
     changed = {p: b for p, b in {**pipe, **extra}.items()
                if have.get(p) != git_blob_sha(b) and not p.endswith("SOURCE.json")}
     gone = [p for p in have if p.startswith(PREFIX) and p not in pipe]
     return head, tree_sha, pipe, extra, changed, gone
 
 
-def check(app: str, repo: str) -> int:
-    _, _, _, _, changed, gone = diff(app, repo, token())
+def check(app: str, repo: str, ref: str = "HEAD") -> int:
+    _, _, _, _, changed, gone = diff(app, repo, token(), ref)
     if not changed and not gone:
-        log(f"OK — {repo}/{PREFIX} and its workflow equal this checkout")
+        log(f"OK — {repo}/{PREFIX} and its workflow equal {ref}")
         return 0
     for p in sorted(changed):
         log("differs:", p)
@@ -242,11 +256,11 @@ def check(app: str, repo: str) -> int:
     return 1
 
 
-def push(app: str, repo: str, message: str | None) -> int:
+def push(app: str, repo: str, message: str | None, ref: str = "HEAD") -> int:
     tok = token()
     if not tok:
         raise SystemExit("[mirror] no token: set GH_TOKEN, log in with `gh auth login`, or set PLACES_PUBLISH_TOKEN")
-    head, tree_sha, pipe, extra, changed, gone = diff(app, repo, tok)
+    head, tree_sha, pipe, extra, changed, gone = diff(app, repo, tok, ref)
     if not changed and not gone:
         log("nothing to push — the mirror is current")
         return 0
@@ -264,8 +278,8 @@ def push(app: str, repo: str, message: str | None) -> int:
         code, tree = api("POST", f"/repos/{repo}/git/trees", tok, {"base_tree": tree_sha, "tree": entries})
         if code != 201:
             raise SystemExit(f"[mirror] tree: {code} {tree}")
-        sha = app_commit(app)
-        msg = message or f"pipeline: mirror of {APP_REPO}@{(sha or 'working tree')[:12]}"
+        sha = app_commit(app, ref)
+        msg = message or f"pipeline: mirror of {APP_REPO}@{(sha or ref)[:12]}"
         code, com = api("POST", f"/repos/{repo}/git/commits", tok, {"message": msg, "tree": tree["sha"], "parents": [head]})
         if code != 201:
             raise SystemExit(f"[mirror] commit: {code} {com}")
@@ -285,6 +299,8 @@ def push(app: str, repo: str, message: str | None) -> int:
 
 
 def main(argv=None):
+    for st in (sys.stdout, sys.stderr):  # a Windows console / log file is not UTF-8 by default
+        st.reconfigure(errors="replace")
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["check", "push", "sync", "record"])
     ap.add_argument("--app", default=APP)
@@ -292,14 +308,15 @@ def main(argv=None):
     ap.add_argument("--dst")
     ap.add_argument("--commit")
     ap.add_argument("--message")
+    ap.add_argument("--ref", default="HEAD", help="push / check this commit's files (default HEAD — committed code only)")
     ap.add_argument("--root")
     ap.add_argument("--summary")
     ap.add_argument("--status", default="unknown")
     a = ap.parse_args(argv)
     if a.cmd == "check":
-        return check(a.app, a.repo)
+        return check(a.app, a.repo, a.ref)
     if a.cmd == "push":
-        return push(a.app, a.repo, a.message)
+        return push(a.app, a.repo, a.message, a.ref)
     if a.cmd == "sync":
         if not a.dst:
             raise SystemExit("sync needs --dst <public repo>/pipeline")
