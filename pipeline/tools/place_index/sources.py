@@ -203,7 +203,7 @@ def osm_record(tags: dict, osm_id: str, lat: float, lng: float, extent_m: float 
             pop = 0
         return R.Record(src=R.SRC_OSM, sid=osm_id, kind="area", cat=PLACE_AREA[place], lat=lat, lng=lng,
                         names=osm_names(tags), conf=0.9, wd=tags.get("wikidata"), population=pop,
-                        extent_m=extent_m)
+                        extent_m=extent_m, extra={"commons": _commons_file(tags)})
     cat = T.osm_cat(tags)
     if cat is None:
         # a named building / landuse / natural feature is still something people search for
@@ -239,8 +239,16 @@ def osm_record(tags: dict, osm_id: str, lat: float, lng: float, extent_m: float 
         social=tags.get("contact:facebook") or tags.get("facebook"),
         hours=tags.get("opening_hours"), addr=addr, street=tags.get("addr:street"),
         wd=tags.get("wikidata"), extent_m=extent_m,
-        extra={"area_m2": area_m2, "wikipedia": bool(tags.get("wikipedia"))},
+        extra={"area_m2": area_m2, "wikipedia": bool(tags.get("wikipedia")),
+               "commons": _commons_file(tags)},
     )
+
+
+def _commons_file(tags: dict) -> str | None:
+    """A photo of the place on Wikimedia Commons named by OSM (`wikimedia_commons=File:…`, or an `image=`
+    pointing at a Commons file) — media.py credits it from Commons' own metadata."""
+    from .media import file_name
+    return file_name(tags.get("wikimedia_commons")) or file_name(tags.get("image"))
 
 
 # ── OSM via the HOT export (desk) ────────────────────────────────────────────

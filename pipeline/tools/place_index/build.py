@@ -20,6 +20,7 @@ import time
 from collections import Counter
 
 from . import enrich as E
+from . import media as MD
 from . import merge as M
 from . import records as R
 from . import sources as S
@@ -114,7 +115,8 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
     return recs, segs, div_area
 
 
-def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cache: str | None = None) -> dict:
+def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cache: str | None = None,
+        media: bool = True) -> dict:
     report: dict = {"version": version, "sources": sorted(sources)}
     t0 = time.time()
     if cache and os.path.exists(cache):
@@ -137,8 +139,10 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
         if missing:
             raise SystemExit(f"taxonomy points at search categories the lexicon lacks: {missing}")
         M.set_area_tokens([n for r in recs if r.kind == "area" for n, _ in r.names])
+        commons_by_key = {r.key: r.extra["commons"] for r in recs if r.extra.get("commons")}
         t = time.time()
         places = M.merge(recs)
+        report["osm_commons"] = {p.pid: commons_by_key[k] for p in places for k in p.members if k in commons_by_key}
         log("merged places", len(places), f"{time.time() - t:.0f}s")
         streets = ST.build_streets(segs) if segs else []
         log("street pieces", len(streets))
@@ -166,6 +170,12 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
         if not p.brand_key and p.pid in autob:
             p.brand_key = autob[p.pid]
     allp = places + streets
+    if media:
+        # one freely licensed photo per place where the open data names one, credited (docs/place-ugc-2026-10.md §4)
+        md = MD.collect([p for p in places if p.kind != "street"], report.get("osm_commons", {}))
+        TL.set_media(md)
+        report["media"] = {"places": len(md), "photos": sum(1 for m in md.values() if m.img)}
+    report.pop("osm_commons", None)
     t = time.time()
     ment = E.mentions(allp)
     for p in allp:
@@ -204,8 +214,9 @@ def main(argv=None):
     ap.add_argument("--osm", default="pbf", choices=["pbf", "hot"])
     ap.add_argument("--version", default=dt.date.today().isoformat())
     ap.add_argument("--cache", help="pickle of the merged places: written after a merge, reused when present")
+    ap.add_argument("--no-media", action="store_true", help="skip the Commons photos (no network)")
     a = ap.parse_args(argv)
-    run(a.data, a.out, set(a.sources.split(",")), a.osm, a.version, a.cache)
+    run(a.data, a.out, set(a.sources.split(",")), a.osm, a.version, a.cache, media=not a.no_media)
 
 
 if __name__ == "__main__":

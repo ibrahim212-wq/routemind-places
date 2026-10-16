@@ -160,6 +160,7 @@ CREATE TABLE tok(t TEXT NOT NULL, id INTEGER NOT NULL, f INTEGER NOT NULL, PRIMA
 CREATE TABLE vocab(t TEXT PRIMARY KEY, n INTEGER NOT NULL) WITHOUT ROWID;
 CREATE TABLE category(id TEXT PRIMARY KEY, ar TEXT NOT NULL, en TEXT NOT NULL, scat TEXT) WITHOUT ROWID;
 CREATE TABLE area(id INTEGER PRIMARY KEY, ar TEXT, en TEXT);
+CREATE TABLE media(id INTEGER PRIMARY KEY, wd TEXT, img TEXT, img_by TEXT, img_lic TEXT, img_lic_url TEXT);
 """
 POST = """
 CREATE INDEX place_scat ON place(scat, lat, lng) WHERE scat IS NOT NULL;
@@ -196,12 +197,22 @@ def compact_social(url: str | None) -> str | None:
     return u
 
 
+# pid → media.Media (the place's Wikidata item and a credited Commons photo); set by build.py before the tiles.
+# The engine never reads `media`: the phone reads it for the sheet (PlaceStore.byPid).
+_MEDIA: dict = {}
+
+
+def set_media(media: dict) -> None:
+    _MEDIA.clear()
+    _MEDIA.update(media)
+
+
 def write_db(path: str, tile_id: str, bbox, places: list[M.Place], meta: dict, with_categories: bool) -> int:
     if os.path.exists(path):
         os.remove(path)
     con = sqlite3.connect(path)
     con.executescript(DDL)
-    rows, toks = [], []
+    rows, toks, media = [], [], []
     df: dict[str, int] = defaultdict(int)
     areas: dict[tuple, int] = {}
     for i, p in enumerate(sorted(places, key=lambda q: (round(q.lat, 2), q.lng)), start=1):
@@ -217,8 +228,12 @@ def write_db(path: str, tile_id: str, bbox, places: list[M.Place], meta: dict, w
         for t, f in place_tokens(p).items():
             toks.append((t, i, f))
             df[t] += 1
+        md = _MEDIA.get(p.pid)
+        if md is not None:
+            media.append((i, md.wd, md.img, md.by, md.lic, md.lic_url))
     con.executemany("INSERT INTO place VALUES (" + ",".join("?" * 23) + ")", rows)
     con.executemany("INSERT INTO area VALUES (?,?,?)", [(i, ar, en) for (ar, en), i in areas.items()])
+    con.executemany("INSERT INTO media VALUES (?,?,?,?,?,?)", media)
     toks.sort()
     con.executemany("INSERT INTO tok VALUES (?,?,?)", toks)
     con.executemany("INSERT INTO vocab VALUES (?,?)", sorted(df.items()))
