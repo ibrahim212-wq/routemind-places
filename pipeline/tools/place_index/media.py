@@ -7,7 +7,8 @@ A place gets up to MAX_PHOTOS photos, best first, each with the credit its licen
              the 2026-10-17 sample even after the filters (logos, portraits, finds); WIKI_LEAD_IMAGES = the switch;
   4. name  — a geotagged Commons file whose title names the place, taken beside it (photos.match_commons_geo);
   5. cat   — files of the item's Commons category (P373): the gallery of a landmark;
-  6. street — a Panoramax street-level picture looking at the place (photos.match_street).
+  6. street — a Panoramax street-level picture looking at the place (photos.match_street) — OFF until measured
+              (STREET_LEVEL: 27 matches in Egypt, none viewable from the desk on 2026-10-17).
 A chain branch also gets its brand's LOGO (P154 of the brand's item: Overture's `brand.wikidata`, OSM's
 `brand:wikidata`) when Commons states it is public domain / CC0 — an identity mark, never shown as a photo.
 
@@ -43,6 +44,9 @@ MAX_PHOTOS = 8
 CATEGORY_FILES = 6
 STAGE_BUDGET_S = 3000
 WIKI_LEAD_IMAGES = False   # measured 0.68 precision (doc §5) — a wrong photo is worse than none
+# Panoramax street level: 27 matches in all of Egypt on 2026-10-17, none of them could be looked at (the OSM-FR
+# instance did not answer from the desk) — unproven is not a pass. The rule (photos.match_street) stays ready.
+STREET_LEVEL = False
 UA = PH.UA
 
 
@@ -318,7 +322,7 @@ def _cells(places, deg: float, min_n: int) -> list[tuple[float, float, float, fl
 
 
 def collect(places, osm_commons: dict[str, str], brand_wd: dict[str, str] | None = None, others=(),
-            budget_s: float = STAGE_BUDGET_S, geo: bool = True, street: bool = True) -> dict[str, Media]:
+            budget_s: float = STAGE_BUDGET_S, geo: bool = True, street: bool | None = None) -> dict[str, Media]:
     """`osm_commons`: pid → a Commons file named by OSM on one of its members; `brand_wd`: pid → the
     brand's Wikidata item. `places` are POIs and areas (pid, kind, cat, lat, lng, names, extent_m, wd);
     `others` (the street pieces) only compete for Commons titles (photos.match_commons_geo)."""
@@ -391,7 +395,7 @@ def collect(places, osm_commons: dict[str, str], brand_wd: dict[str, str] | None
                 add(pid, Photo("commons", f, "cat"))
     log(f"categories: {stats['cat']} photos from {len(got)} of {len(cats)} ({time.time() - t0:.0f}s)")
 
-    if street:
+    if STREET_LEVEL if street is None else street:
         imgs = PH.panoramax((R.EG_BBOX[0], R.EG_BBOX[1], R.EG_BBOX[2], R.EG_BBOX[3]), t0 + budget_s * 0.8)
         for pid, ms in PH.match_street(pois, imgs).items():
             for im, _d, fx in ms:
