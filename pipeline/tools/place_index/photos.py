@@ -41,7 +41,7 @@ from . import fetch as F
 from . import records as R
 from . import textnorm as tn
 
-UA = "RouteMind-place-index/1.0 (https://github.com/ibrahim212-wq/routemind-places; grad.smart.traffic@gmail.com)"
+UA = "RouteMind-place-index/1.0 (https://github.com/ibrahim212-wq/routemind-places)"
 
 
 def log(*a):

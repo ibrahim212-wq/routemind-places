@@ -26,7 +26,7 @@ import time
 import urllib.request
 from collections import defaultdict
 
-UA = "RouteMind-place-index/1.0 (photo evaluation; grad.smart.traffic@gmail.com)"
+UA = "RouteMind-place-index/1.0 (photo evaluation; https://github.com/ibrahim212-wq/routemind-places)"
 
 from ..photos import group_of  # noqa: E402 — the strata are the matcher's own groups
 

@@ -239,6 +239,9 @@ def _plain(v: str | None) -> str | None:
         return None
     t = re.sub(r"<[^>]+>", "", html.unescape(v))
     t = re.sub(r"\s+", " ", t).strip()
+    m = re.fullmatch(r"(.+?)\s*\1", t)          # «Unknown authorUnknown author» (Commons' HTML says it twice)
+    if m:
+        t = m.group(1).strip()
     return t[:120] or None
 
 
