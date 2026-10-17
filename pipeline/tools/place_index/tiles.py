@@ -19,6 +19,14 @@ SCHEMA (version SCHEMA_VERSION) — one file layout for both:
   vocab(t, n)    WITHOUT ROWID     every distinct token (skeletons too) + its document frequency:
                                    IDF, the selectivity that picks the driving word, prefix and typo search
   category(id, ar, en, scat)       national only: display labels
+  media(id, wd, img, img_by, img_lic, img_lic_url, logo)
+                                   the place's Wikidata item, its first Commons photo (the columns app builds
+                                   before 2026-10-17 read) and its brand's public-domain logo (a Commons file)
+  photo(id, n, src, ref, by, lic, lic_url, at, fx, how)  WITHOUT ROWID
+                                   every photo, best first (n = 0…): src commons (ref = file name) | panoramax
+                                   (ref = host/uuid); the credit; capture date and horizontal focus 0..1 for
+                                   street level; how = osm | p18 | wiki | name | cat | street
+                                   (docs/place-photos-2026-10.md). The engine never reads media / photo.
 
 TOKEN FORMS (what `tok.t` holds; engine.py builds the same forms from the query)
   word          normalized word                                   form 0
@@ -160,7 +168,9 @@ CREATE TABLE tok(t TEXT NOT NULL, id INTEGER NOT NULL, f INTEGER NOT NULL, PRIMA
 CREATE TABLE vocab(t TEXT PRIMARY KEY, n INTEGER NOT NULL) WITHOUT ROWID;
 CREATE TABLE category(id TEXT PRIMARY KEY, ar TEXT NOT NULL, en TEXT NOT NULL, scat TEXT) WITHOUT ROWID;
 CREATE TABLE area(id INTEGER PRIMARY KEY, ar TEXT, en TEXT);
-CREATE TABLE media(id INTEGER PRIMARY KEY, wd TEXT, img TEXT, img_by TEXT, img_lic TEXT, img_lic_url TEXT);
+CREATE TABLE media(id INTEGER PRIMARY KEY, wd TEXT, img TEXT, img_by TEXT, img_lic TEXT, img_lic_url TEXT, logo TEXT);
+CREATE TABLE photo(id INTEGER NOT NULL, n INTEGER NOT NULL, src TEXT NOT NULL, ref TEXT NOT NULL, by TEXT, lic TEXT,
+  lic_url TEXT, at TEXT, fx REAL, how TEXT, PRIMARY KEY (id, n)) WITHOUT ROWID;
 """
 POST = """
 CREATE INDEX place_scat ON place(scat, lat, lng) WHERE scat IS NOT NULL;
@@ -212,7 +222,7 @@ def write_db(path: str, tile_id: str, bbox, places: list[M.Place], meta: dict, w
         os.remove(path)
     con = sqlite3.connect(path)
     con.executescript(DDL)
-    rows, toks, media = [], [], []
+    rows, toks, media, photos = [], [], [], []
     df: dict[str, int] = defaultdict(int)
     areas: dict[tuple, int] = {}
     for i, p in enumerate(sorted(places, key=lambda q: (round(q.lat, 2), q.lng)), start=1):
@@ -230,10 +240,13 @@ def write_db(path: str, tile_id: str, bbox, places: list[M.Place], meta: dict, w
             df[t] += 1
         md = _MEDIA.get(p.pid)
         if md is not None:
-            media.append((i, md.wd, md.img, md.by, md.lic, md.lic_url))
+            media.append((i, md.wd, md.img, md.by, md.lic, md.lic_url, getattr(md, "logo", None)))
+            for n, ph in enumerate(getattr(md, "photos", None) or []):
+                photos.append((i, n, ph.src, ph.ref, ph.by, ph.lic, ph.lic_url, ph.at, ph.fx, ph.how))
     con.executemany("INSERT INTO place VALUES (" + ",".join("?" * 23) + ")", rows)
     con.executemany("INSERT INTO area VALUES (?,?,?)", [(i, ar, en) for (ar, en), i in areas.items()])
-    con.executemany("INSERT INTO media VALUES (?,?,?,?,?,?)", media)
+    con.executemany("INSERT INTO media VALUES (?,?,?,?,?,?,?)", media)
+    con.executemany("INSERT INTO photo VALUES (?,?,?,?,?,?,?,?,?,?)", photos)
     toks.sort()
     con.executemany("INSERT INTO tok VALUES (?,?,?)", toks)
     con.executemany("INSERT INTO vocab VALUES (?,?)", sorted(df.items()))
@@ -241,7 +254,7 @@ def write_db(path: str, tile_id: str, bbox, places: list[M.Place], meta: dict, w
         con.executemany("INSERT INTO category VALUES (?,?,?,?)", [(c.id, c.ar, c.en, c.scat) for c in T.CATS])
     m = dict(meta)
     m.update({"schema": str(SCHEMA_VERSION), "tile": tile_id, "bbox": json.dumps([round(x, 5) for x in bbox]),
-              "places": str(len(rows)), "norm": str(tn.NORM_VERSION)})
+              "places": str(len(rows)), "norm": str(tn.NORM_VERSION), "media": "2"})
     con.executemany("INSERT INTO meta VALUES (?,?)", sorted(m.items()))
     con.executescript(POST)
     con.commit()

@@ -140,9 +140,11 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
             raise SystemExit(f"taxonomy points at search categories the lexicon lacks: {missing}")
         M.set_area_tokens([n for r in recs if r.kind == "area" for n, _ in r.names])
         commons_by_key = {r.key: r.extra["commons"] for r in recs if r.extra.get("commons")}
+        brand_by_key = {r.key: r.brand_wd for r in recs if r.brand_wd and str(r.brand_wd).startswith("Q")}
         t = time.time()
         places = M.merge(recs)
         report["osm_commons"] = {p.pid: commons_by_key[k] for p in places for k in p.members if k in commons_by_key}
+        report["brand_wd"] = {p.pid: brand_by_key[k] for p in places for k in reversed(p.members) if k in brand_by_key}
         log("merged places", len(places), f"{time.time() - t:.0f}s")
         streets = ST.build_streets(segs) if segs else []
         log("street pieces", len(streets))
@@ -171,11 +173,17 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
             p.brand_key = autob[p.pid]
     allp = places + streets
     if media:
-        # one freely licensed photo per place where the open data names one, credited (docs/place-ugc-2026-10.md §4)
-        md = MD.collect([p for p in places if p.kind != "street"], report.get("osm_commons", {}))
+        # freely licensed photos where the open data names or shows the place, credited (docs/place-photos-2026-10.md)
+        md = MD.collect([p for p in places if p.kind != "street"], report.get("osm_commons", {}),
+                        brand_wd=report.get("brand_wd", {}), others=streets)
         TL.set_media(md)
-        report["media"] = {"places": len(md), "photos": sum(1 for m in md.values() if m.img)}
+        how = Counter(ph.how for m in md.values() for ph in m.photos)
+        report["media"] = {"places": len(md), "with_photo": sum(1 for m in md.values() if m.photos),
+                           "photos": sum(how.values()), "by_how": dict(how),
+                           "with_logo": sum(1 for m in md.values() if m.logo),
+                           "pois_with_photo": sum(1 for p in places if p.kind == "poi" and md.get(p.pid) and md[p.pid].photos)}
     report.pop("osm_commons", None)
+    report.pop("brand_wd", None)
     t = time.time()
     ment = E.mentions(allp)
     for p in allp:

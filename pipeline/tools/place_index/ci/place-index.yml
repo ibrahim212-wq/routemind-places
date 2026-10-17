@@ -34,7 +34,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       WORK: /tmp/place-index
       PYTHONDONTWRITEBYTECODE: "1"   # pipeline/ is committed back every run: no __pycache__ in it
