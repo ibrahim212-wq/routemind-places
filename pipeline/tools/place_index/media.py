@@ -3,7 +3,8 @@
 A place gets up to MAX_PHOTOS photos, best first, each with the credit its licence asks for:
   1. osm   — OSM's `wikimedia_commons=File:…` / an `image=` naming a Commons file on a merged member;
   2. p18   — Wikidata's P18 (image) of the place's item (OSM `wikidata=` or the Wikidata source);
-  3. wiki  — the lead image of the item's Arabic / English Wikipedia article (PageImages, FREE images only);
+  3. wiki  — the lead image of the item's Wikipedia article (PageImages) — MEASURED AND OFF: 0.68 precision on
+             the 2026-10-17 sample even after the filters (logos, portraits, finds); WIKI_LEAD_IMAGES = the switch;
   4. name  — a geotagged Commons file whose title names the place, taken beside it (photos.match_commons_geo);
   5. cat   — files of the item's Commons category (P373): the gallery of a landmark;
   6. street — a Panoramax street-level picture looking at the place (photos.match_street).
@@ -41,6 +42,7 @@ NO_CREDIT = re.compile(r"^(cc0|cc[ -]?zero|public domain|pd)", re.I)   # a logo 
 MAX_PHOTOS = 8
 CATEGORY_FILES = 6
 STAGE_BUDGET_S = 3000
+WIKI_LEAD_IMAGES = False   # measured 0.68 precision (doc §5) — a wrong photo is worse than none
 UA = PH.UA
 
 
@@ -245,11 +247,17 @@ def _plain(v: str | None) -> str | None:
     return t[:120] or None
 
 
-# a file Commons files under plans, maps, drawings… is not a photo of the place, whatever links to it (a tomb's
-# P18 is often its floor plan: TT107, TT339 in the 2026-10-17 sample)
+# a file Commons files under plans, maps, drawings, museum objects, scans, logos, portraits… is not a photo of the
+# place, whatever links to it (a tomb's P18 is often its floor plan; a category holds its finds and its book plates —
+# the 2026-10-17 samples, docs/place-photos-2026-10.md §5: no photo judged right was lost to it)
 NOT_A_PHOTO_CAT = re.compile(r"(^|\|)[^|]*\b(plans?|floor plans?|maps?|diagrams?|drawings?|line drawings|coats? of arms|"
                              r"flags?|coins?|stamps?|banknotes?|charts?|postcards?|engravings?|lithographs?|"
-                             r"skeletons?|fossils?|manuscripts?|documents?)\b", re.I)
+                             r"skeletons?|fossils?|manuscripts?|documents?|antiquities|accession numbers?|museum objects?|"
+                             r"logos?|textlogo|portraits? of|men of|women of|recipients of|egyptology texts|denkm[aä]ler|"
+                             r"lepsius|derivative works|scanned with|pd-scan|scans? from|scans|illustrations of|"
+                             r"images from (the )?(metropolitan|new york public|internet archive|travelers|rawpixel)|"
+                             r"uncategorized media|reliefs? (of|from|in)|papyr[iu]|3d|computer[- ]generated|"
+                             r"renders?|renderings?|reconstructions?)\b", re.I)
 
 
 def credits(files: list[str], deadline: float | None = None, photos_only: bool = True
@@ -310,6 +318,8 @@ def collect(places, osm_commons: dict[str, str], brand_wd: dict[str, str] | None
     stats = defaultdict(int)
 
     def add(pid: str, ph: Photo):
+        if ph.src == "commons" and PH.NOT_A_PHOTO.search(ph.ref):
+            return
         lst = found[pid]
         if len(lst) < MAX_PHOTOS and all(x.ref != ph.ref for x in lst):
             lst.append(ph)
@@ -336,7 +346,7 @@ def collect(places, osm_commons: dict[str, str], brand_wd: dict[str, str] | None
             for wiki in ("en", "ar"):
                 if getattr(x, wiki):
                     want[wiki].append((getattr(x, wiki), p.pid))
-    for wiki, pairs in want.items():
+    for wiki, pairs in (want.items() if WIKI_LEAD_IMAGES else ()):
         got = page_images(sorted({t for t, _ in pairs}), wiki, t0 + budget_s * 0.35)
         for t, pid in pairs:
             if t in got:

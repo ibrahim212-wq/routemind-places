@@ -64,7 +64,8 @@ COMMONS_CELL_DEG = 0.08
 COMMONS_MIN_CELL_DEG = 0.004
 NOT_A_PHOTO = re.compile(r"\b(map|maps|plan|plans|logo|diagram|coat of arms|flag|coin|stamp|banknote|ticket|"
                          r"seal|emblem|chart|graph|scheme|layout|drawing|sketch|engraving|lithograph|postcard|sign|signs|"
-                         r"signboard|location|locator|route|timetable|schedule|screenshot|خريطة|شعار|مخطط|لافتة)\b", re.I)
+                         r"signboard|location|locator|route|timetable|schedule|screenshot|page|plate|planche|illustration|"
+                         r"vol|lepsius|wreszinski|timea|met dp|inauguration|portrait|خريطة|شعار|مخطط|لافتة)\b", re.I)
 PHOTO_EXT = re.compile(r"\.(jpe?g|png|webp)$", re.I)
 
 
