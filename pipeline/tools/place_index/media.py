@@ -81,6 +81,15 @@ def _get_json(url: str, accept: str = "application/json") -> dict:
     return F._retry(url[:60], once, tries=3)
 
 
+def _post_json(url: str, body: bytes) -> dict:
+    def once():
+        req = urllib.request.Request(url, data=body, headers={
+            "User-Agent": UA, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"})
+        with urllib.request.urlopen(req, timeout=120) as r:
+            return json.load(r)
+    return F._retry(url[:60], once, tries=3)
+
+
 def _post_sparql(query: str) -> dict:
     body = urllib.parse.urlencode({"query": query, "format": "json"}).encode()
 
@@ -271,11 +280,14 @@ def credits(files: list[str], deadline: float | None = None, photos_only: bool =
             log("credits: time budget spent at", i, "of", len(files))
             break
         chunk = files[i:i + 50]
-        url = ("https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=extmetadata"
-               "&iiextmetadatafilter=Artist|LicenseShortName|LicenseUrl|Credit|Categories&maxlag=5&titles="
-               + urllib.parse.quote("|".join("File:" + f for f in chunk)))
+        # POSTed: fifty Arabic file names percent-encode past the URL limit (HTTP 414 on four batches of the
+        # 2026-10-17 build — exactly the Egyptian names)
+        body = urllib.parse.urlencode({
+            "action": "query", "format": "json", "prop": "imageinfo", "iiprop": "extmetadata",
+            "iiextmetadatafilter": "Artist|LicenseShortName|LicenseUrl|Credit|Categories", "maxlag": "5",
+            "titles": "|".join("File:" + f for f in chunk)}).encode()
         try:
-            res = _get_json(url)
+            res = _post_json("https://commons.wikimedia.org/w/api.php", body)
         except (OSError, ValueError) as e:
             log("Commons batch skipped:", str(e)[:120])
             continue
