@@ -49,10 +49,16 @@ SOURCE_YIELD = {
 }
 
 
-def sources(index_dir: str) -> list[str]:
+PRESENT_MIN = 0.5  # a source with records in a recent release must keep ≥ this share of its largest count
+
+
+def sources(index_dir: str, prev_builds: list[str] = ()) -> list[str]:
     """No silent source loss: a source that FETCHED rows but whose adapter failed, yielded nothing, or yielded
     less than its floor refuses the release (the 2026-10-31 build dropped all 129,729 Foursquare rows on a
-    TypeError and still passed). Fetch failures stay tolerated — weekly's summary names them."""
+    TypeError and still passed). And a source that had records in any of the newest releases (`prev_builds`,
+    their build_report.json) must keep ≥ PRESENT_MIN of its largest count there — a failed FETCH included
+    (places-2026-10-31.2 published without its 69k Wikidata items): the last good release stays live. A source
+    no recent release had (a token-gated one never configured) may fail without blocking."""
     try:
         with open(os.path.join(index_dir, "build_report.json"), encoding="utf-8") as f:
             build = json.load(f)
@@ -70,6 +76,18 @@ def sources(index_dir: str) -> list[str]:
         n = loaded.get(name, 0)
         if n == 0 or n < floor * got:
             errs.append(f"source {name}: fetched {got:,} rows, the build kept {n:,} ({n / got:.0%} < {floor:.0%})")
+    best: dict = {}
+    for p in prev_builds:
+        with open(p, encoding="utf-8") as f:
+            prev = json.load(f)
+        for src, k in prev.get("records", {}).get("by_source", {}).items():
+            if k > best.get(src, (0, ""))[0]:
+                best[src] = (k, prev.get("version", os.path.basename(p)))
+    now = build.get("records", {}).get("by_source", {})
+    for src, (k, ver) in sorted(best.items()):
+        if now.get(src, 0) < PRESENT_MIN * k:
+            errs.append(f"source {src}: {now.get(src, 0):,} records, the {ver} release had {k:,} "
+                        f"(< {PRESENT_MIN:.0%}) — the last good release stays live")
     return errs
 
 
@@ -150,6 +168,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--index", required=True)
     ap.add_argument("--previous", help="the previous release's bench.json (default: baseline.json)")
+    ap.add_argument("--previous-builds", nargs="*", default=[],
+                    help="the newest releases' build_report.json (the sources this build must still carry)")
     ap.add_argument("--out", help="where to write this build's bench.json (default <index>/bench.json)")
     ap.add_argument("--write-baseline", action="store_true", help="also replace baseline.json (desk only)")
     a = ap.parse_args(argv)
@@ -160,7 +180,7 @@ def main(argv=None):
             ref = json.load(f)
     with open(os.path.join(a.index, "manifest.json"), encoding="utf-8") as f:
         man = json.load(f)
-    errs = sources(a.index) + structure(a.index, ref)
+    errs = sources(a.index, a.previous_builds) + structure(a.index, ref)
     new = bench(a.index)
     new["version"], new["places"] = man.get("version"), man["totals"]["places"]
     delta = {}

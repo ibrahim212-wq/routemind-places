@@ -54,6 +54,27 @@ def previous_bench(repo: str, dst: str) -> str | None:
         return None
 
 
+def previous_builds(repo: str, work: str, n: int = 3) -> list[str]:
+    """The newest n releases' build_report.json — the sources this build must still carry (gate.sources). All
+    n, not the latest alone: a release that lost a source must not lower the bar for the next one."""
+    out = []
+    try:
+        req = urllib.request.Request(f"https://api.github.com/repos/{repo}/releases?per_page={n}",
+                                     headers={"User-Agent": F.UA})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            tags = [x["tag_name"] for x in json.load(r) if not x.get("draft")]
+        for tag in tags:
+            dst = os.path.join(work, f"prev_build_{tag}.json")
+            req = urllib.request.Request(f"https://github.com/{repo}/releases/download/{tag}/build_report.json",
+                                         headers={"User-Agent": F.UA})
+            with urllib.request.urlopen(req, timeout=60) as r, open(dst, "wb") as f:
+                f.write(r.read())
+            out.append(dst)
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError, KeyError) as e:
+        log("previous build reports:", str(e)[:120], f"— the source rule compares against {len(out)}")
+    return out
+
+
 def run(work: str, repo: str | None, publish: bool, keep: int, only: str, osm: str,
         keep_data: bool, keep_index: bool, fetch: bool = True) -> int:
     data, idx = os.path.join(work, "data"), os.path.join(work, "idx")
@@ -78,9 +99,11 @@ def run(work: str, repo: str | None, publish: bool, keep: int, only: str, osm: s
         shutil.rmtree(data, ignore_errors=True)
     N.write(idx)
     prev = previous_bench(repo, os.path.join(work, "prev_bench.json")) if repo else None
+    builds = previous_builds(repo, work) if repo else []
     from .bench import gate as G
     try:
-        G.main(["--index", idx] + (["--previous", prev] if prev else []))
+        G.main(["--index", idx] + (["--previous", prev] if prev else [])
+               + (["--previous-builds", *builds] if builds else []))
     except SystemExit as e:
         if e.code:
             log("the gate refused this build — nothing published")
