@@ -37,6 +37,40 @@ MIN_PLACES_RATIO = 0.90
 MAX_NET_REGRESSIONS = 4
 MAX_HIT1_DROP = 0.02
 MAX_KIND_DROP = 0.04
+# adapter (build_report "loaded") → (fetch_report key, its row count, the least share the adapter must yield).
+# Floors sit at about half the measured yield (2026-10-31: Overture 0.87, Wikidata 1.0, GeoNames 0.34 —
+# it keeps populated places only; Foursquare 0.56 — closed and 7-year-stale rows dropped).
+SOURCE_YIELD = {
+    "overture places": ("overture", "places", 0.40),
+    "foursquare": ("fsq", "rows", 0.25),
+    "wikidata": ("wikidata", "items", 0.50),
+    "geonames": ("geonames", "rows", 0.15),
+    "user places": ("learning", "ugc_places_export", 0.50),
+}
+
+
+def sources(index_dir: str) -> list[str]:
+    """No silent source loss: a source that FETCHED rows but whose adapter failed, yielded nothing, or yielded
+    less than its floor refuses the release (the 2026-10-31 build dropped all 129,729 Foursquare rows on a
+    TypeError and still passed). Fetch failures stay tolerated — weekly's summary names them."""
+    try:
+        with open(os.path.join(index_dir, "build_report.json"), encoding="utf-8") as f:
+            build = json.load(f)
+        with open(os.path.join(index_dir, "fetch_report.json"), encoding="utf-8") as f:
+            fetch = json.load(f)
+    except FileNotFoundError:
+        return []  # a desk gate of an index without its reports
+    errs = [f"source failed in the build: {e}" for e in build.get("failed", [])]
+    loaded = build.get("loaded", {})
+    for name, (key, field, floor) in SOURCE_YIELD.items():
+        rep = fetch.get(key)
+        got = rep.get(field) if isinstance(rep, dict) and "error" not in rep else None
+        if not isinstance(got, int) or got <= 0:
+            continue
+        n = loaded.get(name, 0)
+        if n == 0 or n < floor * got:
+            errs.append(f"source {name}: fetched {got:,} rows, the build kept {n:,} ({n / got:.0%} < {floor:.0%})")
+    return errs
 
 
 def structure(index_dir: str, prev: dict | None) -> list[str]:
@@ -126,7 +160,7 @@ def main(argv=None):
             ref = json.load(f)
     with open(os.path.join(a.index, "manifest.json"), encoding="utf-8") as f:
         man = json.load(f)
-    errs = structure(a.index, ref)
+    errs = sources(a.index) + structure(a.index, ref)
     new = bench(a.index)
     new["version"], new["places"] = man.get("version"), man["totals"]["places"]
     delta = {}
@@ -153,6 +187,11 @@ def main(argv=None):
             print("[gate]   lost", k)
     for e in errs:
         print("[gate] FAIL", e)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print(f"::error title=place-index gate refused::{e}")  # an annotation on the run's summary page
+    if errs and os.environ.get("GITHUB_STEP_SUMMARY"):
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+            f.write("### The release gate refused this build\n\n" + "".join(f"- {e}\n" for e in errs))
     sys.exit(1 if errs else 0)
 
 

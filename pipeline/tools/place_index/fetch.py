@@ -235,7 +235,8 @@ SELECT ?item ?cls ?lat ?lng ?ar ?en ?sl ?pop WHERE {{
         def once():
             req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/sparql-results+json"})
             with urllib.request.urlopen(req, timeout=120) as r:
-                return json.load(r)
+                # strict=False: a label with a raw control character (2026-10-31: char 38,889,396) is not a failed fetch
+                return json.load(r, strict=False)
         return _retry(f"wikidata {q} {path}", once, tries=2)["results"]["bindings"]
 
     for q in WD_CLASSES:

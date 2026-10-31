@@ -61,6 +61,7 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
     inside = egypt_inside(div_area)
     recs: list[R.Record] = []
     segs = []
+    loaded = report.setdefault("loaded", {})  # adapter → records it yielded; the gate holds it to the fetch (gate.sources)
 
     def have(path):
         ok = os.path.exists(path)
@@ -72,19 +73,23 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
         t = time.time()
         rows = list(S.overture_places(os.path.join(ov_dir, "places_eg_bbox.parquet"), inside))
         recs += rows
+        loaded["overture places"] = len(rows)
         log("overture places", len(rows), f"{time.time() - t:.0f}s")
     if "div" in sources and have(os.path.join(ov_dir, "division_eg.parquet")):
         rows = list(S.overture_areas(os.path.join(ov_dir, "division_eg.parquet"), div_area))
         recs += rows
         log("overture divisions", len(rows))
     def optional(name, fn):
-        """A secondary source that breaks is skipped and reported — never the whole release."""
+        """A secondary source that breaks is skipped and reported — the gate then refuses the release
+        (gate.sources: a fetched source that yields nothing is never silent)."""
         try:
             rows = list(fn())
         except Exception as e:  # noqa: BLE001 — any adapter failure
             log(name, "FAILED, skipped:", repr(e)[:300])
             report.setdefault("failed", []).append(f"{name}: {e!r}"[:300])
+            loaded[name] = 0
             return []
+        loaded[name] = len(rows)
         log(name, len(rows))
         return rows
 
@@ -96,6 +101,7 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
                 rows, segs = S.osm_pbf(os.path.join(data, "egypt-latest.osm.pbf"))
                 rows = [r for r in rows if inside(r.lat, r.lng)]
                 recs += rows
+                loaded["osm"] = len(rows)
                 pbf_ok = True
                 log("osm pbf", len(rows), "segments", len(segs), f"{time.time() - t:.0f}s")
             except Exception as e:  # noqa: BLE001 — fall back to HOT's export below
@@ -105,6 +111,7 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
         if not pbf_ok and have(os.path.join(data, "osm_hot", "points_of_interest.parquet")):
             rows = [r for r in S.osm_hot(os.path.join(data, "osm_hot")) if inside(r.lat, r.lng)]
             recs += rows
+            loaded["osm"] = len(rows)
             if os.path.exists(os.path.join(data, "osm_hot", "roads_named.parquet")):
                 segs = list(S.osm_hot_streets(os.path.join(data, "osm_hot")))
             log("osm hot", len(rows), "segments", len(segs))
