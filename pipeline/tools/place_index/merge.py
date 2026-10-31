@@ -34,7 +34,7 @@ completeness, a chain brand, and the footprint of a mapped polygon.
 from __future__ import annotations
 
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 
 from . import records as R
@@ -409,6 +409,8 @@ def _clean_score(name: str) -> float:
 def _pick_name(members: list[Prep], script: str) -> str | None:
     want_roles_first = ("ar",) if script == "ar" else ("en",)
     rank = {s: i for i, s in enumerate(ORDER_LOC)}
+    # a row brought back on evidence (enrich.rescue) adds names to search, never the name shown
+    members = [m for m in members if not m.rec.extra.get("rescued")] or members
     # 1. OSM / Wikidata: language-tagged name, else the primary in that script
     for src in (R.SRC_OSM, R.SRC_DIV, R.SRC_WD):
         for m in members:
@@ -517,19 +519,23 @@ def build_place(cl: Cluster) -> Place:
     seen = {tn.normalize(x) for x in (name_ar, name_en) if x}
     covered = {s for x in (name_ar, name_en) if x for t in tn.tokens(x) for s in tn.stems(t)}
     alt = []
-    for m in ms:
-        for text, role in m.rec.names:
-            if role == "operator":
-                continue
-            k = tn.normalize(text)
-            if not k or k in seen:
-                continue
-            seen.add(k)
-            words = {tn.stems(t)[-1] for t in tn.tokens(text) if not tn.is_stopword(t)}
-            if words and words <= covered:
-                continue  # says nothing the two display names do not already say
-            covered |= {s for t in tn.tokens(text) for s in tn.stems(t)}
-            alt.append(text)
+    # the alternatives most members agree on first, a rescued row's last: only six are kept, and a chimera
+    # cluster's stragglers pushed «مجمع التحرير» off Tahrir Square in places-2026-10-31.4
+    support = Counter(tn.normalize(t) for m in ms for t in {x for x, r in m.rec.names if r != "operator"})
+    named = sorted(((text, role, m) for m in ms for text, role in m.rec.names),
+                   key=lambda e: (bool(e[2].rec.extra.get("rescued")), -support[tn.normalize(e[0])]))
+    for text, role, m in named:
+        if role == "operator":
+            continue
+        k = tn.normalize(text)
+        if not k or k in seen:
+            continue
+        seen.add(k)
+        words = {tn.stems(t)[-1] for t in tn.tokens(text) if not tn.is_stopword(t)}
+        if words and words <= covered:
+            continue  # says nothing the two display names do not already say
+        covered |= {s for t in tn.tokens(text) for s in tn.stems(t)}
+        alt.append(text)
     srcs = 0
     for m in ms:
         srcs |= R.SOURCE_BITS.get(m.rec.src, 0)

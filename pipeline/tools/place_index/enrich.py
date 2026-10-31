@@ -103,6 +103,7 @@ def eg_phone(phone: str | None) -> bool:
 _ONLINE_NAME = re.compile(r"(?i)online|اون ?لاين|أون ?لاين|delivery|توصيل|artist|makeup|ميكب|ميك اب|photograph|تصوير|"
                           r"courses?\b|كورسات|jobs?\b|وظائف|\.com\b|\.eg\b|\.net\b|page\b|صفحه|صفحة|official|"
                           r"store online|brand\b|collection|for sale|للبيع")
+CONFIRM_SIM = 0.9    # a dropped row is confirmed only by a row of another source with (nearly) the same name
 RESCUE_NEAR_M = 30.0  # a mapped building / OSM place this close counts as "something is there"
 
 
@@ -163,7 +164,11 @@ def rescue(dropped: list[tuple[R.Record, str]], kept: list[R.Record], bcells: se
                 for m in grid.get((cx + dx, cy + dy), ()):
                     if m.rec.src == r.src or (r.src == R.SRC_FSQ and m.rec.extra.get("fsq_id")):
                         continue
-                    if M.match_score(p, m, R.haversine(r.lat, r.lng, m.lat, m.lng)) >= M.MATCH:
+                    if M.match_score(p, m, R.haversine(r.lat, r.lng, m.lat, m.lng)) < M.MATCH:
+                        continue
+                    # the SAME name, or the same number — never one shared word: places-2026-10-31.4 let a stale
+                    # «مول مصر» be "confirmed" by a cafe "Al Alam El Masry" (مصر ⇄ masry) and lent it its name
+                    if (p.phone and p.phone == m.phone) or M.name_similarity(p, m) >= CONFIRM_SIM:
                         return True
         return False
 
