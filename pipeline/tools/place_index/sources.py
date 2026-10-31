@@ -577,7 +577,7 @@ def fsq_places(parquet_path: str, inside) -> Iterator[R.Record]:
             conf = max(0.25, 0.75 - 0.1 * age)
         yield R.Record(src=R.SRC_FSQ, sid=row["fsq_place_id"], kind="poi", cat=cat, lat=lat, lng=lng, names=nm,
                        conf=conf, phone=R.clean_phone(row.get("tel")), website=R.clean_url(row.get("website")),
-                       social=("https://facebook.com/" + row["facebook_id"]) if row.get("facebook_id") else None,
+                       social=f"https://facebook.com/{row['facebook_id']}" if row.get("facebook_id") else None,  # int64 in the open release
                        addr=row.get("address"), extra={"refreshed": refreshed})
 
 
