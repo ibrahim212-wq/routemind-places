@@ -54,6 +54,11 @@ def _point(geom_wkb: bytes) -> tuple[float, float] | None:
     return g.y, g.x
 
 
+def _atp_key(record_id: str) -> str:
+    from .atp import atp_key_of_overture
+    return atp_key_of_overture(record_id)
+
+
 def overture_places(parquet_path: str, inside) -> Iterator[R.Record]:
     """`inside(lat, lng) -> bool` = the Egypt polygon test (build.py passes it)."""
     import pyarrow.parquet as pq
@@ -106,7 +111,14 @@ def overture_places(parquet_path: str, inside) -> Iterator[R.Record]:
                 addr=(a0 or {}).get("freeform"),
                 closed=row.get("operating_status") == "temporarily_closed",
                 extra={"ovt_id": row["id"], "datasets": datasets,
-                       "locality": (a0 or {}).get("locality")},
+                       "locality": (a0 or {}).get("locality"),
+                       # Foursquare's own id of a Foursquare row: the same place in Foursquare's release (build.one_identity)
+                       "fsq_id": next((x.get("record_id") for x in row.get("sources") or []
+                                       if x.get("dataset") == "Foursquare" and not x.get("property")), None),
+                       # …and AllThePlaces' feature id of an AllThePlaces row (atp.py: the same key space)
+                       "atp_key": next((_atp_key(x.get("record_id")) for x in row.get("sources") or []
+                                        if x.get("dataset") == "AllThePlaces" and not x.get("property")
+                                        and x.get("record_id")), None)},
             )
 
 
@@ -164,11 +176,18 @@ def overture_areas(division_path: str, area_path: str) -> Iterator[R.Record]:
 # ── OSM: shared tag handling ─────────────────────────────────────────────────
 
 OSM_NAME_KEYS = ("name", "name:ar", "name:en", "name:arz", "alt_name", "alt_name:ar", "alt_name:en",
-                 "official_name", "official_name:ar", "official_name:en", "old_name", "short_name",
-                 "int_name", "loc_name", "brand", "brand:ar", "brand:en", "operator")
+                 "official_name", "official_name:ar", "official_name:en", "old_name", "old_name:ar", "old_name:en",
+                 "short_name", "short_name:ar", "short_name:en", "int_name", "loc_name", "loc_name:ar",
+                 "brand", "brand:ar", "brand:en", "operator")
 _ROLE = {"name": "primary", "name:ar": "ar", "name:arz": "ar", "name:en": "en", "int_name": "en",
          "brand": "brand", "brand:ar": "brand", "brand:en": "brand", "operator": "operator",
-         "old_name": "old"}
+         "old_name": "old", "old_name:ar": "old", "old_name:en": "old"}
+
+
+def _has_name(tags: dict) -> bool:
+    """Any key a person could search the feature by — not `name` alone: a shop mapped with only `brand`, a
+    building with only `official_name`, a village with only `name:ar` are as findable (the operator is not a name)."""
+    return any(tags.get(k) for k in OSM_NAME_KEYS if k != "operator")
 
 PLACE_AREA = {"city": "city", "town": "town", "suburb": "district", "quarter": "neighbourhood",
               "neighbourhood": "neighbourhood", "village": "village", "hamlet": "hamlet",
@@ -197,7 +216,7 @@ def osm_record(tags: dict, osm_id: str, lat: float, lng: float, extent_m: float 
                area_m2: float = 0.0) -> R.Record | None:
     """One OSM element → a POI or area Record, or None when it is neither."""
     place = tags.get("place")
-    if place in PLACE_AREA and (tags.get("name") or tags.get("name:ar") or tags.get("name:en")):
+    if place in PLACE_AREA and _has_name(tags):
         try:
             pop = int(re.sub(r"[^0-9]", "", tags.get("population", "") or "0") or 0)
         except ValueError:
@@ -208,7 +227,7 @@ def osm_record(tags: dict, osm_id: str, lat: float, lng: float, extent_m: float 
     cat = T.osm_cat(tags)
     if cat is None:
         # a named building / landuse / natural feature is still something people search for
-        if not (tags.get("name") or tags.get("name:ar") or tags.get("name:en")):
+        if not _has_name(tags):
             return None
         if tags.get("building"):
             cat = "tower" if tags.get("building") in ("tower", "office") and area_m2 > 400 else "building"
@@ -397,12 +416,20 @@ _POI_KEYS = ("amenity", "shop", "tourism", "leisure", "office", "craft", "health
              "station", "natural", "landuse", "building", "industrial", "highway", "barrier")
 
 
+BUILDING_CELL = 0.0002  # ≈ 22 m
+
+
+def building_cell(lat: float, lng: float) -> int:
+    return (int(math.floor(lat / BUILDING_CELL)) + 100000) * 1000000 + int(math.floor(lng / BUILDING_CELL)) + 500000
+
+
 def osm_pbf(pbf_path: str):
-    """Returns (records, street segments) from a .osm.pbf (or .osm XML in tests)."""
+    """Returns (records, street segments, building cells) from a .osm.pbf (or .osm XML in tests)."""
     import osmium
 
     recs: list[R.Record] = []
     segs: list[tuple[str, dict, list[tuple[float, float]]]] = []
+    bcells: set[int] = set()  # every mapped building, named or not, as a CELL cell (enrich.rescue's evidence)
 
     def interesting(tags) -> bool:
         return any(k in tags for k in _POI_KEYS)
@@ -421,6 +448,10 @@ def osm_pbf(pbf_path: str):
                 recs.append(rec)
 
         def way(self, w):
+            if "building" in w.tags and len(w.nodes) >= 3:
+                nd = w.nodes[0]
+                if nd.location.valid():
+                    bcells.add(building_cell(nd.lat, nd.lon))
             tags = {t.k: t.v for t in w.tags}
             hw = tags.get("highway")
             if hw and (tags.get("name") or tags.get("name:ar") or tags.get("name:en")) and hw in STREET_HIGHWAY:
@@ -476,7 +507,7 @@ def osm_pbf(pbf_path: str):
             rec = osm_record(tags, f"r{rid}", lat, lng, ext, math.pi * ext * ext * 0.5)
             if rec:
                 recs.append(rec)
-    return recs, segs
+    return recs, segs, bcells
 
 
 def _ring_area_m2(pts: list[tuple[float, float]]) -> float:
@@ -545,17 +576,23 @@ FSQ_MAX_AGE_Y = 7   # a Foursquare row last refreshed more years ago than this i
 _YEAR = datetime.date.today().year
 
 
-def fsq_places(parquet_path: str, inside) -> Iterator[R.Record]:
-    """Rows fetch.fetch_fsq wrote (already cut to the Egypt box)."""
+def fsq_places(parquet_path: str, inside, drops: dict | None = None) -> Iterator[R.Record]:
+    """Rows fetch.fetch_fsq wrote (already cut to the Egypt box). `drops` counts every row not yielded, by reason.
+    A row nobody refreshed in FSQ_MAX_AGE_Y years is yielded marked `stale`: enrich.keep_reason drops it unless
+    enrich.rescue finds independent evidence that the place is there."""
     import pyarrow.parquet as pq
+    drops = drops if drops is not None else {}
     t = pq.read_table(parquet_path)
     for row in t.to_pylist():
         if row.get("date_closed"):
+            drops["closed"] = drops.get("closed", 0) + 1
             continue
         lat, lng = row.get("latitude"), row.get("longitude")
         if lat is None or lng is None or not inside(lat, lng):
+            drops["outside_egypt"] = drops.get("outside_egypt", 0) + 1
             continue
         if not row.get("name"):
+            drops["no_name"] = drops.get("no_name", 0) + 1
             continue
         labels = row.get("fsq_category_labels") or []
         cat = "place"
@@ -570,15 +607,17 @@ def fsq_places(parquet_path: str, inside) -> Iterator[R.Record]:
             nm += [(ar, "ar"), (la, "en")]
         refreshed = str(row.get("date_refreshed") or "")
         conf = 0.55
+        stale = False
         if refreshed[:4].isdigit():
             age = _YEAR - int(refreshed[:4])
-            if age > FSQ_MAX_AGE_Y:
-                continue  # nobody has seen it in years: more likely gone than open (the open release keeps them)
-            conf = max(0.25, 0.75 - 0.1 * age)
+            # nobody has seen it in years: more likely gone than open (the open release keeps them) — unless
+            # another source, a mapped building and a real number say otherwise (enrich.rescue)
+            stale = age > FSQ_MAX_AGE_Y
+            conf = max(0.25, 0.75 - 0.1 * age) if not stale else 0.2
         yield R.Record(src=R.SRC_FSQ, sid=row["fsq_place_id"], kind="poi", cat=cat, lat=lat, lng=lng, names=nm,
                        conf=conf, phone=R.clean_phone(row.get("tel")), website=R.clean_url(row.get("website")),
                        social=f"https://facebook.com/{row['facebook_id']}" if row.get("facebook_id") else None,  # int64 in the open release
-                       addr=row.get("address"), extra={"refreshed": refreshed})
+                       addr=row.get("address"), extra={"refreshed": refreshed, **({"stale": True} if stale else {})})
 
 
 # ── Wikidata ─────────────────────────────────────────────────────────────────

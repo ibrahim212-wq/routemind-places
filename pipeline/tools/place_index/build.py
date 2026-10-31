@@ -20,9 +20,11 @@ import sys
 import time
 from collections import Counter
 
+from . import atp as ATP
 from . import enrich as E
 from . import media as MD
 from . import merge as M
+from . import names as NM
 from . import records as R
 from . import sources as S
 from . import streets as ST
@@ -55,12 +57,44 @@ def egypt_inside(division_area_parquet: str):
     return inside
 
 
+def one_identity(recs: list[R.Record], report: dict) -> list[R.Record]:
+    """One place, one record. Overture's Foursquare rows ARE rows of Foursquare's release (their `record_id` is the
+    `fsq_place_id`), so with the release loaded directly every such place arrived twice, and the merge counted the
+    copy as a second Foursquare report: place_conf rose (0.77 → 0.83 for a lone Foursquare row) and so did every
+    place the pair joined — places-2026-10-31.3 put «الدهان» (Foursquare only) above the Nasr City «الدهان» the bench
+    expects. The Overture row stays (its id is the place's published pid since the first release); the direct row
+    only fills the fields it lacks, and is dropped."""
+    by_fsq = {r.extra["fsq_id"]: r for r in recs if r.extra.get("fsq_id")}
+    by_atp = {r.extra["atp_key"]: r for r in recs if r.extra.get("atp_key") and r.extra.get("ovt_id")}
+    out, same, same_atp = [], 0, 0
+    for r in recs:
+        o = None
+        if not r.extra.get("ovt_id"):
+            if r.src == R.SRC_FSQ:
+                o = by_fsq.get(r.sid)
+                same += o is not None
+            elif r.src == R.SRC_ATP and r.extra.get("atp_key"):
+                o = by_atp.get(r.extra["atp_key"])  # the same for AllThePlaces read directly (atp.py)
+                same_atp += o is not None
+        if o is None:
+            out.append(r)
+            continue
+        for f in ("phone", "website", "social", "hours", "addr"):
+            if not getattr(o, f) and getattr(r, f):
+                setattr(o, f, getattr(r, f))
+        o.conf = max(o.conf, r.conf)
+    report["identity"] = {"fsq_rows_already_in_overture": same, "atp_rows_already_in_overture": same_atp}
+    log("rows already in overture (one record each): foursquare", same, "allplaces", same_atp)
+    return out
+
+
 def load(data: str, sources: set[str], osm_mode: str, report: dict):
     ov_dir = os.path.join(data, "overture")
     div_area = os.path.join(ov_dir, "division_area_eg.parquet")
     inside = egypt_inside(div_area)
     recs: list[R.Record] = []
     segs = []
+    bcells: set[int] = set()
     loaded = report.setdefault("loaded", {})  # adapter → records it yielded; the gate holds it to the fetch (gate.sources)
 
     def have(path):
@@ -98,12 +132,12 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
         if osm_mode == "pbf" and have(os.path.join(data, "egypt-latest.osm.pbf")):
             t = time.time()
             try:
-                rows, segs = S.osm_pbf(os.path.join(data, "egypt-latest.osm.pbf"))
+                rows, segs, bcells = S.osm_pbf(os.path.join(data, "egypt-latest.osm.pbf"))
                 rows = [r for r in rows if inside(r.lat, r.lng)]
                 recs += rows
                 loaded["osm"] = len(rows)
                 pbf_ok = True
-                log("osm pbf", len(rows), "segments", len(segs), f"{time.time() - t:.0f}s")
+                log("osm pbf", len(rows), "segments", len(segs), "building cells", len(bcells), f"{time.time() - t:.0f}s")
             except Exception as e:  # noqa: BLE001 — fall back to HOT's export below
                 log("osm pbf FAILED:", repr(e)[:300])
                 report.setdefault("failed", []).append(f"osm pbf: {e!r}"[:300])
@@ -116,14 +150,18 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
                 segs = list(S.osm_hot_streets(os.path.join(data, "osm_hot")))
             log("osm hot", len(rows), "segments", len(segs))
     if "fsq" in sources and have(os.path.join(data, "fsq.parquet")):
-        recs += optional("foursquare", lambda: S.fsq_places(os.path.join(data, "fsq.parquet"), inside))
+        fsq_drops = report.setdefault("dropped", {}).setdefault("fsq (adapter)", {})
+        recs += optional("foursquare", lambda: S.fsq_places(os.path.join(data, "fsq.parquet"), inside, fsq_drops))
+    if "atp" in sources and have(os.path.join(data, "atp_eg.ndjson")):
+        recs += optional("allplaces", lambda: ATP.atp_places(os.path.join(data, "atp_eg.ndjson"), inside))
+    recs = one_identity(recs, report)
     if "wd" in sources and have(os.path.join(data, "wikidata.json")):
         recs += optional("wikidata", lambda: S.wikidata_places(os.path.join(data, "wikidata.json"), inside))
     if "gn" in sources and have(os.path.join(data, "EG.txt")):
         recs += optional("geonames", lambda: S.geonames_places(os.path.join(data, "EG.txt"), inside))
     if "ugc" in sources and have(os.path.join(data, "ugc_places.json")):
         recs += optional("user places", lambda: S.ugc_places(os.path.join(data, "ugc_places.json"), inside))
-    return recs, segs, div_area
+    return recs, segs, div_area, bcells
 
 
 SEL_POP_MAX = 0.15      # the most a place's popularity gains from being picked (log-scaled, saturating at SEL_POP_SAT)
@@ -177,9 +215,24 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
         log("reused merge cache", cache, len(places), len(streets))
         lex = E.load_lexicon(LEXICON)
     else:
-        recs, segs, div_area = load(data, sources, osm_mode, report)
+        recs, segs, div_area, bcells = load(data, sources, osm_mode, report)
         n0 = len(recs)
-        recs = [r for r in recs if E.keep(r)]
+        kept, dropped = [], []
+        for r in recs:
+            why = E.keep_reason(r)
+            if why is None:
+                kept.append(r)
+            else:
+                dropped.append((r, why))
+        rescued = E.rescue(dropped, kept, bcells, report)
+        for r, why in dropped:
+            d = report.setdefault("dropped", {}).setdefault(r.src, {})
+            d[why] = d.get(why, 0) + 1
+        log("dropped", len(dropped), "rescued on evidence", len(rescued), json.dumps(report.get("rescue", {}))[:2000])
+        recs = kept + rescued
+        del bcells, kept, dropped
+        E.unstack(recs, report)
+        log("stacked pins", json.dumps(report["stacked"]))
         for r in recs:
             if r.kind == "poi":
                 r.cat = T.refine_by_name(r.cat, [n for n, _ in r.names])
@@ -209,6 +262,16 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
     areas = [p for p in places if p.kind == "area"]
     al = E.AreaLocator(areas)
     bm = E.BrandMatcher(lex)
+    ki = E.KindInferer(lex)
+    inferred: Counter = Counter()
+    for p in places:
+        if p.kind == "poi":
+            c = ki.infer(p.cat, [x for x in (p.name_ar, p.name_en, *p.alt) if x])
+            if c:
+                inferred[c] += 1
+                p.cat = c
+    report["kind_from_name"] = {"places": sum(inferred.values()), "by_kind": dict(inferred.most_common())}
+    log("kind from the name", sum(inferred.values()))
     for p in places + streets:
         p.gov = gov.locate(p.lat, p.lng)
         if p.kind != "area":
@@ -222,6 +285,28 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
     for p in places:
         if not p.brand_key and p.pid in autob:
             p.brand_key = autob[p.pid]
+    # a chain's logo belongs to every branch: the brand's Wikidata item, named by some of its branches' own rows
+    # (Overture brand.wikidata, OSM brand:wikidata), is lent to the branches whose rows do not name it (media.py
+    # shows the item's public-domain Commons logo; places-2026-10-31.3: 1,513 of 20,113 branches had one)
+    bwd = report.setdefault("brand_wd", {})
+    votes: dict = {}
+    for p in places:
+        q = bwd.get(p.pid)
+        if p.brand_key and q:
+            votes.setdefault(p.brand_key, Counter())[q] += 1
+    lent = 0
+    for p in places:
+        if p.brand_key and p.pid not in bwd and p.brand_key in votes:
+            (q, k), = votes[p.brand_key].most_common(1)
+            if k >= 2 and k >= 0.6 * sum(votes[p.brand_key].values()):
+                bwd[p.pid] = q
+                lent += 1
+    log("brand logo lent to branches", lent)
+    report["brand_logo_lent"] = lent
+    # an Arabic form for a Latin-only name and the reverse, learned from the index's own bilingual names (names.py);
+    # after the brands, so a generated word never makes a place a chain's branch
+    NM.generate_all(places, report)
+    log("generated names", json.dumps(report["generated_names"]))
     allp = places + streets
     if media:
         # freely licensed photos where the open data names or shows the place, credited (docs/place-photos-2026-10.md)

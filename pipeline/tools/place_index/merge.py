@@ -533,6 +533,8 @@ def build_place(cl: Cluster) -> Place:
     srcs = 0
     for m in ms:
         srcs |= R.SOURCE_BITS.get(m.rec.src, 0)
+    if all(m.rec.extra.get("approx") for m in ms):
+        srcs |= R.APPROX_BIT  # no member knows where the place really is
     p = Place(
         pid=anchor_id(ms), kind=ms[0].rec.kind, cat=cat, lat=round(loc[0], 6), lng=round(loc[1], 6),
         name_ar=name_ar, name_en=name_en, alt=alt[:6],

@@ -377,14 +377,21 @@ def fetch_learning(data: str) -> dict:
     return out
 
 
+def fetch_atp(data: str) -> dict:
+    """All the Places (CC0): only the Egyptian spiders' entries of the weekly run's zip, read by Range (atp.py)."""
+    from .atp import fetch_atp as fetch
+    return fetch(data)
+
+
 FETCHERS = {"overture": fetch_overture, "geofabrik": fetch_geofabrik, "hot": fetch_hot,
-            "wikidata": fetch_wikidata, "geonames": fetch_geonames, "fsq": fetch_fsq, "learning": fetch_learning}
+            "wikidata": fetch_wikidata, "geonames": fetch_geonames, "fsq": fetch_fsq, "learning": fetch_learning,
+            "atp": fetch_atp}
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True)
-    ap.add_argument("--only", default="overture,geofabrik,wikidata,geonames,fsq,learning")
+    ap.add_argument("--only", default="overture,geofabrik,wikidata,geonames,fsq,atp,learning")
     a = ap.parse_args(argv)
     os.makedirs(a.data, exist_ok=True)
     rpath = os.path.join(a.data, "fetch_report.json")

@@ -43,6 +43,7 @@ MAX_KIND_DROP = 0.04
 SOURCE_YIELD = {
     "overture places": ("overture", "places", 0.40),
     "foursquare": ("fsq", "rows", 0.25),
+    "allplaces": ("atp", "features", 0.50),
     "wikidata": ("wikidata", "items", 0.50),
     "geonames": ("geonames", "rows", 0.15),
     "user places": ("learning", "ugc_places_export", 0.50),

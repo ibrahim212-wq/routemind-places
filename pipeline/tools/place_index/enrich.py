@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from collections import Counter, defaultdict
 
 from . import merge as M
@@ -45,20 +46,153 @@ def _storefront(rec: R.Record) -> bool:
     return bool(rec.phone) and c is not None and c.scat is not None and rec.cat not in ONLINE_PRONE
 
 
-def keep(rec: R.Record) -> bool:
-    """Drop a Meta row that is almost certainly an online-only shop or a personal page."""
+def keep_reason(rec: R.Record) -> str | None:
+    """None = kept; else why the row is dropped (build_report `dropped`): a Meta row that is almost certainly an
+    online-only shop or a personal page, or a Foursquare row nobody refreshed in years. rescue() may still bring
+    a dropped row back on independent evidence."""
+    if rec.src == R.SRC_FSQ and rec.extra.get("stale"):
+        return "fsq_stale"
     if rec.src not in (R.SRC_META, R.SRC_OVT_OTHER):
-        return True
+        return None
     if rec.cat in ALWAYS_KEEP:
-        return rec.conf >= 0.12
+        return None if rec.conf >= 0.12 else "vital_conf_below_0.12"
     web = (rec.website or "").lower()
     online = any(h in web for h in ONLINE_HOSTS)
     store = _storefront(rec)
     if online and rec.conf < 0.45 and not (store and rec.conf >= 0.2):
-        return False
+        return "online_seller_link"
     if rec.conf < 0.2 and not (store and not online and rec.conf >= 0.08):
+        if store:
+            return "storefront_conf_below_0.08"
+        if not rec.phone:
+            return "low_conf_no_phone"
+        if rec.cat in ONLINE_PRONE:
+            return "low_conf_online_prone_kind"
+        return "low_conf_unsearchable_kind"
+    return None
+
+
+def keep(rec: R.Record) -> bool:
+    return keep_reason(rec) is None
+
+
+# ── rescue: a dropped row with independent evidence that the place is there ──
+
+_JUNK_PHONE = re.compile(r"(\d)\1{6,}|0123456789|1234567")
+
+
+def eg_phone(phone: str | None) -> bool:
+    """A dialable Egyptian number (records.clean_phone's +20 form): a mobile +20 1[0125] + 8 digits, Cairo / Giza
+    +20 2 + 8, Alexandria +20 3 + 7, another governorate's 2-digit code + 7, or a 5-digit hotline (19xxx / 16xxx);
+    never a run of one digit or a counting sequence."""
+    if not phone:
         return False
-    return True
+    d = phone.replace("+", "")
+    if _JUNK_PHONE.search(d):
+        return False
+    if re.fullmatch(r"1[0-9]{4}", d):
+        return d[:2] in ("19", "16", "15")
+    if not d.startswith("20"):
+        return False
+    n = d[2:]
+    return bool(re.fullmatch(r"1[0125][0-9]{8}", n) or re.fullmatch(r"2[0-9]{8}", n) or re.fullmatch(r"3[0-9]{7}", n)
+                or re.fullmatch(r"(4[0-8]|5[0-7]|6[2-9]|8[2-8]|9[2-7])[0-9]{7}", n))
+
+
+# a name that sells or works online, or is a person's page, whatever its category says
+_ONLINE_NAME = re.compile(r"(?i)online|اون ?لاين|أون ?لاين|delivery|توصيل|artist|makeup|ميكب|ميك اب|photograph|تصوير|"
+                          r"courses?\b|كورسات|jobs?\b|وظائف|\.com\b|\.eg\b|\.net\b|page\b|صفحه|صفحة|official|"
+                          r"store online|brand\b|collection|for sale|للبيع")
+RESCUE_NEAR_M = 30.0  # a mapped building / OSM place this close counts as "something is there"
+
+
+def rescue(dropped: list[tuple[R.Record, str]], kept: list[R.Record], bcells: set[int] | None,
+           report: dict) -> list[R.Record]:
+    """Bring back a dropped row when independent evidence says the place exists:
+
+      * CONFIRMED — a kept row of ANOTHER source is the same place (merge.match_score ≥ MATCH: the name agrees within
+        the category's radius, or the same number with an agreeing name); it would merge into that place anyway, so
+        it adds a name, a number, a confirmation — never a second pin;
+      * a stale Foursquare venue (it was a real venue people checked in at; the doubt is whether it is still open)
+        otherwise needs ALL of, never with a link to an online shop or a name that says it sells online, never on a
+        pin many pages share (a district's centre, unstack):
+          PHONE    a dialable Egyptian number (eg_phone),
+          KIND     a kind people walk into that search can ask for (a display category, not an online-prone kind),
+          THERE    a mapped building or an OSM place within RESCUE_NEAR_M of the pin.
+        Measured on Overture 2026-10 + OSM, that is NOT evidence for a low-confidence Facebook page: two of the three
+        brought back 3,390 rows, nearly all Instagram boutiques, makeup artists, photographers and job pages (every
+        online seller has a mobile number, and in a city every pin has a building beside it), and all three still
+        brought back 174, half of them on district-centre pins or filed under the wrong kind. A page comes back only
+        when another source confirms it.
+
+    The rescued row keeps its own low confidence (it ranks below a confirmed place) and is marked `rescued`."""
+    from . import sources as S
+    osm_cells = set()
+    for r in kept:
+        if r.src == R.SRC_OSM and r.kind == "poi":
+            osm_cells.add(S.building_cell(r.lat, r.lng))
+    bc = bcells or set()
+
+    def there(r: R.Record) -> bool:
+        c0 = S.building_cell(r.lat, r.lng)
+        for di in (-1, 0, 1):
+            for dj in (-1, 0, 1):
+                c = c0 + di * 1000000 + dj
+                if c in bc or c in osm_cells:
+                    return True
+        return False
+
+    # the CONFIRMED test: the merge's own matcher against kept rows of other sources nearby
+    cell = M.CELL
+    grid: dict[tuple[int, int], list[M.Prep]] = defaultdict(list)
+    need = {(int(math.floor(r.lng / cell)), int(math.floor(r.lat / cell))) for r, _ in dropped}
+    for r in kept:
+        if r.kind != "poi":
+            continue
+        k = (int(math.floor(r.lng / cell)), int(math.floor(r.lat / cell)))
+        if any((k[0] + dx, k[1] + dy) in need for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+            grid[k].append(M.prep(r))
+
+    def confirmed(r: R.Record) -> bool:
+        p = M.prep(r)
+        if not p.core and not p.phone:
+            return False
+        cx, cy = int(math.floor(r.lng / cell)), int(math.floor(r.lat / cell))
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for m in grid.get((cx + dx, cy + dy), ()):
+                    if m.rec.src == r.src or (r.src == R.SRC_FSQ and m.rec.extra.get("fsq_id")):
+                        continue
+                    if M.match_score(p, m, R.haversine(r.lat, r.lng, m.lat, m.lng)) >= M.MATCH:
+                        return True
+        return False
+
+    pins = Counter((round(r.lat, 5), round(r.lng, 5)) for r in kept if r.kind == "poi")
+    pins.update((round(r.lat, 5), round(r.lng, 5)) for r, _ in dropped)
+    out = []
+    stats: dict = {}
+    for r, why in dropped:
+        web = (r.website or "").lower()
+        online = any(h in web for h in ONLINE_HOSTS)
+        how = None
+        if confirmed(r):
+            how = "confirmed_by_another_source"
+        elif (why == "fsq_stale" and not online and not any(_ONLINE_NAME.search(n) for n, _ in r.names)
+              and pins[(round(r.lat, 5), round(r.lng, 5))] < STACK_MIN):
+            c = T.BY_ID.get(r.cat)
+            if (eg_phone(r.phone) and c is not None and c.scat is not None and r.cat not in ONLINE_PRONE
+                    and r.cat not in M.GENERIC_CATS and there(r)):
+                how = "phone+kind+there"
+        key = f"{r.src}:{why}"
+        st = stats.setdefault(key, {"dropped": 0, "rescued": 0, "by": {}})
+        st["dropped"] += 1
+        if how:
+            st["rescued"] += 1
+            st["by"][how] = st["by"].get(how, 0) + 1
+            r.extra["rescued"] = how
+            out.append(r)
+    report["rescue"] = stats
+    return out
 
 
 # ── governorates ─────────────────────────────────────────────────────────────
@@ -140,6 +274,115 @@ class AreaLocator:
                     if best_k is None or k < best_k:
                         best, best_k = a, k
         return best
+
+
+# ── stacked pins: many pages geocoded to one district centre ───────────────
+
+STACK_MIN = 5          # this many places of the page sources on one exact point = a geocoded centre, not a building
+STACK_SNAP_M = 3000.0  # a stacked page moves to the OSM place of the same name within this distance
+_PAGE_SRCS = {R.SRC_META, R.SRC_FSQ, R.SRC_MS, R.SRC_OVT_OTHER}
+
+
+def unstack(recs: list[R.Record], report: dict) -> None:
+    """A Facebook page with no street address is pinned at its district's centre: places-2026-10-31.3 has 1,207
+    places on one point of Downtown Cairo, 624 on one point of Alexandria — 1,973 points carry ≥ 5 places, 28k
+    places in all. Such a pin is not where the place is. Each stacked row moves to the OSM place that is the same
+    place (merge.name_similarity ≥ 0.9, a compatible kind, the only such place within STACK_SNAP_M); the rest are
+    marked `approx` (merge sets records.APPROX_BIT when no member knows better), so the engine never ranks them as
+    if they stood exactly there."""
+    groups: dict[tuple[float, float], list[R.Record]] = defaultdict(list)
+    for r in recs:
+        if r.kind == "poi" and r.src in _PAGE_SRCS:
+            groups[(round(r.lat, 5), round(r.lng, 5))].append(r)
+    stacked = [r for g in groups.values() if len(g) >= STACK_MIN for r in g]
+    if not stacked:
+        report["stacked"] = {"points": 0, "places": 0, "snapped": 0, "approximate": 0}
+        return
+    cell = 0.03
+    grid: dict[tuple[int, int], list[M.Prep]] = defaultdict(list)
+    for r in recs:
+        if r.src == R.SRC_OSM and r.kind == "poi":
+            grid[(int(math.floor(r.lat / cell)), int(math.floor(r.lng / cell)))].append(M.prep(r))
+    snapped = 0
+    for r in stacked:
+        p = M.prep(r)
+        best, best_s, second = None, 0.0, 0.0
+        if p.core:
+            ci, cj = int(math.floor(r.lat / cell)), int(math.floor(r.lng / cell))
+            for di in (-1, 0, 1):
+                for dj in (-1, 0, 1):
+                    for m in grid.get((ci + di, cj + dj), ()):
+                        if not M.cats_compatible(r.cat, m.rec.cat):
+                            continue
+                        if R.haversine(r.lat, r.lng, m.lat, m.lng) > STACK_SNAP_M:
+                            continue
+                        s = M.name_similarity(p, m)
+                        if s > best_s:
+                            best, best_s, second = m, s, best_s
+                        elif s > second:
+                            second = s
+        if best is not None and best_s >= 0.9 and second < 0.9:
+            r.lat, r.lng = best.lat, best.lng
+            r.extra["snapped"] = best.rec.sid
+            snapped += 1
+        else:
+            r.extra["approx"] = True
+    report["stacked"] = {"points": sum(1 for g in groups.values() if len(g) >= STACK_MIN), "places": len(stacked),
+                         "snapped": snapped, "approximate": len(stacked) - snapped}
+
+
+# ── kind from the name (a Facebook page filed under a generic class) ─────────
+
+INFER_FROM = frozenset({"place", "shop", "store", "service", "company", "office", "food", "convenience_store",
+                        "tech_company"})
+# words a category's search terms carry that do not name a kind of place when they head a name («دواء», "tea")
+_NOT_A_KIND_WORD = {"قريب", "قريبه", "near", "nearby", "دواء", "medicine", "شاي", "tea", "er", "اقرب", "محل",
+                    "shop", "store", "مكان", "place", "center", "مركز", "سنتر",
+                    # measured on places-2026-10-31.3: "… Office For Law Services" → rest area, "Toll Station" → police,
+                    # "The Temple Flower Essence" → a temple, «رنين لاند» → radiology
+                    "services", "service", "station", "محطه", "temple", "معبد", "رنين"}
+
+
+class KindInferer:
+    """A place whose source filed it under a generic class (place / shop / service / company …) takes the kind its
+    NAME says, when the name says exactly one: the HEAD word (Arabic «بقالة الأمل», «كشري التحرير») or the LAST word
+    (English "Nile Pharmacy") is one search category's own word — its label or a single-word term from the shared
+    lexicon — and no word of the name names another category. Every other case keeps the source's class."""
+
+    def __init__(self, lexicon: dict):
+        by_word: dict[str, set[str]] = defaultdict(set)
+        for c in lexicon.get("categories", []):
+            words = [c.get("label_ar"), c.get("label_en")] + list(c.get("terms_ar") or []) + list(c.get("terms_en") or [])
+            for w in words:
+                toks = tn.tokens(w or "")
+                if len(toks) != 1:
+                    continue
+                k = tn.stems(toks[0])[-1]
+                if len(k) >= 3 and k not in _NOT_A_KIND_WORD and toks[0] not in _NOT_A_KIND_WORD:
+                    by_word[k].add(c["id"])
+        self.word = {k: next(iter(v)) for k, v in by_word.items() if len(v) == 1}
+        self.cat_of: dict[str, str] = {}
+        for c in T.CATS:
+            if c.scat and (c.scat not in self.cat_of or c.id == c.scat):
+                self.cat_of[c.scat] = c.id
+
+    def infer(self, cat: str, names: list[str]) -> str | None:
+        if cat not in INFER_FROM:
+            return None
+        found: set[str] = set()
+        edge: set[str] = set()
+        for nm in names:
+            toks = [t for t in tn.tokens(nm) if not tn.is_stopword(t)]
+            for i, t in enumerate(toks):
+                sc = self.word.get(tn.stems(t)[-1])
+                if sc:
+                    found.add(sc)
+                    if i == 0 or i == len(toks) - 1:
+                        edge.add(sc)
+        if len(found) != 1 or not edge:
+            return None
+        new = self.cat_of.get(next(iter(found)))
+        return new if new != cat else None
 
 
 # ── brands ───────────────────────────────────────────────────────────────────

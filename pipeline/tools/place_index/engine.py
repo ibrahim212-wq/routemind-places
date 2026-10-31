@@ -70,7 +70,10 @@ TUNING = {
     "rel_plain_text": 0.85,        # «X جنب Y»: the plain reading wins when a place's own name (with the word) is the query
     "rel_mark_text": 0.75,         # … and the landmark must be found this well to search around it
     "f_area": 0.40,                # a word naming the place's own area («سنابل الشام مساكن ضرغام»)
+    "approx_m": 1500.0,            # a pin flagged APPROX (a page geocoded to its district's centre) is never nearer
 }
+
+APPROX_BIT = 1024  # records.APPROX_BIT: the row's pin is a geocoded district centre, not the place
 
 STREET_WORDS = {"شارع", "ش", "street", "st", "str", "طريق", "road", "rd", "كوبري", "bridge", "محور", "axis",
                 "ميدان", "square", "sq", "نفق", "tunnel", "كورنيش", "corniche", "شارح"}
@@ -842,6 +845,8 @@ class Engine:
             else:
                 d = haversine(alat, alng, row["lat"], row["lng"])
                 d_user = haversine(lat, lng, row["lat"], row["lng"])
+            if row["srcs"] & APPROX_BIT:
+                d = max(d, T["approx_m"])  # it stands somewhere in the district: it may not claim to be right here
             text = self._text_score(p.residual, c, row) if p.residual else 0.0
             for exp in p.expansions:
                 text = max(text, T["expansion_factor"] * self._text_score(exp, c, row))
@@ -919,11 +924,21 @@ class Engine:
         brand, n = max(counts.items(), key=lambda kv: kv[1])
         if n < T["detect_brand_min"]:
             return out
+        # Only the order AMONG the chain's branches changes (nearest first, the chain law); each branch takes the
+        # score of a slot the branches already held, so the answers keep ONE scale. Scoring the branches on the chain
+        # scale beside answers on the name scale sank them under weaker names as soon as a name became a chain (more
+        # rows → an auto brand: places-2026-10-31.3, «جروبي» from Maadi, Talaat Harb 1 → 11).
         w = T["w_brand"]
-        for r in out:
-            if r.row.get("brand") == brand and r.text >= 0.8:
-                d = haversine(lat, lng, r.lat, r.lng)
-                r.score = w[0] + w[1] * math.exp(-d / max(tau, 4000.0)) + w[2] * r.row["pop"] + w[3] * r.row["conf"] + w[4]
+        branches = [r for r in out if r.row.get("brand") == brand and r.text >= 0.8]
+        slots = sorted((r.score for r in branches), reverse=True)
+        for r in branches:
+            d = haversine(lat, lng, r.lat, r.lng)
+            if r.row["srcs"] & APPROX_BIT:
+                d = max(d, T["approx_m"])
+            r.score = w[0] + w[1] * math.exp(-d / max(tau, 4000.0)) + w[2] * r.row["pop"] + w[3] * r.row["conf"] + w[4]
+        branches.sort(key=_rank)
+        for r, s in zip(branches, slots):
+            r.score = s
         out.sort(key=_rank)
         return out
 

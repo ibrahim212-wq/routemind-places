@@ -34,7 +34,7 @@ from . import fetch as F
 from . import notice as N
 from . import publish as P
 
-DEFAULT_ONLY = "overture,geofabrik,hot,wikidata,geonames,fsq,learning"  # hot = the OSM fallback if the pbf read fails
+DEFAULT_ONLY = "overture,geofabrik,hot,wikidata,geonames,fsq,atp,learning"  # hot = the OSM fallback if the pbf read fails
 
 
 def log(*a):
@@ -93,7 +93,7 @@ def run(work: str, repo: str | None, publish: bool, keep: int, only: str, osm: s
         log("--no-fetch, but", data, "holds no Overture places")
         return 2
     version = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
-    B.run(data, idx, {"osm", "overture", "div", "fsq", "wd", "gn", "ugc", "sel"}, osm, version)
+    B.run(data, idx, {"osm", "overture", "div", "fsq", "atp", "wd", "gn", "ugc", "sel"}, osm, version)
     shutil.copyfile(os.path.join(data, "fetch_report.json"), os.path.join(idx, "fetch_report.json"))
     if not keep_data:
         shutil.rmtree(data, ignore_errors=True)

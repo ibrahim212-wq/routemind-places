@@ -24,6 +24,9 @@ SRC_GN = "gn"          # GeoNames
 SRC_UGC = "ugc"        # places RouteMind users added (docs/search-learning-migration.sql, ODbL by the in-app terms)
 SOURCE_BITS = {SRC_OSM: 1, SRC_ATP: 2, SRC_FSQ: 4, SRC_MS: 8, SRC_META: 16, SRC_OVT_OTHER: 32,
                SRC_DIV: 64, SRC_WD: 128, SRC_GN: 256, SRC_UGC: 512}
+# not a source: a `srcs` flag saying the pin is where a page was geocoded (a district's centre shared by many
+# pages, enrich.unstack), not the place — the engine never lets it claim to be nearer than TUNING["approx_m"]
+APPROX_BIT = 1024
 
 
 @dataclass
