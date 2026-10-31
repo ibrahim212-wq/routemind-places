@@ -13,6 +13,7 @@ network except fsq_places / wikidata (which fetch.py drives).
 """
 from __future__ import annotations
 
+import datetime
 import json
 import math
 import re
@@ -520,6 +521,30 @@ FSQ_LEAF = {
 }
 
 
+def ugc_places(json_path: str, inside) -> Iterator[R.Record]:
+    """Places RouteMind users added that the export rule accepted (docs/search-learning-migration.sql
+    `ugc_places_export`: two independent reports, or one made on the spot and undisputed for a week).
+    Confidence by the evidence: on the spot AND confirmed 0.8, either alone 0.6."""
+    with open(json_path, encoding="utf-8") as f:
+        rows = json.load(f)
+    for r in rows:
+        lat, lng, name = r.get("lat"), r.get("lng"), (r.get("name") or "").strip()
+        if lat is None or lng is None or not name or not inside(lat, lng):
+            continue
+        cat = r.get("cat") if r.get("cat") in T.BY_ID else "place"
+        nm = [(name, "primary")]
+        ar, la = R.split_scripts(name)
+        if ar and la:
+            nm += [(ar, "ar"), (la, "en")]
+        conf = 0.8 if (r.get("presence") and (r.get("reports") or 1) >= 2) else 0.6
+        yield R.Record(src=R.SRC_UGC, sid=str(r["id"]), kind="poi", cat=cat, lat=float(lat), lng=float(lng), names=nm,
+                       conf=conf, phone=R.clean_phone(r.get("phone")), extra={"reports": r.get("reports") or 1})
+
+
+FSQ_MAX_AGE_Y = 7   # a Foursquare row last refreshed more years ago than this is not taken
+_YEAR = datetime.date.today().year
+
+
 def fsq_places(parquet_path: str, inside) -> Iterator[R.Record]:
     """Rows fetch.fetch_fsq wrote (already cut to the Egypt box)."""
     import pyarrow.parquet as pq
@@ -546,7 +571,9 @@ def fsq_places(parquet_path: str, inside) -> Iterator[R.Record]:
         refreshed = str(row.get("date_refreshed") or "")
         conf = 0.55
         if refreshed[:4].isdigit():
-            age = 2026 - int(refreshed[:4])
+            age = _YEAR - int(refreshed[:4])
+            if age > FSQ_MAX_AGE_Y:
+                continue  # nobody has seen it in years: more likely gone than open (the open release keeps them)
             conf = max(0.25, 0.75 - 0.1 * age)
         yield R.Record(src=R.SRC_FSQ, sid=row["fsq_place_id"], kind="poi", cat=cat, lat=lat, lng=lng, names=nm,
                        conf=conf, phone=R.clean_phone(row.get("tel")), website=R.clean_url(row.get("website")),

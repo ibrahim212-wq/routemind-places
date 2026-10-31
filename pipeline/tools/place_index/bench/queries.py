@@ -442,3 +442,19 @@ B("saydaleyet seif", "zamalek", "franco", ["سيف", "seif"])
 P("el ma3adi", "heliopolis", "area", "franco", ["المعادي", "maadi"], (29.9602, 31.2569), 3000)
 P("khan el 5alily", "nasr", "landmark", "franco", ["خان الخليلي", "khan el khalili", "khan al khalili"], (30.0477, 31.2623), 800)
 P("gam3et el qahera", "maadi", "education", "franco", ["جامعة القاهرة", "cairo university"], (30.0262, 31.2080), 2000)
+
+# ── round 11 (2026-10-31): a landmark instead of an address — «X جنب / ورا / قصاد / قريب من Y» ─────
+# Judged within `km` of the LANDMARK (the user is elsewhere): what Egyptians say when they give directions.
+C("صيدلية جنب مسجد الحصري", "maadi", "relative", "colloquial", "pharmacy", 1.5, center=(29.9741, 30.9467))
+C("بنزينة قريب من مول مصر", "downtown", "relative", "colloquial", "gas_station", 3, center=(29.9726, 31.0167))
+C("pharmacy near cairo tower", "nasr", "relative", "en", "pharmacy", 1.5, center=(30.0459, 31.2243))
+C("atm next to city stars", "maadi", "relative", "en", "atm", 1.5, center=(30.0729, 31.3456))
+C("كافيه جنب جامعة القاهرة", "nasr", "relative", "colloquial", "cafe", 1.5, center=(30.0262, 31.2080))
+C("مطعم قصاد مكتبة الاسكندرية", "montaza", "relative", "colloquial", "restaurant", 1.5, center=(31.2089, 29.9092))
+C("صيدلية ورا محطة سيدي جابر", "agami", "relative", "colloquial", "pharmacy", 1.5, center=(31.2189, 29.9420))
+C("مستشفى جنب ميدان التحرير", "haram", "relative", "colloquial", "hospital", 2.5, center=(30.0444, 31.2357))
+C("بنك جنب مسجد السيد البدوي", "mahalla", "relative", "colloquial", "bank", 1.5, center=(30.7911, 30.9983))
+C("صيدلية قريب من جامعة المنصورة", "tanta", "relative", "colloquial", "pharmacy", 1.5, center=(31.0420, 31.3540))
+# … and the names that only LOOK relative: «امام» is part of the name, never a direction
+P("مسجد الامام الحسين", "maadi", "landmark", "ar", ["الحسين", "hussein"], (30.0478, 31.2625), 800)
+P("مسجد الامام الشافعي", "downtown", "landmark", "ar", ["الشافعي", "shafi"], (30.0110, 31.2470), 1500)

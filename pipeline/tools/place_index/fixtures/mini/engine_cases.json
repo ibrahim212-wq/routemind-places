@@ -1437,14 +1437,14 @@
 "text": 0.8127653394459852
 },
 {
+"pid": "sw54920579#1",
+"score": 0.7002743272856145,
+"text": 0.6063662209248086
+},
+{
 "pid": "vplNEAp4YSx-h",
 "score": 0.6988780877319218,
 "text": 0.8333333333333334
-},
-{
-"pid": "vTQT1l5vcRamh",
-"score": 0.6630635972612013,
-"text": 0.6563769786859673
 }
 ]
 },
@@ -1730,49 +1730,49 @@
 "text": 0.8999291783197285
 },
 {
-"pid": "w98328366",
-"score": 0.6882024176117136,
-"text": 0.6509737981037321
+"pid": "sw54920579#1",
+"score": 0.780937740172715,
+"text": 0.5822710081292619
 },
 {
-"pid": "vTQT1l5vcRamh",
-"score": 0.6695894669468186,
-"text": 0.6301404647703988
+"pid": "sw1442653890",
+"score": 0.7662210869240612,
+"text": 0.62423285166292
 },
 {
-"pid": "vKmU4kuBIQeqw",
-"score": 0.6541644235087265,
-"text": 0.6923698859756566
+"pid": "sw28850078",
+"score": 0.7613326819017933,
+"text": 0.62423285166292
 },
 {
-"pid": "vWX-yQkZ-QxOj",
-"score": 0.6307364185493465,
-"text": 0.65070321930899
+"pid": "sw776514305",
+"score": 0.7530641567699589,
+"text": 0.62423285166292
 },
 {
-"pid": "vFXeROJWYSRG6",
-"score": 0.6143377327995359,
-"text": 0.6923698859756566
+"pid": "sw690478253",
+"score": 0.7515431522435768,
+"text": 0.5825661849962533
 },
 {
-"pid": "vQy_Dxj-nTU61",
-"score": 0.5942603916177013,
-"text": 0.65070321930899
+"pid": "sw28850097",
+"score": 0.747407655038916,
+"text": 0.62423285166292
 },
 {
-"pid": "vsjYWfJ2hTYGG",
-"score": 0.5758595799088706,
-"text": 0.6173698859756567
+"pid": "sw53502855",
+"score": 0.7464552342760894,
+"text": 0.56173285166292
 },
 {
-"pid": "vSJyy3UlyRTKv",
-"score": 0.556902052581939,
-"text": 0.6923698859756566
+"pid": "sw28850095",
+"score": 0.7392076550389161,
+"text": 0.62423285166292
 },
 {
-"pid": "vplNEAp4YSx-h",
-"score": 0.5496880076356028,
-"text": 0.6090365526423233
+"pid": "sw1434351902",
+"score": 0.7374419720180573,
+"text": 0.56173285166292
 }
 ]
 },
@@ -3800,6 +3800,16 @@
 "pid": "vMI9LI2CTSKqb",
 "score": 0.6848907354381398,
 "text": 0.8333333333333334
+},
+{
+"pid": "vAFX1meWgS8CC",
+"score": 0.5603113904272631,
+"text": 0.5075000000000001
+},
+{
+"pid": "veRgYS3Y5Qs2P",
+"score": 0.5535134538718499,
+"text": 0.505
 }
 ]
 },
@@ -4705,14 +4715,14 @@
 "text": 0.5677795216587206
 },
 {
+"pid": "vdLBhjrILRfCh",
+"score": 0.6042679981093244,
+"text": 0.5148628784757152
+},
+{
 "pid": "r16686191",
 "score": 0.6000522849122969,
 "text": 0.5193214369045762
-},
-{
-"pid": "viv--jevEQl-k",
-"score": 0.5992848995434235,
-"text": 0.6030500116664068
 }
 ]
 },
@@ -4885,7 +4895,7 @@
 },
 {
 "pid": "v_vwecX4YT7qa",
-"score": 0.8428285215001605,
+"score": 0.8428285215001606,
 "text": 1.0
 },
 {
@@ -4956,7 +4966,7 @@
 },
 {
 "pid": "v_vwecX4YT7qa",
-"score": 0.8428285215001605,
+"score": 0.8428285215001606,
 "text": 0.0
 },
 {
@@ -5798,7 +5808,7 @@
 "top": [
 {
 "pid": "sw54920579#2",
-"score": 0.8627500951439647,
+"score": 0.8841171486778675,
 "text": 0.6464012392243452
 },
 {
@@ -5965,6 +5975,430 @@
 {
 "pid": "vM14pWogJTxmr",
 "score": 0.7081571140849701,
+"text": 0.0
+}
+]
+},
+{
+"q": "صيدلية جنب ميدان التحرير",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "pharmacy",
+"brand": null,
+"scope": "in_area",
+"area": "ميدان التحرير",
+"entity": "tahrir_square",
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vhAUhxDeaSKuk",
+"score": 0.782656416756883,
+"text": 0.0
+},
+{
+"pid": "vTthnFzacRNel",
+"score": 0.7280313645314938,
+"text": 0.0
+},
+{
+"pid": "vMHqoXO0CR2eO",
+"score": 0.647707852758775,
+"text": 0.0
+},
+{
+"pid": "vbeBJsJeGRdy-",
+"score": 0.6363719132543144,
+"text": 0.0
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.635859473083759,
+"text": 0.0
+},
+{
+"pid": "vr9Av9xfHS7q3",
+"score": 0.582527298453217,
+"text": 0.0
+},
+{
+"pid": "n3220051546",
+"score": 0.5625389804707543,
+"text": 0.0
+},
+{
+"pid": "vhErhgqMvRZqr",
+"score": 0.5450765381779128,
+"text": 0.0
+},
+{
+"pid": "vgJbYO_CtQICa",
+"score": 0.5114635379800518,
+"text": 0.0
+},
+{
+"pid": "vZDhsBCLbSw6d",
+"score": 0.5100257042926641,
+"text": 0.0
+}
+]
+},
+{
+"q": "pharmacy near tahrir square",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "pharmacy",
+"brand": null,
+"scope": "in_area",
+"area": "ميدان التحرير",
+"entity": "tahrir_square",
+"street": false,
+"near": true,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "vhAUhxDeaSKuk",
+"score": 0.782656416756883,
+"text": 0.0
+},
+{
+"pid": "vTthnFzacRNel",
+"score": 0.7280313645314938,
+"text": 0.0
+},
+{
+"pid": "vMHqoXO0CR2eO",
+"score": 0.647707852758775,
+"text": 0.0
+},
+{
+"pid": "vbeBJsJeGRdy-",
+"score": 0.6363719132543144,
+"text": 0.0
+},
+{
+"pid": "v5IYAajb_ScSa",
+"score": 0.635859473083759,
+"text": 0.0
+},
+{
+"pid": "vr9Av9xfHS7q3",
+"score": 0.582527298453217,
+"text": 0.0
+},
+{
+"pid": "n3220051546",
+"score": 0.5625389804707543,
+"text": 0.0
+},
+{
+"pid": "vhErhgqMvRZqr",
+"score": 0.5450765381779128,
+"text": 0.0
+},
+{
+"pid": "vgJbYO_CtQICa",
+"score": 0.5114635379800518,
+"text": 0.0
+},
+{
+"pid": "vZDhsBCLbSw6d",
+"score": 0.5100257042926641,
+"text": 0.0
+}
+]
+},
+{
+"q": "كشري جنب المتحف المصري",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "koshary",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"المتحف",
+"المصري"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "w767418990",
+"score": 0.7298022131199311,
+"text": 0.0
+},
+{
+"pid": "n7245672388",
+"score": 0.49129964035347623,
+"text": 0.0
+},
+{
+"pid": "vraBADwqIQSey",
+"score": 0.3888587373520929,
+"text": 0.0
+},
+{
+"pid": "v-uI3qTdnSWa6",
+"score": 0.3456937748704594,
+"text": 0.0
+},
+{
+"pid": "vjXamlSxpR5en",
+"score": 0.33806995642942866,
+"text": 0.0
+},
+{
+"pid": "vl7KWJvrrQpGr",
+"score": 0.3305450237514027,
+"text": 0.0
+},
+{
+"pid": "w10873198",
+"score": 0.773785461094298,
+"text": 1.0
+},
+{
+"pid": "vz3gvR5uTTPG1",
+"score": 0.7059746056537421,
+"text": 0.8589502546630581
+},
+{
+"pid": "vdaXmKpT9S4ig",
+"score": 0.6579664121507252,
+"text": 0.9166666666666666
+},
+{
+"pid": "w1116281346",
+"score": 0.6464493933898241,
+"text": 0.7708762241034912
+}
+]
+},
+{
+"q": "atm next to egyptian museum",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "atm",
+"brand": null,
+"scope": "anchor",
+"area": null,
+"entity": null,
+"street": false,
+"near": false,
+"residual": [
+"next",
+"to",
+"egyptian",
+"museum"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n9203775633",
+"score": 0.7010206609451748,
+"text": 0.0
+},
+{
+"pid": "v0CiD4XfmTzq6",
+"score": 0.6635794986364958,
+"text": 0.0
+},
+{
+"pid": "v_Cigk-tJQ_eh",
+"score": 0.6038246435769683,
+"text": 0.0
+},
+{
+"pid": "n820771840",
+"score": 0.6003791932278286,
+"text": 0.0
+},
+{
+"pid": "vUHJKRfN4Sy65",
+"score": 0.5510577618989092,
+"text": 0.0
+},
+{
+"pid": "vxEa4pAAySxe1",
+"score": 0.5457302393120957,
+"text": 0.0
+},
+{
+"pid": "vIltpO7WtTziq",
+"score": 0.5046560030880498,
+"text": 0.0
+},
+{
+"pid": "n9391441249",
+"score": 0.4930901814029572,
+"text": 0.0
+},
+{
+"pid": "vA4ST_didRpaP",
+"score": 0.48496447144317884,
+"text": 0.0
+},
+{
+"pid": "vhnN3z-PYSIic",
+"score": 0.4154267202256815,
+"text": 0.0
+}
+]
+},
+{
+"q": "قهوة قريب من مجمع التحرير",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "cat_name",
+"scat": "cafe",
+"brand": null,
+"scope": "near_me",
+"area": "ميدان التحرير",
+"entity": "tahrir_square",
+"street": false,
+"near": true,
+"residual": [
+"مجمع"
+],
+"open_now": false
+},
+"top": [
+{
+"pid": "n1772677318",
+"score": 0.6907668448673348,
+"text": 0.0
+},
+{
+"pid": "vLSlnwlXDQJec",
+"score": 0.6822313173472359,
+"text": 0.0
+},
+{
+"pid": "n12301575401",
+"score": 0.6722715168321574,
+"text": 0.0
+},
+{
+"pid": "vg29PT9NpTaK-",
+"score": 0.6702011467895903,
+"text": 0.0
+},
+{
+"pid": "vmSncOSdbS1at",
+"score": 0.6461241487938669,
+"text": 0.0
+},
+{
+"pid": "vv35lXeStRn66",
+"score": 0.64359658414941,
+"text": 0.0
+},
+{
+"pid": "n11168835105",
+"score": 0.6370788821175084,
+"text": 0.0
+},
+{
+"pid": "vL0RyDuVsSw2r",
+"score": 0.6283030849787348,
+"text": 0.0
+},
+{
+"pid": "v9kkti9flTYaR",
+"score": 0.6202268426080642,
+"text": 0.0
+},
+{
+"pid": "vpvVkaQ5cSoKl",
+"score": 0.619819979836651,
+"text": 0.0
+}
+]
+},
+{
+"q": "مطعم وسط البلد",
+"lat": 30.0444,
+"lng": 31.2357,
+"parse": {
+"kind": "category",
+"scat": "restaurant",
+"brand": null,
+"scope": "in_area",
+"area": "وسط البلد",
+"entity": "downtown_cairo",
+"street": false,
+"near": false,
+"residual": [],
+"open_now": false
+},
+"top": [
+{
+"pid": "n6557076288",
+"score": 0.912809161655963,
+"text": 0.0
+},
+{
+"pid": "w768977207",
+"score": 0.8683939622197678,
+"text": 0.0
+},
+{
+"pid": "w98246970",
+"score": 0.8544836258860995,
+"text": 0.0
+},
+{
+"pid": "n10197496118",
+"score": 0.8541313116115492,
+"text": 0.0
+},
+{
+"pid": "n10694272503",
+"score": 0.85248181119207,
+"text": 0.0
+},
+{
+"pid": "n478582334",
+"score": 0.8475598046178514,
+"text": 0.0
+},
+{
+"pid": "n2789855480",
+"score": 0.846921786019138,
+"text": 0.0
+},
+{
+"pid": "n11339510469",
+"score": 0.8393650822475309,
+"text": 0.0
+},
+{
+"pid": "vaMScIqICS9SC",
+"score": 0.8267018812353235,
+"text": 0.0
+},
+{
+"pid": "w768636274",
+"score": 0.8221466654985374,
 "text": 0.0
 }
 ]

@@ -42,7 +42,7 @@ from . import taxonomy as T
 from . import textnorm as tn
 
 TRUST = {R.SRC_OSM: 0, R.SRC_WD: 1, R.SRC_ATP: 2, R.SRC_FSQ: 3, R.SRC_MS: 4, R.SRC_META: 5,
-         R.SRC_OVT_OTHER: 6, R.SRC_DIV: 1, R.SRC_GN: 7}
+         R.SRC_OVT_OTHER: 6, R.SRC_DIV: 1, R.SRC_GN: 7, R.SRC_UGC: 8}  # a user's add joins what is known
 
 BIG = {"mall": 450, "hypermarket": 300, "hospital": 400, "university": 900, "college": 500, "airport": 2500,
        "stadium": 500, "park": 500, "zoo": 600, "historic_site": 500, "attraction": 500, "museum": 300,
@@ -498,6 +498,8 @@ def anchor_id(members: list[Prep]) -> str:
         return compact_uuid(r.sid, "d")
     if r.src == R.SRC_WD:
         return "q" + r.sid.lstrip("Q")
+    if r.src == R.SRC_UGC:
+        return compact_uuid(r.sid, "u")
     return "g" + r.sid
 
 

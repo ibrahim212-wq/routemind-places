@@ -4,3 +4,5 @@ shapely==2.2.0
 osmium==4.3.1
 # Foursquare OS Places through its Iceberg catalog — only used when FSQ_PORTAL_TOKEN is set
 pyiceberg[pyarrow]>=0.9,<1
+# … or the same open release on Hugging Face — only used when HF_TOKEN is set (a free account)
+huggingface_hub>=0.30,<2

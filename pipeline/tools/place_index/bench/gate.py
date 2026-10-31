@@ -44,7 +44,9 @@ def structure(index_dir: str, prev: dict | None) -> list[str]:
     with open(os.path.join(index_dir, "manifest.json"), encoding="utf-8") as f:
         man = json.load(f)
     total = 0
-    for t in [man["national"]] + man["tiles"]:
+    if not man.get("router"):
+        errs.append("no router — a place outside the tiles around the user would be unfindable (router.py)")
+    for t in [man["national"]] + man["tiles"] + ([man["router"]] if man.get("router") else []):
         p = os.path.join(index_dir, t["file"])
         if not os.path.exists(p):
             errs.append(f"missing {t['file']}")

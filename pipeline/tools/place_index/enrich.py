@@ -25,17 +25,38 @@ ALWAYS_KEEP = {"hospital", "emergency_room", "pharmacy", "clinic", "medical_cent
                "government", "school", "university", "mosque", "church", "bank", "atm", "post_office"}
 
 
+# Kinds an online seller's or a person's page is filed under far more often than a shop's (the
+# 2026-10-31 audit of the 22,389 rows the confidence floor dropped: Instagram boutiques, agencies,
+# event planners, personal pages): a low-confidence page of one of these stays dropped.
+ONLINE_PRONE = {"place", "shop", "store", "service", "company", "office", "tech_company", "advertising",
+                "event_service", "real_estate", "travel_agency", "tutoring", "training_center", "ngo", "clothes",
+                "womens_clothes", "mens_clothes", "kids_clothes", "shoes", "cosmetics", "gifts", "jewelry",
+                "accessories", "home_goods", "art_gallery", "photographer", "lawyer", "consultant", "media",
+                # the rescued sample's own noise: holiday-rental pages filed as hotels, property developers,
+                # couriers and «factories» selling online, «spiritual healers» filed as cultural centres
+                "hotel", "developer", "shipping", "factory", "cultural_center"}
+
+
+def _storefront(rec: R.Record) -> bool:
+    """A searchable kind of place people walk into (a restaurant, a grocery, a salon, a doctor, a mobile
+    shop, a car repair …) with a phone number: the same audit found «مطبخ عبود», Muy Frito, a hair salon, a
+    swimming academy and mobile shops among the dropped pages — real storefronts behind thin pages."""
+    c = T.BY_ID.get(rec.cat)
+    return bool(rec.phone) and c is not None and c.scat is not None and rec.cat not in ONLINE_PRONE
+
+
 def keep(rec: R.Record) -> bool:
     """Drop a Meta row that is almost certainly an online-only shop or a personal page."""
     if rec.src not in (R.SRC_META, R.SRC_OVT_OTHER):
         return True
+    if rec.cat in ALWAYS_KEEP:
+        return rec.conf >= 0.12
     web = (rec.website or "").lower()
     online = any(h in web for h in ONLINE_HOSTS)
-    if online and rec.conf < 0.45 and rec.cat not in ALWAYS_KEEP:
+    store = _storefront(rec)
+    if online and rec.conf < 0.45 and not (store and rec.conf >= 0.2):
         return False
-    if rec.conf < 0.2 and rec.cat not in ALWAYS_KEEP:
-        return False
-    if rec.conf < 0.12:
+    if rec.conf < 0.2 and not (store and not online and rec.conf >= 0.08):
         return False
     return True
 

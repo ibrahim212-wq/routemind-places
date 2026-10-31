@@ -67,6 +67,9 @@ TUNING = {
     "street_half_m": 2500.0, "short_skel_factor": 0.6, "q_skel2": 0.55, "q_skel_fuzzy": 0.62,
     "road_word_boost": 0.06, "soft_branch_text": 0.75, "detect_brand_min": 3,
     "street_unasked": 0.06,        # a street the query did not ask for («6 اكتوبر» is the city, not the bridge)
+    "rel_plain_text": 0.85,        # «X جنب Y»: the plain reading wins when a place's own name (with the word) is the query
+    "rel_mark_text": 0.75,         # … and the landmark must be found this well to search around it
+    "f_area": 0.40,                # a word naming the place's own area («سنابل الشام مساكن ضرغام»)
 }
 
 STREET_WORDS = {"شارع", "ش", "street", "st", "str", "طريق", "road", "rd", "كوبري", "bridge", "محور", "axis",
@@ -100,8 +103,43 @@ FILLER = {"عايز", "عاوز", "عايزه", "عاوزه", "دور", "دور�
           "best", "top", "good", "nice", "افضل", "احسن", "كويس", "كويسه", "حلو", "حلوه"}
 
 
+# «صيدلية جنب مسجد الحصري», «ATM ورا سيتي ستارز», "pharmacy near Cairo Tower": what Egyptians give
+# instead of an address — a landmark and where the place is from it. Normalized forms («وراء» → «ورا»).
+REL_WORDS = {"جنب", "بجنب", "بجوار", "جوار", "بجانب", "جانب", "ورا", "خلف", "قدام", "امام", "قصاد", "مقابل",
+             "behind", "beside", "opposite", "next"}
+# … and «قريب من X» / "near X": relative only when a place follows (never «قريب مني», "near me")
+REL_NEAR = {"قريب", "قريبه", "near", "nearby", "close", "around"}
+REL_SELF = {"مني", "هنا", "me", "here", "us", "مننا", "ليا", "لي"}
+REL_SKIP = {"من", "ل", "to", "from", "of", "the"}
+
+
 def _toks(s: str) -> list[str]:
     return tn.tokens(s)
+
+
+def relative_split(raw: str) -> tuple[str, str, str] | None:
+    """(what, landmark, the direction word) when the query places what it asks for relative to a landmark."""
+    toks = _toks(raw)
+    for i, t in enumerate(toks):
+        if t not in REL_WORDS and t not in REL_NEAR:
+            continue
+        head = [x for x in toks[:i] if x not in FILLER and x not in NEAR_WORDS]
+        j = i + 1
+        while j < len(toks) and toks[j] in REL_SKIP:
+            j += 1
+        mark = toks[j:]
+        if not head or not mark or all(x in REL_SELF or tn.is_stopword(x) for x in mark):
+            return None
+        if t in REL_NEAR and j == i + 1 and t not in ("near",):
+            return None  # «قريب X» without «من» is «X قريب» (near me), not a landmark
+        return " ".join(head), " ".join(mark), t
+    return None
+
+
+def _name_has(r: "Result", word: str) -> bool:
+    """The word is one of the result's own name words («امام» in «مسجد الإمام الحسين»)."""
+    w = tn.stems(word)[-1]
+    return any(tn.stems(t)[-1] == w for nm in (r.name_ar, r.name_en) if nm for t in tn.tokens(nm))
 
 
 def _key(toks) -> str:
@@ -324,6 +362,8 @@ class Engine:
         if tuning:
             self.T.update(tuning)
         self._area_cache: dict = {}
+        self._area_names: dict = {}
+        self._extra: list[str] = []
 
     # ── 1 parse ─────────────────────────────────────────────────────────────
 
@@ -657,14 +697,54 @@ class Engine:
     # ── 2 retrieve + 3 score ────────────────────────────────────────────────
 
     def search(self, raw: str, lat: float, lng: float, limit: int = 10, route=None, dest=None, dbs=None,
-               explain=False) -> list[Result]:
+               explain=False, extra=None) -> list[Result]:
         """An interpretation that finds nothing is the wrong one: a trailing word read as an area
         («مترو السادات» → Sadat City) is retried as part of the name, and a category nobody
-        tagged («استراحة») is retried as the words of a name."""
+        tagged («استراحة») is retried as the words of a name.
+
+        `extra` = tiles the NAME ROUTER says hold the query's words (router.py): searched for text
+        after the tiles around the anchor, whatever their distance.
+
+        A query placed relative to a landmark («صيدلية جنب مسجد الحصري») resolves the landmark first and
+        searches the rest around it — unless the plain reading finds a place whose own name holds the
+        direction word («مسجد الامام الحسين»: «امام» is part of the name), or the phrase is the
+        destination's («جنب الوصول»)."""
+        self._extra = [x for x in (extra or []) if x in self.ix.cons]
+        plain = self._search_plain(raw, lat, lng, limit, route, dest, dbs, explain)
+        rel = relative_split(raw) if not route else None
+        if rel is not None and self.parse(raw, lat, lng).scope in ("along_route", "near_destination"):
+            rel = None  # «صيدلية جنب الوصول»: the destination, not a landmark
+        if rel is None:
+            return plain
+        what, mark, word = rel
+        if plain and plain[0].text >= self.T["rel_plain_text"]:
+            # the plain reading named a place: it stands when the direction word is part of that name, or the place
+            # is the kind the query asks for («مسجد الامام الحسين» → the mosque; «صيدلية ورا محطة سيدي جابر» → not
+            # the station)
+            hs = self.parse(what, lat, lng).scat
+            top = plain[0]
+            if _name_has(top, word) or (hs and (top.scat == hs or top.scat in SCAT_FAMILY.get(hs, ()))):
+                return plain
+        marks = self._search_plain(mark, lat, lng, 1, None, None, dbs, explain)
+        if not marks or marks[0].text < self.T["rel_mark_text"]:
+            return plain
+        m = marks[0]
+        near = self._search_plain(what, m.lat, m.lng, limit, None, None, dbs, explain, near=True)
+        for r in near:
+            r.dist = haversine(lat, lng, r.lat, r.lng)  # what the user sees is still their own distance
+        seen = {r.pid for r in near}
+        return (near + [r for r in plain if r.pid not in seen])[:limit]
+
+    def _search_plain(self, raw: str, lat: float, lng: float, limit: int, route, dest, dbs, explain,
+                      near: bool = False) -> list[Result]:
         p = self.parse(raw, lat, lng)
+        if near:
+            p.near = True
         out = self._search(p, lat, lng, limit, route, dest, dbs, explain)
         if not out and p.area is not None and not p.area_led:
             p = self.parse(raw, lat, lng, no_area=True)
+            if near:
+                p.near = True
             out = self._search(p, lat, lng, limit, route, dest, dbs, explain)
         if not out and p.kind == "name" and len(p.residual) == 2:
             a, b = p.residual  # «بور توفيق» ⇄ «بورتوفيق»: the name written as one word
@@ -682,6 +762,12 @@ class Engine:
                 out = (exact + [r for r in out if r.pid not in seen])[:limit]
         return out
 
+    def _text_scope(self, lat: float, lng: float) -> list[str]:
+        """The files a name is looked for in: the national file and the tiles around the anchor
+        (nearest first), then the routed tiles beyond them."""
+        near = self.ix.near(lat, lng, self.T["text_radius_m"])
+        return near + [x for x in self._extra if x not in near]
+
     def _exact_names(self, raw: str, lat: float, lng: float, dbs, cat_words: list) -> list[Result]:
         """Places whose whole name IS the query («مكتبة الإسكندرية», «معبد الكرنك», «مطعم الدهان»):
         first, whatever the parse made of the words — but only when the query names something (a
@@ -697,7 +783,7 @@ class Engine:
         if all(w in self.lx.generic or w in kind_words for w in want):
             return []
         cands: dict = {}
-        self._text_candidates(words, dbs or self.ix.near(lat, lng, T["text_radius_m"]), cands)
+        self._text_candidates(words, dbs or self._text_scope(lat, lng), cands)
         out = []
         for (db, pid), c in cands.items():
             row = self._row(db, pid)
@@ -730,7 +816,7 @@ class Engine:
         tau = self._tau(p)
         if p.near:
             tau *= T["nearby_query_tau_scale"]
-        scope = dbs or self.ix.near(alat, alng, T["text_radius_m"])
+        scope = dbs or self._text_scope(alat, alng)
         cands: dict[tuple[str, int], dict] = {}
 
         # text — a category word that is part of a name («مول مصر», «مستشفى السلام») is the most
@@ -975,9 +1061,22 @@ class Engine:
 
     # ── in-memory word match (the same function scores every candidate, wherever it came from)
 
-    def _place_tokens(self, row: dict) -> list[tuple[str, int, bool]]:
+    def _area_text(self, db: str | None, aid) -> str | None:
+        """The names of the area a row points at (its file's `area` table), «ar\\x1fen»."""
+        if db is None or aid is None:
+            return None
+        key = (db, aid)
+        if key not in self._area_names:
+            r = self.ix.cons[db].execute("SELECT ar, en FROM area WHERE id = ?", (aid,)).fetchone()
+            self._area_names[key] = "\x1f".join(x for x in (r[0], r[1]) if x) or None if r else None
+        return self._area_names[key]
+
+    def _place_tokens(self, row: dict, db: str | None = None) -> list[tuple[str, int, bool]]:
+        """Field 0 the names, 1 the alternative names, 2 the address, 3 the place's own AREA: a query that
+        names a neighbourhood the parse did not read as one («Trust Code مساكن الجيزة») still finds it."""
         out = []
-        for field_, text in ((0, row.get("name_ar")), (0, row.get("name_en")), (1, row.get("alt")), (2, row.get("addr"))):
+        for field_, text in ((0, row.get("name_ar")), (0, row.get("name_en")), (1, row.get("alt")), (2, row.get("addr")),
+                             (3, self._area_text(db, row.get("area")))):
             if not text:
                 continue
             for part in text.split("\x1f"):
@@ -1041,7 +1140,7 @@ class Engine:
                         qual = T["q_fuzzy1"] if e == 1 else T["q_fuzzy2"]
             if qual == 0.0:
                 continue
-            qual *= (T["f_name"], T["f_alt"], T["f_addr"], T["f_addr"])[fld]
+            qual *= (T["f_name"], T["f_alt"], T["f_addr"], T["f_area"])[fld]
             if first and fld == 0:
                 qual = min(1.0, qual + T["first_word_bonus"])
             if qual > best:
@@ -1062,7 +1161,7 @@ class Engine:
 
     def _text_score(self, words: list[str], c: dict, row: dict) -> float:
         T = self.T
-        toks = self._place_tokens(row)
+        toks = self._place_tokens(row, c.get("_db"))
         if not toks:
             return 0.0
         n = len(words)

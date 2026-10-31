@@ -119,6 +119,8 @@ def files_of(index_dir: str, man: dict) -> list[tuple[str, str, str]]:
     """(asset name, local path, content type), manifest excluded — it goes last."""
     out = [(man["national"]["file"], os.path.join(index_dir, man["national"]["file"]), "application/gzip")]
     out += [(t["file"], os.path.join(index_dir, t["file"]), "application/gzip") for t in man["tiles"]]
+    if man.get("router"):
+        out.append((man["router"]["file"], os.path.join(index_dir, man["router"]["file"]), "application/gzip"))
     for fn, ct in (("NOTICE.md", "text/markdown"), ("attribution.json", "application/json"),
                    ("build_report.json", "application/json"), ("bench.json", "application/json")):
         if os.path.exists(os.path.join(index_dir, fn)):

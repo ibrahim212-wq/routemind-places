@@ -21,8 +21,9 @@ SRC_OVT_OTHER = "ovx"  # PinMeTo / DAC / … rows inside Overture
 SRC_DIV = "div"        # Overture divisions (OSM-derived area names)
 SRC_WD = "wd"          # Wikidata
 SRC_GN = "gn"          # GeoNames
+SRC_UGC = "ugc"        # places RouteMind users added (docs/search-learning-migration.sql, ODbL by the in-app terms)
 SOURCE_BITS = {SRC_OSM: 1, SRC_ATP: 2, SRC_FSQ: 4, SRC_MS: 8, SRC_META: 16, SRC_OVT_OTHER: 32,
-               SRC_DIV: 64, SRC_WD: 128, SRC_GN: 256}
+               SRC_DIV: 64, SRC_WD: 128, SRC_GN: 256, SRC_UGC: 512}
 
 
 @dataclass

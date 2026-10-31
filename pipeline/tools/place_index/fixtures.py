@@ -98,6 +98,9 @@ MINI_QUERIES = [
     "صيدلية فاتحة دلوقتي", "دار الاوبرا", "kobry 6 october", "صيدلبة", "بنزنيه", "محطة مترو السادات",
     "فول وطعمية", "مطعم قريب", "صيدلية في جاردن سيتي", "بنزينة في الزمالك", "شارع قصر النيل وسط البلد",
     "مكتبة الشروق التحرير", "كشري ابو طارق", "قهوة في وسط البلد",
+    # a landmark instead of an address (engine.py `relative_split`, 2026-10-31) and a place's own area
+    "صيدلية جنب ميدان التحرير", "pharmacy near tahrir square", "كشري جنب المتحف المصري",
+    "atm next to egyptian museum", "قهوة قريب من مجمع التحرير", "مطعم وسط البلد",
 ]
 
 
@@ -183,9 +186,37 @@ def mini(index_dir: str, out_dir: str) -> dict:
         json.dump(mman, f, ensure_ascii=False, indent=1)
     with open(os.path.join(out_dir, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(mman, f, ensure_ascii=False, indent=1)
-    # the expectation: the reference engine on the mini index itself
+    mini_cases(work, out_dir, mman["version"])
+    shutil.rmtree(work)
+    return {k: (v["places"], v["bytes"]) for k, v in entries.items()}
+
+
+def restate_mini(out_dir: str) -> int:
+    """The expectation re-stated on the COMMITTED mini index (an engine change; the index stays as cut)."""
+    import gzip
+    import shutil
+    work = os.path.join(out_dir, "_work")
+    os.makedirs(work, exist_ok=True)
+    with open(os.path.join(out_dir, "manifest.json"), encoding="utf-8") as f:
+        mman = json.load(f)
+    for t in [mman["national"]] + mman["tiles"]:
+        with open(os.path.join(out_dir, t["file"]), "rb") as f:
+            raw = gzip.decompress(f.read())
+        with open(os.path.join(work, t["id"] + ".sqlite"), "wb") as f:
+            f.write(raw)
+    with open(os.path.join(work, "manifest.json"), "w", encoding="utf-8") as f:
+        json.dump(mman, f, ensure_ascii=False, indent=1)
+    n = mini_cases(work, out_dir, mman["version"])
+    shutil.rmtree(work)
+    return n
+
+
+def mini_cases(work: str, out_dir: str, version: str) -> int:
+    """The expectation: the reference engine on the mini index itself."""
+    clat, clng = MINI_CENTER
     lx = E.Lexicon.load(os.path.join(APP, "assets", "search", "egypt_lexicon.json"))
-    eng = E.Engine(E.Index(work), lx)
+    ix = E.Index(work)
+    eng = E.Engine(ix, lx)
     cases = []
     for q in MINI_QUERIES:
         p = eng.parse(q, clat, clng)
@@ -196,21 +227,99 @@ def mini(index_dir: str, out_dir: str) -> dict:
                                 "street": p.street, "near": p.near, "residual": p.residual, "open_now": p.open_now},
                       "top": [{"pid": r.pid, "score": r.score, "text": r.text} for r in rs]})
     with open(os.path.join(out_dir, "engine_cases.json"), "w", encoding="utf-8") as f:
-        json.dump({"index_version": mman["version"], "cases": cases}, f, ensure_ascii=False, indent=0)
-    shutil.rmtree(work)
-    return {k: (v["places"], v["bytes"]) for k, v in entries.items()}
+        json.dump({"index_version": version, "cases": cases}, f, ensure_ascii=False, indent=0)
+    for con in ix.cons.values():
+        con.close()
+    return len(cases)
+
+
+# ── the name router: a synthetic router (router.py) the app tests parse and query ───────────────
+
+ROUTER_NAMES = [  # (tiles, names): realistic names through the same tokenizer the tiles use
+    ([0], ["كشري أبو طارق", "Koshary Abou Tarek"]),
+    ([1], ["مطعم زفير", "Zephyr Restaurant"]),
+    ([2, 3], ["صيدلية الحكمة", "El Hekma Pharmacy"]),
+    (list(range(4, 14)), ["فول الجحش"]),             # 10 tiles: not distinctive → only the near ones fetch
+    ([5, 9], ["حلواني العبد"]),
+    ([7], ["مخبز الإيمان", "ma5baz el iman"]),
+    (list(range(0, 30)), ["مطعم المدينة", "شارع الجمهورية"]),  # in every tile: common, routes nothing
+]
+ROUTER_QUERIES = [  # (words as the engine's parse leaves them, anchor)
+    (["كشري", "ابو", "طارق"], 30.05, 31.24), (["زفير"], 31.2, 29.9), (["zephyr"], 30.05, 31.24),
+    (["الحكمه"], 27.2, 31.2), (["فول", "الجحش"], 30.05, 31.24), (["الجحش"], 24.1, 32.9),
+    (["حلواني", "العبد"], 30.05, 31.24), (["العبد"], 30.05, 31.24), (["مطعم"], 30.05, 31.24),
+    (["مطعم", "زفير"], 30.05, 31.24), (["ايمان"], 29.0, 31.1), (["ma5baz"], 30.05, 31.24),
+    (["زفير", "الحكمه"], 30.05, 31.24), (["غير", "موجود", "اصلا"], 30.05, 31.24), ([], 30.05, 31.24),
+]
+
+
+def router_fixture() -> dict:
+    """30 tiles on a grid over Egypt holding the tokens of ROUTER_NAMES; the reference's answers."""
+    import base64
+    import gzip
+    from . import router as RT
+    from . import tiles as TL
+    toks: list[dict] = [dict() for _ in range(30)]
+    for tiles_of, names in ROUTER_NAMES:
+        for i in tiles_of:
+            for nm in names:
+                TL.text_tokens(nm, TL.F_NAME, toks[i])
+    entries = []
+    for i in range(30):
+        x0, y0 = 25.0 + (i % 6) * 2.0, 22.0 + (i // 6) * 1.9
+        entries.append((f"t{i:02d}", [x0, y0, x0 + 2.0, y0 + 1.9], sorted(toks[i])))
+    data, _stats = RT.encode_router(entries, "fixture-router-1", max_tiles=24)  # 30 tiles: «مطعم» stays common
+    gz = gzip.compress(data, compresslevel=9, mtime=0)
+    r = RT.Router(data=gz)
+    cases = []
+    for words, lat, lng in ROUTER_QUERIES:
+        routed = r.route_tiles(words, lat, lng)
+        have = {t for t, _ in routed[:1]}
+        cases.append({
+            "words": words, "lat": lat, "lng": lng,
+            "word_tiles": [r.word_tiles(w) for w in words],
+            "routed": [[t, round(d, 6)] for t, d in routed],
+            "have": sorted(have),
+            "plan_metered": list(RT.plan(routed, have, True)),
+            "plan_wifi": list(RT.plan(routed, have, False)),
+        })
+    fnv = [[t, format(RT.fnv1a64(t), "016x"), format(RT.fmix64(RT.fnv1a64(t)), "016x")]
+           for t in ("", "a", "كشري", "~كشر", "zephyr", "مطعم", "الحكمه")]
+    return {"version": "fixture-router-1", "file_b64": base64.b64encode(gz).decode("ascii"), "cases": cases, "fnv": fnv}
+
+
+def write_router_fixture() -> None:
+    """Re-state only the router part of text_cases.json (the text cases stay as they are)."""
+    p = os.path.join(OUT, "text_cases.json")
+    with open(p, encoding="utf-8") as f:
+        d = json.load(f)
+    d["router"] = router_fixture()
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(d, f, ensure_ascii=False, separators=(",", ":"))
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--index", required=True)
+    ap.add_argument("--index")
     ap.add_argument("--cases", type=int, default=1600, help="sampled names for text_cases.json")
     ap.add_argument("--mini", action="store_true", help="also cut the mini index + its engine_cases.json")
+    ap.add_argument("--router-only", action="store_true", help="re-state only the router fixture")
+    ap.add_argument("--restate-mini", action="store_true",
+                    help="re-state only engine_cases.json on the committed mini index (an engine change)")
     a = ap.parse_args(argv)
     os.makedirs(OUT, exist_ok=True)
+    if a.router_only:
+        write_router_fixture()
+        print("[fixtures] router", len(router_fixture()["cases"]), "cases")
+        return
+    if a.restate_mini:
+        print("[fixtures] mini cases", restate_mini(os.path.join(OUT, "mini")))
+        return
+    if not a.index:
+        ap.error("--index is required")
     with open(os.path.join(OUT, "text_cases.json"), "w", encoding="utf-8") as f:
-        json.dump({"norm_version": tn.NORM_VERSION, "cases": text_cases(a.index, a.cases), "damerau": damerau_cases()},
-                  f, ensure_ascii=False, separators=(",", ":"))
+        json.dump({"norm_version": tn.NORM_VERSION, "cases": text_cases(a.index, a.cases), "damerau": damerau_cases(),
+                   "router": router_fixture()}, f, ensure_ascii=False, separators=(",", ":"))
     if a.mini:
         print("[fixtures] mini", mini(a.index, os.path.join(OUT, "mini")))
 

@@ -88,6 +88,9 @@ jobs:
         working-directory: pipeline
         env:
           FSQ_PORTAL_TOKEN: ${{ secrets.FSQ_PORTAL_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           ARGS="--work $WORK --repo $GITHUB_REPOSITORY --keep 3 --keep-index"

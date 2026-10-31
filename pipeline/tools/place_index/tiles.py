@@ -48,6 +48,7 @@ from collections import defaultdict
 
 from . import merge as M
 from . import records as R
+from . import router as RT
 from . import taxonomy as T
 from . import textnorm as tn
 
@@ -281,6 +282,8 @@ def build_tiles(places: list[M.Place], out_dir: str, meta: dict, keep_raw: bool 
                 "built": meta.get("built"), "license": "ODbL-1.0", "tiles": []}
     raw_total = gz_total = 0
 
+    raws = []
+
     def emit(tid, bbox, items, with_cats):
         nonlocal raw_total, gz_total
         raw = os.path.join(out_dir, f"{tid}.sqlite")
@@ -289,8 +292,7 @@ def build_tiles(places: list[M.Place], out_dir: str, meta: dict, keep_raw: bool 
         gz, sha = gzip_file(raw, raw + ".gz")
         raw_total += size
         gz_total += gz
-        if not keep_raw:
-            os.remove(raw)
+        raws.append(raw)
         return {"id": tid, "bbox": [round(x, 5) for x in bbox], "file": f"{tid}.sqlite.gz", "bytes": gz,
                 "raw_bytes": size, "sha256": sha, "places": n}
 
@@ -298,7 +300,20 @@ def build_tiles(places: list[M.Place], out_dir: str, meta: dict, keep_raw: bool 
     manifest["national"] = emit("national", nat_bbox, national, True)
     for tid, (bbox, items) in sorted(parts.items()):
         manifest["tiles"].append(emit(tid, bbox, items, False))
-    manifest["totals"] = {"files": 1 + len(manifest["tiles"]), "bytes": gz_total, "raw_bytes": raw_total,
+    # the name router: which tile holds a word (router.py) — what makes a place findable from anywhere
+    rraw = os.path.join(out_dir, "router.bin")
+    rstats = RT.build_router([(t["id"], t["bbox"], os.path.join(out_dir, t["id"] + ".sqlite"))
+                              for t in manifest["tiles"]], rraw, meta.get("version") or "")
+    rgz, rsha = RT.gzip_router(rraw, rraw + ".gz")
+    manifest["router"] = {"id": "router", "file": "router.bin.gz", "bytes": rgz, "raw_bytes": rstats["bytes"],
+                          "sha256": rsha, "tokens": rstats["tokens"], "common": rstats["common"]}
+    raw_total += rstats["bytes"]
+    gz_total += rgz
+    raws.append(rraw)
+    if not keep_raw:
+        for raw in raws:
+            os.remove(raw)
+    manifest["totals"] = {"files": 2 + len(manifest["tiles"]), "bytes": gz_total, "raw_bytes": raw_total,
                           "places": len(places)}
     with open(os.path.join(out_dir, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=1)

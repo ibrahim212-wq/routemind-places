@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
 import os
 import sys
 import time
@@ -26,6 +27,7 @@ from . import records as R
 from . import sources as S
 from . import streets as ST
 from . import taxonomy as T
+from . import textnorm as tn
 from . import tiles as TL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -112,7 +114,49 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
         recs += optional("wikidata", lambda: S.wikidata_places(os.path.join(data, "wikidata.json"), inside))
     if "gn" in sources and have(os.path.join(data, "EG.txt")):
         recs += optional("geonames", lambda: S.geonames_places(os.path.join(data, "EG.txt"), inside))
+    if "ugc" in sources and have(os.path.join(data, "ugc_places.json")):
+        recs += optional("user places", lambda: S.ugc_places(os.path.join(data, "ugc_places.json"), inside))
     return recs, segs, div_area
+
+
+SEL_POP_MAX = 0.15      # the most a place's popularity gains from being picked (log-scaled, saturating at SEL_POP_SAT)
+SEL_POP_SAT = 60
+SEL_ALIAS_MIN_N = 5     # a query that led to the place this often, on this many days, becomes one of its names
+SEL_ALIAS_MIN_DAYS = 3
+
+
+def apply_selections(places, path: str, report: dict) -> None:
+    """What users picked after searching (docs/search-learning-migration.sql `search_selections_export`:
+    aggregates only — a place id, the typed words, how often, on how many days). Two effects, both
+    measured by the release gate like any other change:
+      * popularity: the place people actually choose ranks above its look-alikes;
+      * LEARNED ALIASES: words people type for a place its names do not contain («زعبوط» for «مطعم
+        الزعبوطي») become an alternative name, so the next person who types them finds it first."""
+    with open(path, encoding="utf-8") as f:
+        rows = json.load(f)
+    by_pid: dict = {}
+    for r in rows:
+        by_pid.setdefault(r["pid"], []).append(r)
+    boosted = aliased = 0
+    for p in places:
+        rs = by_pid.get(p.pid)
+        if not rs:
+            continue
+        n = sum(int(r.get("n") or 0) for r in rs)
+        p.pop = round(min(1.0, p.pop + SEL_POP_MAX * min(1.0, math.log1p(n) / math.log1p(SEL_POP_SAT))), 3)
+        boosted += 1
+        covered = {s for x in (p.name_ar, p.name_en, *p.alt) if x for t in tn.tokens(x) for s in tn.stems(t)}
+        for r in sorted(rs, key=lambda r: (-int(r.get("n") or 0), r.get("qkey") or "")):
+            q = (r.get("qkey") or "").strip()
+            if len(q) < 3 or int(r.get("n") or 0) < SEL_ALIAS_MIN_N or int(r.get("days") or 0) < SEL_ALIAS_MIN_DAYS:
+                continue
+            words = {tn.stems(t)[-1] for t in tn.tokens(q) if not tn.is_stopword(t)}
+            if not words or words <= covered or len(p.alt) >= 6:
+                continue
+            p.alt.append(q)
+            covered |= {s for t in tn.tokens(q) for s in tn.stems(t)}
+            aliased += 1
+    report["selections"] = {"rows": len(rows), "places_boosted": boosted, "aliases_learned": aliased}
 
 
 def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cache: str | None = None,
@@ -191,6 +235,9 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
         if n:
             p.pop = round(min(1.0, p.pop + E.mention_boost(n)), 3)
     log("mentions", len(ment), f"{time.time() - t:.0f}s")
+    if "sel" in sources and os.path.exists(os.path.join(data, "selections.json")):
+        apply_selections(places, os.path.join(data, "selections.json"), report)
+        log("selections", json.dumps(report["selections"]))
     report["places"] = {"total": len(allp), "by_kind": dict(Counter(p.kind for p in allp)),
                         "multi_source": sum(1 for p in places if bin(p.srcs).count("1") > 1),
                         "with_phone": sum(1 for p in places if p.phone), "with_hours": sum(1 for p in places if p.hours),
@@ -218,7 +265,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--sources", default="osm,overture,div,fsq,wd,gn")
+    ap.add_argument("--sources", default="osm,overture,div,fsq,wd,gn,ugc,sel")
     ap.add_argument("--osm", default="pbf", choices=["pbf", "hot"])
     ap.add_argument("--version", default=dt.date.today().isoformat())
     ap.add_argument("--cache", help="pickle of the merged places: written after a merge, reused when present")
