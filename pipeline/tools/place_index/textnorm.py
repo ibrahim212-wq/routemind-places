@@ -170,6 +170,7 @@ def script_of(text: str) -> str:
     return "ar" if ar else "latin"
 
 
+@lru_cache(maxsize=400_000)
 def is_arabic_token(tok: str) -> bool:
     return any(is_arabic_letter(c) for c in tok)
 
@@ -207,6 +208,76 @@ def stems(tok: str) -> list[str]:
 
 def is_stopword(tok: str) -> bool:
     return tok in LATIN_STOP or tok in ARABIC_STOP
+
+
+# ── numbers written as words ────────────────────────────────────────────────
+# «قسم ثان» = «قسم 2» = «القسم التاني», «المرحلة الثانية» = "phase 2", «كلاود ناين» = "cloud 9": an ordinal or a
+# cardinal written as a word stands for its digits. Keys are normalized STEMS (the article is already off). Words
+# that mean something else more often than a number («ست» a lady, «تن» a ton, «فور» at once, «تو» just now, «وان»
+# a van, «ايت») are left out.
+NUMBER_WORDS = {
+    "1": ("اول", "اولي", "واحد", "واحده", "first", "1st", "one"),
+    "2": ("ثان", "ثاني", "ثانيه", "تاني", "تانيه", "اتنين", "اثنين", "اثنان", "second", "2nd", "two"),
+    "3": ("ثالث", "ثالثه", "تالت", "تالته", "ثلاثه", "تلاته", "ثلاث", "تلات", "third", "3rd", "three", "ثري"),
+    "4": ("رابع", "رابعه", "اربعه", "اربع", "fourth", "4th", "four"),
+    "5": ("خامس", "خامسه", "خمسه", "خمس", "fifth", "5th", "five", "فايف"),
+    "6": ("سادس", "سادسه", "سته", "sixth", "6th", "six", "سيكس"),
+    "7": ("سابع", "سابعه", "سبعه", "سبع", "seventh", "7th", "seven", "سفن"),
+    "8": ("ثامن", "ثامنه", "تامن", "تامنه", "ثمانيه", "تمانيه", "تمنيه", "ثمان", "eighth", "8th", "eight"),
+    "9": ("تاسع", "تاسعه", "تسعه", "تسع", "ninth", "9th", "nine", "ناين"),
+    "10": ("عاشر", "عاشره", "عشره", "tenth", "10th", "ten"),
+    # the tens («بوينت تسعين» = Point 90, «الأربعين» = 40)
+    "20": ("عشرين", "twenty"), "30": ("ثلاثين", "تلاتين", "thirty"), "40": ("اربعين", "forty"),
+    "50": ("خمسين", "fifty"), "60": ("ستين", "sixty"), "70": ("سبعين", "seventy"),
+    "80": ("ثمانين", "تمانين", "eighty"), "90": ("تسعين", "ninety"), "100": ("ميه", "مايه", "مائه", "hundred"),
+}
+_NUMBER_OF = {w: d for d, ws in NUMBER_WORDS.items() for w in ws}
+
+
+def is_digits(tok: str) -> bool:
+    return bool(tok) and all("0" <= c <= "9" for c in tok)
+
+
+def has_digit(tok: str) -> bool:
+    return any("0" <= c <= "9" for c in tok)
+
+
+@lru_cache(maxsize=200_000)
+def number_value(tok: str) -> str | None:
+    """The digits a token stands for: «الثاني» → "2", "2nd" → "2", "007" → "7", «ناين» → "9"; else None."""
+    st = stems(tok)[-1]
+    if is_digits(st):
+        return st.lstrip("0") or "0"
+    return _NUMBER_OF.get(st)
+
+
+def number_forms(tok: str) -> list[str]:
+    """Every other way the same number is written (the digits first), for retrieval: «ثان» → ["2", "ثاني", …]."""
+    v = number_value(tok)
+    if v is None:
+        return []
+    out = [v] + list(NUMBER_WORDS.get(v, ()))
+    return [x for x in out if x != tok]
+
+
+@lru_cache(maxsize=400_000)
+def alnum_parts(tok: str) -> tuple[str, ...]:
+    """"cloud9" → ["cloud", "9"]: a Latin word ending in digits, with at least three letters and no digit before
+    them, is also its two parts. Franco digits inside or in front of letters ("3ezaby", "sa7el") are letters."""
+    if not tok or is_arabic_token(tok):
+        return ()
+    i = len(tok)
+    while i > 0 and "0" <= tok[i - 1] <= "9":
+        i -= 1
+    if i == len(tok) or i < 3 or has_digit(tok[:i]):
+        return ()
+    return (tok[:i], tok[i:])
+
+
+@lru_cache(maxsize=400_000)
+def has_number(tok: str) -> bool:
+    """The token holds a NUMBER ("9", "cloud9"), not Franco letters ("3ezaby", "sa7el")."""
+    return is_digits(tok) or bool(alnum_parts(tok))
 
 
 # ── skeleton ────────────────────────────────────────────────────────────────

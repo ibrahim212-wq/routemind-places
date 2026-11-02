@@ -25,6 +25,7 @@ from . import enrich as E
 from . import media as MD
 from . import merge as M
 from . import names as NM
+from . import quality as QL
 from . import records as R
 from . import sources as S
 from . import streets as ST
@@ -272,6 +273,8 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
                 p.cat = c
     report["kind_from_name"] = {"places": sum(inferred.values()), "by_kind": dict(inferred.most_common())}
     log("kind from the name", sum(inferred.values()))
+    QL.police(places, report)  # «قسم شرطة …», «قسم ثان المحلة» merged with a civil registry is the police station
+    log("police by name", report["police_by_name"])
     for p in places + streets:
         p.gov = gov.locate(p.lat, p.lng)
         if p.kind != "area":
@@ -303,10 +306,25 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
                 lent += 1
     log("brand logo lent to branches", lent)
     report["brand_logo_lent"] = lent
+    # a branch named in one script takes its chain's name in the other (a real name, shown: «بازوكا» for an Arabic
+    # search), before the generated names so those are only made where nothing reliable exists
+    QL.lend_names(places, lex, report)
+    log("chain names lent", json.dumps(report["chain_names_lent"]))
     # an Arabic form for a Latin-only name and the reverse, learned from the index's own bilingual names (names.py);
     # after the brands, so a generated word never makes a place a chain's branch
     NM.generate_all(places, report)
     log("generated names", json.dumps(report["generated_names"]))
+    # the mall / compound / campus each place stands in, and the malls only their shops' addresses name
+    derived = QL.contain(places, report)
+    for p in derived:
+        p.gov = gov.locate(p.lat, p.lng)
+        a = al.locate(p.lat, p.lng)
+        if a:
+            p.area_ar, p.area_en = a.name_ar, a.name_en
+    places = places + derived
+    log("containment", json.dumps(report["contain"]))
+    QL.locate(places, report)  # positions the sources contradict
+    log("positions doubted", json.dumps(report["locate"]))
     allp = places + streets
     if media:
         # freely licensed photos where the open data names or shows the place, credited (docs/place-photos-2026-10.md)

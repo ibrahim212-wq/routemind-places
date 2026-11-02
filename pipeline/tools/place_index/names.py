@@ -9,10 +9,11 @@ each is the other's dominant partner (≥ MIN_SHARE of the places either word ap
 transliterations the skeleton misses ("cilantro" ⇄ «سيلانترو», "gad" ⇄ «جاد»), Egyptian spellings ("abou" ⇄
 «ابو») and plain translations ("pyramids" ⇄ «الاهرامات», "pharmacy" ⇄ «صيدليه») — whatever the data agrees on.
 
-A generated name holds only the words the dictionary knows (in the name's order) and is written as an alternative
-name: the engine reads alternatives at f_alt (0.88 of a real name's weight), so a generated match ranks below a real
-one, and the app never displays an alternative. It is generated only when it adds a word the place's own names do
-not already match (a different word AND a different skeleton)."""
+A generated name holds only the words the dictionary knows (in the name's order) and is kept apart from the real
+alternative names (`Place.gen_alt`, written after a "\x1e" in the tile's `alt`): the engine reads it at f_alt × f_gen and
+as a FALLBACK match class, so a generated match never outranks a real one, and the app never displays it. It is
+generated only when it adds a word the place's own names do not already match (a different word AND a different
+skeleton)."""
 from __future__ import annotations
 
 from collections import Counter, defaultdict
@@ -109,7 +110,9 @@ def generate_all(places, report: dict) -> None:
         own = [x for x in (p.name_ar, p.name_en, *p.alt) if x]
         g = d.generate(p.name_ar, "ar", own) if p.name_ar else d.generate(p.name_en, "la", own)
         if g:
-            p.alt = list(p.alt) + [g]
+            # kept apart from the real alternative names: the tile writes them after a "\x1e" and the engine reads
+            # a match on them as a fallback (match class 1), never as the place's real name
+            p.gen_alt = list(p.gen_alt) + [g]
             made["latin_for_arabic_only" if p.name_ar else "arabic_for_latin_only"] += 1
     report["generated_names"] = {"dictionary": len(d.ar2la), **made,
                                  "pois_without_arabic": sum(1 for p in pois if not p.name_ar),

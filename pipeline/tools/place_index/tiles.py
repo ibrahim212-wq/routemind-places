@@ -13,7 +13,9 @@ SCHEMA (version SCHEMA_VERSION) — one file layout for both:
 
   meta(k, v)                       schema, tile, bbox, built, norm, license, sources
   place(id, pid, kind, cat, scat, lat, lng, name_ar, name_en, alt, addr, area, gov,
-        phone, website, social, hours, brand, conf, pop, srcs, ext, grp)
+        phone, website, social, hours, brand, conf, pop, srcs, ext, grp, inside)
+                                   alt = the real alternative names U+001F-joined, then U+001E + the generated ones;
+                                   inside = the mall / compound / campus the place stands in, «ar U+001F en»
   area(id, ar, en)                 the neighbourhood / city names `place.area` points at (subtitles)
   tok(t, id, f)  WITHOUT ROWID     the inverted index, PRIMARY KEY (t, id); f = flags below
   vocab(t, n)    WITHOUT ROWID     every distinct token (skeletons too) + its document frequency:
@@ -97,6 +99,8 @@ def text_tokens(text: str, field: int, out: dict, variants: bool = True) -> None
         for sk in tn.skeletons(t)[:2]:
             if len(sk) >= 2 and not sk.isdigit():
                 _add(out, "~" + sk, flags(field, FORM_SKEL, first))
+        for x in tn.alnum_parts(t):  # "Cloud9" is found by "cloud 9"
+            _add(out, x, flags(field, FORM_STEM, False))
     if variants:
         for i in range(len(toks) - 1):
             a, b = toks[i], toks[i + 1]
@@ -105,6 +109,18 @@ def text_tokens(text: str, field: int, out: dict, variants: bool = True) -> None
                 _add(out, j, flags(field, FORM_JOIN, i == 0))
                 for s in tn.stems(j)[1:]:
                     _add(out, s, flags(field, FORM_JOIN, i == 0))
+            v = tn.number_value(b)
+            if v is not None and not tn.is_digits(b) and not tn.is_arabic_token(a) and not tn.has_number(a):
+                _add(out, a + v, flags(field, FORM_JOIN, i == 0))  # "Cloud Nine" is found by "cloud9"
+
+
+def alt_text(p: M.Place) -> str | None:
+    """The `alt` column: the real alternative names joined by U+001F, then — after a U+001E — the names GENERATED in the
+    other script (names.py), which the engine reads as a fallback (engine._place_tokens, field bit 8)."""
+    real = "\x1f".join(p.alt)
+    if p.gen_alt:
+        return real + "\x1e" + "\x1f".join(p.gen_alt)
+    return real or None
 
 
 def place_tokens(p: M.Place) -> dict[str, int]:
@@ -112,7 +128,7 @@ def place_tokens(p: M.Place) -> dict[str, int]:
     for n in (p.name_ar, p.name_en):
         if n:
             text_tokens(n, F_NAME, out)
-    for n in p.alt:
+    for n in list(p.alt) + list(p.gen_alt):
         text_tokens(n, F_ALT, out)
     # the address line is NOT indexed (it was a third of every tile's index): a query that names a
     # street finds the street itself, and a category / name candidate is scored on its address
@@ -164,7 +180,8 @@ CREATE TABLE place(
   id INTEGER PRIMARY KEY, pid TEXT NOT NULL, kind INTEGER NOT NULL, cat TEXT NOT NULL, scat TEXT,
   lat REAL NOT NULL, lng REAL NOT NULL, name_ar TEXT, name_en TEXT, alt TEXT, addr TEXT,
   area INTEGER, gov TEXT, phone TEXT, website TEXT, social TEXT, hours TEXT,
-  brand TEXT, conf REAL NOT NULL, pop REAL NOT NULL, srcs INTEGER NOT NULL, ext INTEGER NOT NULL, grp TEXT);
+  brand TEXT, conf REAL NOT NULL, pop REAL NOT NULL, srcs INTEGER NOT NULL, ext INTEGER NOT NULL, grp TEXT,
+  inside TEXT);
 CREATE TABLE tok(t TEXT NOT NULL, id INTEGER NOT NULL, f INTEGER NOT NULL, PRIMARY KEY (t, id)) WITHOUT ROWID;
 CREATE TABLE vocab(t TEXT PRIMARY KEY, n INTEGER NOT NULL) WITHOUT ROWID;
 CREATE TABLE category(id TEXT PRIMARY KEY, ar TEXT NOT NULL, en TEXT NOT NULL, scat TEXT) WITHOUT ROWID;
@@ -233,9 +250,9 @@ def write_db(path: str, tile_id: str, bbox, places: list[M.Place], meta: dict, w
         if p.area_ar or p.area_en:
             area = areas.setdefault((p.area_ar, p.area_en), len(areas) + 1)
         rows.append((i, p.pid, KIND[p.kind], p.cat, scat, p.lat, p.lng, p.name_ar, p.name_en,
-                     "\x1f".join(p.alt) if p.alt else None, p.addr, area, p.gov, p.phone,
+                     alt_text(p), p.addr, area, p.gov, p.phone,
                      compact_web(p.website), compact_social(p.social), p.hours, p.brand_key, round(p.conf, 3),
-                     round(p.pop, 3), p.srcs, int(min(p.extent_m, 2_000_000)), p.grp))
+                     round(p.pop, 3), p.srcs, int(min(p.extent_m, 2_000_000)), p.grp, p.inside))
         for t, f in place_tokens(p).items():
             toks.append((t, i, f))
             df[t] += 1
@@ -244,7 +261,7 @@ def write_db(path: str, tile_id: str, bbox, places: list[M.Place], meta: dict, w
             media.append((i, md.wd, md.img, md.by, md.lic, md.lic_url, getattr(md, "logo", None)))
             for n, ph in enumerate(getattr(md, "photos", None) or []):
                 photos.append((i, n, ph.src, ph.ref, ph.by, ph.lic, ph.lic_url, ph.at, ph.fx, ph.how))
-    con.executemany("INSERT INTO place VALUES (" + ",".join("?" * 23) + ")", rows)
+    con.executemany("INSERT INTO place VALUES (" + ",".join("?" * 24) + ")", rows)
     con.executemany("INSERT INTO area VALUES (?,?,?)", [(i, ar, en) for (ar, en), i in areas.items()])
     con.executemany("INSERT INTO media VALUES (?,?,?,?,?,?,?)", media)
     con.executemany("INSERT INTO photo VALUES (?,?,?,?,?,?,?,?,?,?)", photos)

@@ -45,7 +45,9 @@ TUNING = {
     "f_name": 1.0, "f_alt": 0.88, "f_addr": 0.45,
     # text score blend
     "coverage_share": 0.25, "first_word_bonus": 0.04, "exact_name_bonus": 0.10,
-    # profiles: text, prox, pop, conf, cat
+    # profiles: text, prox, pop, conf, cat — w_need is FITTED (bench/fit.py, 2026-11-02); the fit's name / category + name
+    # profiles won on its cached re-ranking but lost on the real 346 run (an airport 25 km away, the landmark a relative
+    # query resolves first — the cache cannot re-run that), so those keep the published values
     "w_name": (0.52, 0.14, 0.24, 0.10, 0.00),
     "w_category": (0.04, 0.52, 0.24, 0.14, 0.06),
     "w_cat_name": (0.46, 0.16, 0.12, 0.08, 0.18),
@@ -71,6 +73,25 @@ TUNING = {
     "rel_mark_text": 0.75,         # … and the landmark must be found this well to search around it
     "f_area": 0.40,                # a word naming the place's own area («سنابل الشام مساكن ضرغام»)
     "approx_m": 1500.0,            # a pin flagged APPROX (a page geocoded to its district's centre) is never nearer
+    # match classes (docs/place-search-2026-10.md §13): a real match (every word on a real name: the word, its stem,
+    # the same number, the start of a word while typing, a transliteration) is worth more than any score of a fallback
+    # (a skeleton, a typo, a generated name, the address); inside the real class the place's whole name gains
+    # exact_bonus — a strong preference, never a wall: the famous palace beats the wedding hall named after it
+    "tier_gap": 1.0, "exact_bonus": 0.06,
+    "exact_short_len": 5, "exact_short_m": 30000.0,  # «baz»: a name this short is "the whole name" only this near
+    "lead_cov": 0.8,               # coverage credit when the query is the START of the name (search-as-you-type)
+    "chain_min": 3, "chain_sat": 12.0, "chain_bonus": 0.05,  # a name many places share nearby is a chain
+    "q_generic_prefix": 0.9,       # the word being typed completes a word that says what kind («مطع» → «مطعم»)
+    "f_gen": 0.92,                 # a generated other-script name (names.py), under f_alt
+    "cat_in_name": 0.8,            # catm for a place whose own NAME carries the category word («… Cloud 9 Mall»)
+    "w_need": (0.38, 0.39, 0.14, 0.08, 0.01),  # «شاشه عربيات»: the shops that sell it, nearest first
+    "need_cat": 0.7,               # … a shop of a providing kind; 1.0 = its name says it sells it
+    "need_radius_m": 15000.0,
+    "short_area_len": 4,           # «المحلة» = «المحلة الكبرى»: a city's leading word names it …
+    "short_area_pop": 0.5,         # … a city people know by that word
+    "detect_brand_text": 0.75,
+    "translit_len": 5,             # a one-word query this long reads a same-consonant word of the other script as real …
+    "translit_skel": 4,            # … when they share this many consonants ("inovasys" ⇄ «نفسية» share only n-f-s)
 }
 
 APPROX_BIT = 1024  # records.APPROX_BIT: the row's pin is a geocoded district centre, not the place
@@ -88,6 +109,9 @@ NAME_TYPE_SCATS = {"bridge", "square"}
 # A category search includes the kinds that ARE that category («مطعم» finds a koshary place); only true
 # is-a families — the lexicon's prominence classes are not (a cemetery is not a mosque).
 SCAT_FAMILY = {"restaurant": ("restaurant", "koshary", "grill", "seafood", "pizza", "burger", "fast_food", "foul_taameya")}
+# Kinds whose places share names without being one chain («مسجد التوحيد», «مدرسة السلام»): no chain strength.
+NO_CHAIN_SCATS = {"mosque", "church", "school", "kindergarten", "cemetery", "police", "government_office", "courthouse",
+                  "civil_registry", "post_office", "university", "hospital", "health_unit"}
 # «صيدلية فاتحة دلوقتي»: words that ask for a place open now — consumed (never searched as a name) and
 # reported as `open_now` for the app, which alone can read hours against the clock.
 OPEN_WORDS = {"فاتحه", "فاتح", "مفتوح", "مفتوحه", "دلوقتي", "دلوقت", "الان", "حاليا", "now", "open", "opened"}
@@ -96,12 +120,16 @@ OPEN_WORDS = {"فاتحه", "فاتح", "مفتوح", "مفتوحه", "دلوق�
 NAME_TYPE_WORDS = {"محطه", "station"}
 ROAD_WORDS = {"طريق", "road", "rd", "محور", "axis", "كوبري", "bridge", "كورنيش", "corniche"}
 STREET_ABBR = {"ش": "شارع", "st": "street", "str": "street", "rd": "road", "sq": "square",
+               # «م التحرير» = ميدان التحرير, «ج القاهرة» = جامعة القاهرة (how addresses and signs shorten them)
+               "م": "ميدان", "ج": "جامعه",
                # Franco street words become the Arabic word the names carry («kobry 6 october»)
                "kobry": "كوبري", "kobri": "كوبري", "kubri": "كوبري", "share3": "شارع", "shar3": "شارع",
                "sharea": "شارع", "tare2": "طريق", "tari2": "طريق", "midan": "ميدان", "medan": "ميدان",
                "me7war": "محور", "mehwar": "محور"}
 FILLER = {"عايز", "عاوز", "عايزه", "عاوزه", "دور", "دورلي", "شوف", "شوفلي", "فين", "وين", "find", "show", "where", "is",
           "the", "a", "an", "want", "i", "need", "محتاج", "محتاجه", "لو", "سمحت", "please", "اقرب", "اي", "اى",
+          # «حد يصلح تكييف», «اشتري جزمة منين»: the errand's verbs are not names
+          "حد", "اشتري", "اجيب", "منين", "بيبيع", "بيبيعوا", "يبيع", "buy",
           # praise is not a name — «افضل مطعم», «best sushi» ask for the kind; only in queries of two words or more
           "best", "top", "good", "nice", "افضل", "احسن", "كويس", "كويسه", "حلو", "حلوه"}
 
@@ -175,6 +203,7 @@ class Lexicon:
     preps: set = field(default_factory=set)        # «جنب», «بجوار», «في» … (single words, stems)
     brands_short: dict = field(default_factory=dict)  # two-letter chain names, matched only as the whole query
     fuzzy: dict = field(default_factory=dict)  # first letter → single-word lexicon keys (≥ 4 letters), code-point order
+    needs: list = field(default_factory=list)  # «شاشه عربيات» → the shop kinds that sell it (lexicon `needs`)
     max_window: int = 4
 
     @staticmethod
@@ -232,9 +261,19 @@ class Lexicon:
         fuzzy: dict = {}
         for k in sorted({k for k in list(cat_terms) + list(brands) + list(entities) if " " not in k and len(k) >= 4}):
             fuzzy.setdefault(k[0], []).append(k)
+        # a need: its product phrases (and, for a specific one, a context phrase) as stem tuples, the kinds that sell
+        # it (best first, only kinds the lexicon has) and the phrases a seller's own NAME carries
+        seq = lambda xs: [t for t in (tuple(tn.stems(w)[-1] for w in _toks(x)) for x in xs) if t]
+        needs = []
+        for nd in d.get("needs", []):
+            cats = [c for c in nd.get("categories", []) if c in prox]
+            prods = seq(nd.get("products", []))
+            if cats and prods:
+                needs.append({"id": nd["id"], "cats": cats, "products": prods, "contexts": seq(nd.get("contexts", [])),
+                              "provider": seq(nd.get("provider_words", []))})
         return Lexicon(cat_terms, prox, brands, intents, meds, tup(preps.get("near_me", [])),
                        tup(preps.get("along_route", [])), tup(preps.get("near_destination", [])), labels, generic,
-                       entities, preps_set, brands_short, fuzzy)
+                       entities, preps_set, brands_short, fuzzy, needs)
 
 
 @dataclass
@@ -257,6 +296,8 @@ class Parsed:
     typed: bool = False              # a NAME_TYPE_WORD leads a name («محطة رمسيس»)
     open_now: bool = False           # the query asked for a place open now
     area_led: bool = True            # the area was led by «في» (False: a trailing word read as an area)
+    need: dict | None = None         # «شاشه عربيات»: a product / service the query asks for (Lexicon.needs)
+    complete: tuple | None = None    # «مطع»: (search category, the kind word the typed word is the start of)
 
     @property
     def kind(self) -> str:
@@ -289,6 +330,7 @@ class Result:
     parts: dict = field(default_factory=dict)
     row: dict = field(default_factory=dict)
     adist: float = 0.0               # distance to what the query is measured from (area, route, user)
+    tier: int = 0                    # the match class (3 the whole name, 2 real words, 1 a fallback)
 
     def name(self, lang="ar"):
         return (self.name_ar or self.name_en) if lang == "ar" else (self.name_en or self.name_ar)
@@ -367,6 +409,10 @@ class Engine:
         self._area_cache: dict = {}
         self._area_names: dict = {}
         self._extra: list[str] = []
+        self._wm_cls = 0      # word_match's match class of its last call
+        self._tier = 0        # _text_score's match class of its last call
+        self._multi = False   # the words being scored are more than one (word_match's transliteration rule)
+        self._qlen = 0        # the words of the query being searched (_search), stopwords aside
 
     # ── 1 parse ─────────────────────────────────────────────────────────────
 
@@ -421,6 +467,10 @@ class Engine:
                 used[i] = True
             elif not used[i] and len(toks) > 1 and keys[i] in self.lx.preps and t not in IN_WORDS:
                 used[i] = True  # «جنب», «بجوار», «قدام»: the place after it is the anchor
+        # a product or service with what makes it specific («شاشه عربيات», «تصليح تكييف») before the kinds: «بطارية
+        # عربية» is a car battery, not «بطارية» + a name
+        if p.scat is None:
+            self._need(p, keys, used, True)
         # a word nobody wrote (no lexicon key, not in the national file) one typo from a lexicon word
         for i, t in enumerate(toks):
             if not used[i] and t not in STREET_WORDS and t not in IN_WORDS and not tn.is_stopword(t):
@@ -495,6 +545,8 @@ class Engine:
                 if not used[i] and k in self.lx.medicines:
                     p.scat, p.cat_conf = "pharmacy", 0.85
                     used[i] = True
+        if p.scat is None and p.brand is None and p.entity is None:
+            self._need(p, keys, used, False)  # «جزمه», «كفر موبايل»: a product alone
         for i, t in enumerate(toks):
             if not used[i] and t in STREET_WORDS:
                 p.street = True
@@ -553,7 +605,66 @@ class Engine:
             i, n = p.brand_span
             p.residual_beyond_brand = bool(p.residual and not all(t in STREET_WORDS for t in p.residual))
             p.residual = toks[i:i + n] + p.residual
+        if p.kind == "name" and len(p.residual) == 1 and p.entity is None and not p.street:
+            p.complete = self._completion(p.residual[0])
         return p
+
+    def _need(self, p: Parsed, keys: list, used: list, with_context: bool) -> None:
+        """The need the query names: a product phrase as one run of unused words and — for a need that has
+        contexts — one of its context phrases elsewhere. The longest match wins (product + context words), ties the
+        lexicon's order. Its words are consumed; p.scat is the first kind that sells it."""
+        def at(seq, banned):
+            n = len(seq)
+            for i in range(len(keys) - n + 1):
+                if all(not used[i + j] and (i + j) not in banned for j in range(n)) and tuple(keys[i:i + n]) == seq:
+                    return i
+            return -1
+        best = None
+        for nd in self.lx.needs:
+            if bool(nd["contexts"]) != with_context:
+                continue
+            for prod in nd["products"]:
+                i = at(prod, ())
+                if i < 0:
+                    continue
+                span = set(range(i, i + len(prod)))
+                if with_context:
+                    for ctx in nd["contexts"]:
+                        j = at(ctx, span)
+                        if j >= 0:
+                            size = len(prod) + len(ctx)
+                            if best is None or size > best[0]:
+                                best = (size, nd, span | set(range(j, j + len(ctx))))
+                            break
+                elif best is None or len(prod) > best[0]:
+                    best = (len(prod), nd, span)
+        if best is None:
+            return
+        _, nd, span = best
+        for j in sorted(span):
+            used[j] = True
+        p.need = nd
+        p.scat, p.cat_conf = nd["cats"][0], 0.9
+        p.cat_words = [p.tokens[j] for j in sorted(span)]
+
+    def _completion(self, w: str):
+        """«مطع» → (restaurant, «مطعم»): the one word typed so far is the start of a word that says what kind of
+        place — of ONE search category (the shortest such word stands for it). None when it starts no kind word or
+        those of several kinds (“res” → restaurant / rest area), when it is a whole kind word already, or too short."""
+        k = tn.stems(w)[-1]
+        if len(k) < (3 if tn.is_arabic_token(k) else 4) or tn.has_digit(k) or k in self.lx.cat_terms:
+            return None
+        hits: dict = {}
+        for term, (scat, _) in self.lx.cat_terms.items():
+            if " " in term or not term.startswith(k) or scat in NAME_TYPE_SCATS:
+                continue
+            old = hits.get(scat)
+            if old is None or (len(term), term) < (len(old), old):
+                hits[scat] = term
+        if len(hits) != 1:
+            return None
+        scat, term = next(iter(hits.items()))
+        return scat, term
 
     def _fuzzy_key(self, k: str, tok: str):
         """«صيدلبه» → «صيدليه», "heliopolice" → "heliopolis": a word that is neither a lexicon key nor
@@ -640,18 +751,20 @@ class Engine:
                 for a in self._areas_named(words):
                     d = haversine(lat, lng, a["lat"], a["lng"])
                     # without «في», a trailing word is an area only when the area is near or big — and
-                    # big only when the words are its whole name («الشيخ» is not Kafr El-Sheikh)
-                    if not led and d > self.T["area_trailing_max_m"] and (not a["full"] or a["cat"] not in (
+                    # big only when the words are its whole name («الشيخ» is not Kafr El-Sheikh) or the
+                    # city's own short name («المحلة» = «المحلة الكبرى»)
+                    if not led and d > self.T["area_trailing_max_m"] and (not (a["full"] or a["short"]) or a["cat"] not in (
                             "city", "governorate", "markaz", "town")):
                         continue
                     if not led and a["cat"] in ("neighbourhood", "hamlet", "village") and d > self.T["area_trailing_small_m"]:
                         continue
-                    cands.append((-(n * 10) - (2 if led else 0), d, i, n, a))
+                    cands.append((-(n * 10) - (2 if led else 0), 1 if a["short"] else 0, d, i, n, a))
             if cands:
                 break
         if not cands:
             return None
-        cands.sort(key=lambda c: (c[0], c[1] / (1 + 0.5 * c[4]["pop"])))
+        cands.sort(key=lambda c: (c[0], c[1], c[2] / (1 + 0.5 * c[5]["pop"])))
+        cands = [(c[0], c[2], c[3], c[4], c[5]) for c in cands]
         _, d, i, n, a = cands[0]
         for j in range(n):
             used[i + j] = True
@@ -683,17 +796,31 @@ class Engine:
             q = ",".join(str(i) for i in sorted(ids)[:400])
             want = {tn.stems(w)[-1] for w in words}
             want_core = want - AREA_WORDS
+            short = None  # the most populous city whose name LEADS with the one word typed
             for r in con.execute(f"SELECT id, lat, lng, name_ar, name_en, cat, ext, pop, kind FROM place WHERE id IN ({q}) AND kind = 1 ORDER BY id"):
                 # the area's own name (either language, minus «كفر / قرية / حي …») is what was typed;
                 # `full` = every word of it was typed, «كفر» included
                 for nm in (r["name_ar"], r["name_en"]):
-                    words_ = {tn.stems(t)[-1] for t in _toks(nm or "") if not tn.is_stopword(t)}
+                    order = [tn.stems(t)[-1] for t in _toks(nm or "") if not tn.is_stopword(t)]
+                    words_ = set(order)
                     core = words_ - AREA_WORDS
                     if core and core == want_core:
                         row = dict(r)
                         row["full"] = words_ == want
+                        row["short"] = False
                         out.append(row)
                         break
+                    lead = [t for t in order if t not in AREA_WORDS]
+                    # an Arabic usage («المحلة», «شبين»): an English name leads with its modifier ("October Gardens")
+                    if len(want_core) == 1 and len(lead) >= 2 and lead[0] in want_core and tn.is_arabic_token(lead[0]) \
+                            and len(lead[0]) >= self.T["short_area_len"] and r["cat"] in ("city", "town", "markaz") and \
+                            r["pop"] >= self.T["short_area_pop"] and \
+                            (short is None or (r["pop"], -r["id"]) > (short["pop"], -short["id"])):
+                        short = dict(r)
+                        short["full"] = False
+                        short["short"] = True
+            if short is not None and all(o["id"] != short["id"] for o in out):
+                out.append(short)
         self._area_cache[key] = out
         return out
 
@@ -792,19 +919,15 @@ class Engine:
             row = self._row(db, pid)
             if row is None:
                 continue
-            exact = False
-            for nm in (row["name_ar"], row["name_en"]):
-                core = {tn.stems(t)[-1] for t in _toks(nm or "") if not tn.is_stopword(t)}
-                if core and core == want:
-                    exact = True
-                    break
-            if not exact:
+            if not self._is_exact(words, row):
                 continue
             d = haversine(lat, lng, row["lat"], row["lng"])
             w = T["w_name"]
-            s = w[0] + w[1] * (1.0 / (1.0 + d / T["name_half_m"])) + w[2] * row["pop"] + w[3] * row["conf"]
+            # placed FIRST by _search_plain, so scored above every class (the app re-sorts by score)
+            s = w[0] + w[1] * (1.0 / (1.0 + d / T["name_half_m"])) + w[2] * row["pop"] + w[3] * row["conf"] + \
+                T["tier_gap"] * 3
             out.append(Result(db, pid, row["pid"], row["kind"], row["cat"], row["scat"], row["lat"], row["lng"],
-                              row["name_ar"], row["name_en"], d, s, 1.0, {}, dict(row), d))
+                              row["name_ar"], row["name_en"], d, s, 1.0, {}, dict(row), d, 3))
         out.sort(key=_rank)
         return self._collapse(out)[:3]
 
@@ -816,6 +939,7 @@ class Engine:
         elif p.scope == "near_destination" and dest:
             alat, alng = dest
         kind = p.kind
+        self._qlen = sum(1 for t in p.tokens if not tn.is_stopword(t))
         tau = self._tau(p)
         if p.near:
             tau *= T["nearby_query_tau_scale"]
@@ -827,10 +951,18 @@ class Engine:
         if p.residual:
             self._text_candidates(p.cat_words + p.residual if kind == "cat_name" else p.residual, scope, cands)
         for exp in p.expansions:
-            self._text_candidates(exp, scope, cands)
-        # category / brand
-        if p.scat and (kind in ("category", "cat_name")):
+            self._text_candidates(exp, scope, cands, prefix=False)  # another WHOLE name of the entity: no completions
+        # category / brand / need: the kinds that sell it, and the shops whose own names say they do
+        if p.need is not None and kind in ("category", "cat_name"):
+            for sc in p.need["cats"]:
+                self._category_candidates(sc, alat, alng, scope, cands, p, route)
+            nscope = self.ix.near(alat, alng, T["need_radius_m"])
+            for ph in p.need["provider"]:
+                self._text_candidates(list(ph), nscope, cands, prefix=False)
+        elif p.scat and (kind in ("category", "cat_name")):
             self._category_candidates(p.scat, alat, alng, scope, cands, p, route)
+        if p.complete is not None:
+            self._category_candidates(p.complete[0], alat, alng, scope, cands, p, route)
         if p.brand:
             self._brand_candidates(p.brand, alat, alng, cands)
 
@@ -848,23 +980,38 @@ class Engine:
             if row["srcs"] & APPROX_BIT:
                 d = max(d, T["approx_m"])  # it stands somewhere in the district: it may not claim to be right here
             text = self._text_score(p.residual, c, row) if p.residual else 0.0
+            tier = self._tier if p.residual else 0
             for exp in p.expansions:
-                text = max(text, T["expansion_factor"] * self._text_score(exp, c, row))
+                te = T["expansion_factor"] * self._text_score(exp, c, row)
+                if te > text:
+                    text, tier = te, min(self._tier, 2)  # another name of the entity is not what was typed
             if p.area and kind != "name" and d > max(p.area["radius"] * 2.2, 4000):
                 continue
             catm = 0.0
-            if p.scat:
+            if p.need is not None:
+                catm = self._need_match(p.need, row, db)
+            elif p.scat:
                 if row["scat"] == p.scat or row["scat"] in SCAT_FAMILY.get(p.scat, ()):
                     catm = 1.0
                 elif p.brand and row["brand"] == p.brand:
                     catm = 0.8
+                elif kind == "cat_name" and p.cat_words and self._names_have(p.cat_words, row):
+                    catm = T["cat_in_name"]  # «Zepter Rehab City - Cloud 9 Mall» answers «cloud9 mall»
             if kind == "category":
-                if catm < 1.0:
+                if (p.need is not None and catm <= 0.0) or (p.need is None and catm < 1.0):
                     continue
-                w = T["w_category"]
+                if p.need is not None:
+                    w = T["w_need"]
+                    text_part = catm  # its name says it sells it, else it is a kind that does
+                    catm = 1.0
+                else:
+                    w = T["w_category"]
+                    text_part = 1.0
                 prox = math.exp(-d / tau)
-                text_part = 1.0
+                tier = 2
             elif kind == "cat_name":
+                if p.need is not None:
+                    catm = 1.0 if catm > 0.0 else 0.0
                 if text < T["min_text_cat_name"] and catm < 1.0:
                     continue
                 if text < T["min_text_cat_name"] * 0.6:
@@ -872,6 +1019,12 @@ class Engine:
                 w = T["w_cat_name"]
                 prox = 1.0 / (1.0 + d / max(tau, T["name_half_m"] * 0.5))
                 text_part = text
+                if catm <= 0.0 and tier >= 2:
+                    tier = 1  # «مستشفى السلام»: a mosque called «السلام» answers only as a fallback
+                elif tier == 3 and catm < 0.8 and not self._is_exact(p.cat_words + p.residual, row):
+                    tier = 2  # «السلام» alone is not «مستشفى السلام» unless it IS a hospital
+                elif tier == 2 and self._is_exact(p.cat_words + p.residual, row):
+                    tier = 3
             elif kind == "brand":
                 is_branch = row["brand"] == p.brand
                 if (not is_branch and row["kind"] == 0 and text >= T["soft_branch_text"] and p.brand_scat
@@ -883,7 +1036,15 @@ class Engine:
                 prox = math.exp(-d / max(tau, 4000.0))
                 text_part = 1.0 if is_branch else text * 0.6
                 catm = 1.0 if is_branch else catm
+                tier = 2 if is_branch else min(tier, 1)  # «كنتاكي» the mosque is not a KFC
             else:
+                if p.complete is not None and (row["scat"] == p.complete[0] or
+                                               row["scat"] in SCAT_FAMILY.get(p.complete[0], ())):
+                    # «مطع»: the place is of the kind the word being typed completes to («مطعم»)
+                    tc = self.word_match(p.residual[0], True, [(p.complete[1], 0, True)])
+                    if tc > text:
+                        text = tc
+                    tier = max(tier, 2)
                 if text < T["min_text_name"]:
                     continue
                 if row["kind"] == 2 and p.street:
@@ -893,6 +1054,9 @@ class Engine:
                     w = T["w_area"] if row["kind"] == 1 else T["w_name"]
                     prox = 1.0 / (1.0 + d / T["name_half_m"])
                 text_part = text
+                if tier == 3 and len(p.residual) == 1 and len(p.residual[0]) < T["exact_short_len"] and \
+                        d > T["exact_short_m"]:
+                    tier = 2  # «baz» is a far village's whole name, not what is being typed
             s = w[0] * text_part + w[1] * prox + w[2] * row["pop"] + w[3] * row["conf"] + w[4] * catm
             if kind == "name" and row["kind"] == 2 and not p.street:
                 s -= T["street_unasked"]
@@ -900,22 +1064,66 @@ class Engine:
                 s += T["street_word_boost"]
                 if p.road_word and row["cat"] in ("road", "highway", "axis", "bridge"):
                     s += T["road_word_boost"]
+            s += T["tier_gap"] * min(tier, 2) + (T["exact_bonus"] if tier == 3 else 0.0)
             out.append(Result(db, pid, row["pid"], row["kind"], row["cat"], row["scat"], row["lat"], row["lng"],
                               row["name_ar"], row["name_en"], d_user, s, text,
                               {"text": round(text_part, 3), "prox": round(prox, 3), "pop": row["pop"],
-                               "conf": row["conf"], "cat": catm, "kind": kind} if explain else {}, dict(row), d))
+                               "conf": row["conf"], "cat": catm, "kind": kind, "tier": tier} if explain else {},
+                              dict(row), d, tier))
         if p.entity and kind == "name":
             out.extend(self._entity_result(p, out, lat, lng, explain))
+        if kind in ("name", "cat_name"):
+            self._chain_strength(out)
         out.sort(key=_rank)
         if kind == "name":
             out = self._detected_brand(out, alat, alng, tau)
         return self._collapse(out)[:limit]
 
+    def _chain_strength(self, out: list) -> None:
+        """Many places answering with one brand — or one name — are a chain the user is likely after («baz» →
+        Bazooka, «kans» → Kansas Fried Chicken): each real-class member gains chain_bonus × log(n) / log(chain_sat)."""
+        T = self.T
+        keys = []
+        counts: dict = {}
+        for r in out:
+            k = None
+            nm = r.name_en or r.name_ar
+            if r.tier >= 2 and r.kind == 0 and r.scat not in NO_CHAIN_SCATS and (r.row.get("brand") or nm):
+                k = r.row.get("brand") or ("n:" + tn.normalize(nm))
+                counts[k] = counts.get(k, 0) + 1
+            keys.append(k)
+        for r, k in zip(out, keys):
+            if k is not None and counts[k] >= T["chain_min"]:
+                r.score += T["chain_bonus"] * min(1.0, math.log(counts[k]) / math.log(T["chain_sat"]))
+
+    def _names_have(self, words: list[str], row: dict) -> bool:
+        """Every word is one of the place's own name words (or a real alternative name's), by itself or its stem."""
+        toks = [(t, f, x) for t, f, x in self._place_tokens(row) if (f & 3) < 2 and not (f & 8)]
+        for w in words:
+            self.word_match(w, False, toks)
+            if self._wm_cls < 2:
+                return False
+        return True
+
+    def _need_match(self, nd: dict, row: dict, db: str | None) -> float:
+        """1.0 when the place's own name says it sells the need (every word of one provider phrase among its name
+        words), need_cat when it is of a kind that does, else 0."""
+        stems = None
+        for ph in nd["provider"]:
+            if stems is None:
+                stems = {tn.stems(t)[-1] for t, f, _ in self._place_tokens(row, db) if (f & 3) < 2 and not (f & 12)}
+            if all(w in stems for w in ph):
+                return 1.0
+        sc = row["scat"]
+        if any(sc == c or sc in SCAT_FAMILY.get(c, ()) for c in nd["cats"]):
+            return self.T["need_cat"]
+        return 0.0
+
     def _detected_brand(self, out: list, lat: float, lng: float, tau: float) -> list:
         """A name the index knows as a chain (its places share a brand key, lexicon or auto): rank
         those branches as a chain — nearest first — the Dart BrandDetector's rule, on the index."""
         T = self.T
-        top = [r for r in out[:12] if r.row.get("brand") and r.text >= 0.8]
+        top = [r for r in out[:12] if r.row.get("brand") and r.text >= T["detect_brand_text"]]
         if len(top) < T["detect_brand_min"]:
             return out
         counts: dict = {}
@@ -929,7 +1137,7 @@ class Engine:
         # scale beside answers on the name scale sank them under weaker names as soon as a name became a chain (more
         # rows → an auto brand: places-2026-10-31.3, «جروبي» from Maadi, Talaat Harb 1 → 11).
         w = T["w_brand"]
-        branches = [r for r in out if r.row.get("brand") == brand and r.text >= 0.8]
+        branches = [r for r in out if r.row.get("brand") == brand and r.text >= T["detect_brand_text"]]
         slots = sorted((r.score for r in branches), reverse=True)
         for r in branches:
             d = haversine(lat, lng, r.lat, r.lng)
@@ -953,7 +1161,7 @@ class Engine:
         d = haversine(lat, lng, e["lat"], e["lng"])
         w = T["w_area"] if e["kind"] == "area" else T["w_name"]
         pop = 0.6
-        s = w[0] * 0.92 + w[1] * (1.0 / (1.0 + d / T["name_half_m"])) + w[2] * pop + w[3] * 0.9
+        s = w[0] * 0.92 + w[1] * (1.0 / (1.0 + d / T["name_half_m"])) + w[2] * pop + w[3] * 0.9 + T["tier_gap"] * 2
         cat = {"area": "neighbourhood", "road": "road", "landmark": "landmark"}[e["kind"]]
         row = {"pid": "lex:" + e["id"], "kind": 1 if e["kind"] == "area" else 0, "cat": cat, "scat": None,
                "lat": e["lat"], "lng": e["lng"], "name_ar": e["ar"], "name_en": e["en"], "alt": None, "grp": None,
@@ -979,9 +1187,13 @@ class Engine:
 
     def _index_forms(self, q: str) -> list[str]:
         out = [q] + tn.stems(q)[1:]
-        for sk in tn.skeletons(q)[:2]:
-            if len(sk) >= 2 and not sk.isdigit():
-                out.append("~" + sk)
+        if not tn.has_number(q):
+            for sk in tn.skeletons(q)[:2]:
+                if len(sk) >= 2 and not sk.isdigit():
+                    out.append("~" + sk)
+        for f in tn.number_forms(q):  # «ثان» also finds «الثاني» and «2»
+            if f not in out:
+                out.append(f)
         return out
 
     def _terms(self, con, q: str, last: bool) -> list[tuple[str, int]]:
@@ -997,19 +1209,19 @@ class Engine:
             for t, n in con.execute("SELECT t, n FROM vocab WHERE t > ? AND t < ? ORDER BY n DESC, t LIMIT ?",
                                     (q, q + "\uffff", T["prefix_terms"])):
                 out.setdefault(t, n)
-            for sk in tn.skeletons(q)[:1]:
+            for sk in (tn.skeletons(q)[:1] if not tn.has_number(q) else []):
                 if len(sk) >= 3 and not sk.isdigit():
                     for t, n in con.execute("SELECT t, n FROM vocab WHERE t > ? AND t < ? ORDER BY n DESC, t LIMIT ?",
                                             ("~" + sk, "~" + sk + "\uffff", T["prefix_terms"] // 2)):
                         out.setdefault(t, n)
-        if not out:
+        if not out and not tn.has_number(q):
             for sk in tn.skeletons(q)[:1]:
                 if len(sk) >= 4:
                     for t, n in con.execute("SELECT t, n FROM vocab WHERE t >= ? AND t < ? AND length(t) BETWEEN ? AND ? ORDER BY t",
                                             ("~" + sk[0], "~" + sk[0] + "\uffff", len(sk), len(sk) + 2)):
                         if tn.damerau(sk, t[1:], 1) <= 1:
                             out.setdefault(t, n)
-        if not any(not t.startswith("~") for t in out) and len(q) >= 3:
+        if not any(not t.startswith("~") for t in out) and len(q) >= 3 and not tn.has_number(q):
             qf = tn.stems(q)[-1]  # an article never carries the typo
             budget = tn.max_edits(qf)
             if budget:
@@ -1025,17 +1237,29 @@ class Engine:
                     out.setdefault(t, -n)
         return list(out.items())
 
-    def _text_candidates(self, words: list[str], scope: list[str], cands: dict):
+    def _text_candidates(self, words: list[str], scope: list[str], cands: dict, prefix: bool = True):
+        """`prefix` = the last word may be one being typed (False for a need's provider phrase)."""
         T = self.T
         n = len(words)
         per_word = []  # [(word index, [(db, term, df)], total df)]
         for wi, q in enumerate(words):
             terms = []
             for db in scope:
-                for t, df in self._terms(self.ix.cons[db], q, wi == n - 1):
+                for t, df in self._terms(self.ix.cons[db], q, prefix and wi == n - 1):
                     terms.append((db, t, df))
             total = sum(df for _, _, df in terms)
             per_word.append((wi, terms, total))
+        # "cloud 9" also finds a place written "Cloud9": a word and a number beside it, joined (exact forms only)
+        for wi in range(n - 1):
+            a, b = words[wi], words[wi + 1]
+            if (tn.is_digits(a) or tn.is_digits(b)) and len(a) + len(b) <= 12:
+                terms = []
+                for db in scope:
+                    r = self.ix.cons[db].execute("SELECT n FROM vocab WHERE t = ?", (a + b,)).fetchone()
+                    if r:
+                        terms.append((db, a + b, r[0]))
+                if terms:
+                    per_word.append((n + wi, terms, sum(df for _, _, df in terms)))
         usable = [w for w in per_word if w[1]]
         if not usable:
             return
@@ -1090,48 +1314,89 @@ class Engine:
         """Field 0 the names, 1 the alternative names, 2 the address, 3 the place's own AREA: a query that
         names a neighbourhood the parse did not read as one («Trust Code مساكن الجيزة») still finds it."""
         out = []
-        for field_, text in ((0, row.get("name_ar")), (0, row.get("name_en")), (1, row.get("alt")), (2, row.get("addr")),
-                             (3, self._area_text(db, row.get("area")))):
+        # names generated in the other script (names.py) follow a "\x1e" in `alt`: field bit 8, a fallback
+        real_alt, _, gen_alt = (row.get("alt") or "").partition("\x1e")
+        for field_, text in ((0, row.get("name_ar")), (0, row.get("name_en")), (1, real_alt), (9, gen_alt),
+                             (2, row.get("addr")), (3, self._area_text(db, row.get("area")))):
             if not text:
                 continue
             for part in text.split("\x1f"):
                 toks = [t for t in tn.tokens(part) if not tn.is_stopword(t)]
                 for i, t in enumerate(toks):
                     out.append((t, field_, i == 0))
-                if field_ < 2:
+                    if (field_ & 3) < 2:
+                        for x in tn.alnum_parts(t):  # "Cloud9" is also "cloud 9"
+                            out.append((x, field_, False))
+                if (field_ & 3) < 2:
                     for i in range(len(toks) - 1):
                         if len(toks[i]) + len(toks[i + 1]) <= 12:
-                            out.append((toks[i] + toks[i + 1], field_ + 4, False))
+                            out.append((toks[i] + toks[i + 1], field_ | 4, False))
+                        v = tn.number_value(toks[i + 1])
+                        if v is not None and not tn.is_digits(toks[i + 1]) and not tn.is_arabic_token(toks[i]) \
+                                and not tn.has_number(toks[i]):
+                            out.append((toks[i] + v, field_ | 4, False))  # "Cloud Nine" is also "cloud9"
         return out
 
+    def _prefix_qual(self, q: str, q_stem: str, t: str, ts: list, first: bool) -> float:
+        T = self.T
+        core = t if t.startswith(q) else ts[-1]
+        ratio = len(q if t.startswith(q) else q_stem) / max(1, len(core))
+        qual = T["q_prefix_min"] + (T["q_prefix_max"] - T["q_prefix_min"]) * ratio
+        if len(q) == 1 and not first:
+            qual *= 0.6
+        return qual
+
     def word_match(self, q: str, last: bool, toks: list[tuple[str, int, bool]]) -> float:
+        """The best quality of one query word against a place's tokens. Also sets self._wm_cls, the word's MATCH
+        CLASS: 2 = real (on a name or a real alternative name: the word, its stem, the same number, a joined pair, the
+        start of a name word while typing, a vowel spelling of a word of 4+ letters), 1 = only a fallback (a skeleton,
+        a typo, a generated other-script name, the address, the area), 0 = no match. A word with a digit matches
+        only exactly: «cloud9» is not «cloud 5»."""
         T = self.T
         qs = tn.stems(q)
         q_stem = qs[-1]
         q_loose = tn.loose(q)
-        q_sk = [s for s in tn.skeletons(q) if len(s) >= 2 and not s.isdigit()]
-        budget = tn.max_edits(q)
+        q_num = tn.number_value(q)
+        q_dig = tn.has_number(q)
+        q_sk = [s for s in tn.skeletons(q) if len(s) >= 2 and not s.isdigit()] if not q_dig else []
+        budget = tn.max_edits(q) if not q_dig else 0
         best = 0.0
+        real_best = 0.0
         generic = self.lx.generic
         for t, field_, first in toks:
-            join = field_ >= 4
+            join = (field_ & 4) != 0
+            gen = (field_ & 8) != 0
             fld = field_ & 3
             ts = tn.stems(t)
+            real = True
             if t == q:
                 qual = T["q_join"] if join else T["q_word"]
             elif ts[-1] == q_stem or q in ts or t in qs:
                 qual = T["q_join"] if join else T["q_stem"]
-            elif ts[-1] in generic or t in generic or q.isdigit():
-                continue
+            elif q_num is not None and not join and tn.number_value(t) == q_num:
+                qual = T["q_stem"]  # «ثان» = «الثاني» = «2»
+            elif ts[-1] in generic or t in generic:
+                # a word that says what KIND of place: never a skeleton or a typo, only completed while typing
+                if not (last and not join and len(q) >= 2 and (t.startswith(q) or ts[-1].startswith(q_stem))):
+                    continue
+                qual = self._prefix_qual(q, q_stem, t, ts, first) * T["q_generic_prefix"]
+            elif q_dig or tn.has_number(t):
+                if not (last and not join and not tn.is_digits(q) and t.startswith(q)):
+                    continue  # "9" never completes "90"; "cloud" completes "cloud9"
+                qual = self._prefix_qual(q, q_stem, t, ts, first)
             elif not join and len(q_loose) >= 2 and tn.loose(t) == q_loose:
                 qual = T["q_loose"]
+                # a finished word in another vowel spelling is real («السيد» = «سيدي», «سبينيز» = «سبينز»); the word being
+                # typed needs four consonants for it («مطع» is not «المطيعة», "kans" not "Kanayis")
+                real = len(q_loose) >= 4 or not last
+                if not real and last and (t.startswith(q) or ts[-1].startswith(q_stem)):
+                    # … but the start of the word being typed is real whatever its vowels («البحر» → «البحري»)
+                    real = True
+                    qual = max(qual, self._prefix_qual(q, q_stem, t, ts, first))
             elif last and (t.startswith(q) or ts[-1].startswith(q_stem)) and len(q) >= 1:
-                core = t if t.startswith(q) else ts[-1]
-                ratio = len(q if t.startswith(q) else q_stem) / max(1, len(core))
-                qual = T["q_prefix_min"] + (T["q_prefix_max"] - T["q_prefix_min"]) * ratio
-                if len(q) == 1 and not first:
-                    qual *= 0.6
+                qual = self._prefix_qual(q, q_stem, t, ts, first)
             else:
+                real = False
                 qual = 0.0
                 t_sk = [s for s in tn.skeletons(t) if len(s) >= 2]
                 short = len(q) <= 3
@@ -1140,6 +1405,9 @@ class Engine:
                         if a == b:
                             if len(a) >= 3:
                                 v = T["q_skel"]
+                                if (self._multi or (len(q) >= T["translit_len"] and len(a) >= T["translit_skel"])) and \
+                                        tn.is_arabic_token(q) != tn.is_arabic_token(t):
+                                    real = True  # «مول مصر» ⇄ "mol masr", «بازوكا» ⇄ Bazooka; never "kans" ⇄ «الكنائس»
                             elif len(q_stem) <= 6 and len(ts[-1]) <= 6:
                                 v = T["q_skel2"]  # «maadi» ⇄ «المعادي» ("md"), never «mohamed»
                             else:
@@ -1156,12 +1424,17 @@ class Engine:
             if qual == 0.0:
                 continue
             qual *= (T["f_name"], T["f_alt"], T["f_addr"], T["f_area"])[fld]
+            if gen:
+                qual *= T["f_gen"]
             if first and fld == 0:
                 qual = min(1.0, qual + T["first_word_bonus"])
+            if real and fld < 2 and not gen and qual > real_best:
+                real_best = qual
             if qual > best:
                 best = qual
-                if best >= 1.0:
+                if best >= 1.0 and real_best >= 1.0:
                     break
+        self._wm_cls = 2 if real_best > 0.0 else (1 if best > 0.0 else 0)
         return best
 
     def _idf(self, db: str, word: str) -> float:
@@ -1175,12 +1448,20 @@ class Engine:
         return math.log(1 + N / (1 + df)) / math.log(1 + N)
 
     def _text_score(self, words: list[str], c: dict, row: dict) -> float:
+        """The text score of a place for the query words; also sets self._tier, the place's MATCH CLASS for them:
+        3 = its whole name (or a real alternative name) is the query, 2 = every word matched a real name
+        (word_match class 2), 1 = some word only by a fallback or not at all, 0 = no text match."""
         T = self.T
+        self._tier = 0
+        self._multi = len(words) >= 2 or self._qlen >= 2  # «mol masr»: the category word counts
         toks = self._place_tokens(row, c.get("_db"))
         if not toks:
             return 0.0
         n = len(words)
-        quals = [self.word_match(w, i == n - 1, toks) for i, w in enumerate(words)]
+        quals, clss = [], []
+        for i, w in enumerate(words):
+            quals.append(self.word_match(w, i == n - 1, toks))
+            clss.append(self._wm_cls)
         ws = [max(0.12, self._idf_cached(c.get("_db", "national"), w)) for w in words]
         tot = sum(ws)
         missing = [i for i in range(n) if quals[i] == 0.0]
@@ -1190,7 +1471,8 @@ class Engine:
             if len(missing) > 1 or ws[missing[0]] > 0.5 * tot:
                 return 0.0
         text = sum(ws[i] * quals[i] for i in range(n)) / tot
-        # coverage: how much of the place's own (display) name the query accounts for
+        # coverage: how much of the place's own (display) name the query accounts for — or the START of it, the
+        # way a name is typed («baz» → «Bazooka Fried Chicken»)
         best_cov = 0.0
         for nm in (row.get("name_ar"), row.get("name_en")):
             if not nm:
@@ -1202,11 +1484,51 @@ class Engine:
             for t in nt:
                 if any(self.word_match(w, i == n - 1, [t]) >= 0.7 for i, w in enumerate(words)):
                     hit += 1
-            best_cov = max(best_cov, hit / len(nt))
+            cov = hit / len(nt)
+            # only while the last word is still being typed: «مجمع» typed whole is not the start of «مجمع معابد دندرة»
+            if cov < T["lead_cov"] and n <= len(nt) and self._typing(words[-1], nt[n - 1][0]) and \
+                    all(self.word_match(words[i], i == n - 1, [nt[i]]) >= 0.7 for i in range(n)):
+                cov = T["lead_cov"]
+            best_cov = max(best_cov, cov)
         text = (1 - T["coverage_share"]) * text + T["coverage_share"] * best_cov
         if best_cov >= 0.999 and not missing and min(quals) >= 0.9:
             text = min(1.0, text + T["exact_name_bonus"])
+        if missing or min(clss) < 2:
+            self._tier = 1
+        else:
+            # the whole name, when the query names something (a kind word alone, «جامعة», is never a whole name)
+            named = any(tn.stems(w)[-1] not in self.lx.generic for w in words)
+            self._tier = 3 if named and self._is_exact(words, row) else 2
         return text
+
+    @staticmethod
+    def _typing(q: str, t: str) -> bool:
+        """The name word t continues q, which is not yet a whole word of it ("baz" → "bazooka")."""
+        ts = tn.stems(t)
+        q_stem = tn.stems(q)[-1]
+        if t == q or ts[-1] == q_stem or q in ts:
+            return False
+        return t.startswith(q) or ts[-1].startswith(q_stem)
+
+    @staticmethod
+    def _canon(t: str) -> str:
+        v = tn.number_value(t)
+        return v if v is not None else tn.stems(t)[-1]
+
+    def _is_exact(self, words: list[str], row: dict) -> bool:
+        """The place's whole name — or one of its real alternative names — is the query: the same words (stems, the
+        same numbers) in any order, or the same letters without spaces («cloud9 mall» = «Cloud 9 Mall»)."""
+        qw = [w for w in words if not tn.is_stopword(w)]
+        if not qw:
+            return False
+        want = sorted(self._canon(w) for w in qw)
+        joined = "".join(qw)
+        real_alt = (row.get("alt") or "").partition("\x1e")[0]
+        for nm in [row.get("name_ar"), row.get("name_en")] + real_alt.split("\x1f"):
+            nt = [x for x in tn.tokens(nm or "") if not tn.is_stopword(x)]
+            if nt and (sorted(self._canon(x) for x in nt) == want or "".join(nt) == joined):
+                return True
+        return False
 
     def _idf_cached(self, db, w):
         key = (db, w)

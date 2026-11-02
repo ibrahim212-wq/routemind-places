@@ -107,9 +107,18 @@ def family(cat: str) -> str:
     return "other:" + cat
 
 
+# Civic offices are different services, at most under one roof: a police station is never the post office or the
+# civil registry beside it (places-2026-10-31 merged «قسم شرطة الزقازيق ثانى» with the main post office and «قسم أول
+# المحلة» with the civil registry, so neither answered as a police station). A generic government record still merges.
+CIVIC_DISTINCT = {"police", "traffic_department", "civil_registry", "notary", "courthouse", "post_office",
+                  "telecom_exchange", "electricity_office", "water_office"}
+
+
 def cats_compatible(a: str, b: str) -> bool:
     if a == b or a in UNIVERSAL_CATS or b in UNIVERSAL_CATS:
         return True
+    if a in CIVIC_DISTINCT and b in CIVIC_DISTINCT:
+        return False
     ga, gb = _GROUP_OF.get(a), _GROUP_OF.get(b)
     if ga is not None and ga == gb:
         return True
@@ -378,6 +387,8 @@ class Place:
     area_en: str | None = None
     brand_key: str | None = None
     grp: str | None = None
+    gen_alt: list[str] = field(default_factory=list)  # names GENERATED in the other script (names.py): a fallback
+    inside: str | None = None  # the mall / compound / campus the place stands in, «ar\x1fen» (build.contain)
 
 
 ORDER_LOC = [R.SRC_OSM, R.SRC_WD, R.SRC_ATP, R.SRC_FSQ, R.SRC_MS, R.SRC_META, R.SRC_OVT_OTHER, R.SRC_DIV, R.SRC_GN]

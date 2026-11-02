@@ -26,6 +26,9 @@ OUT = os.path.join(HERE, "fixtures")
 APP = os.path.abspath(os.path.join(HERE, "..", ".."))
 
 EDGE = [
+    # numbers written as words and joined to letters (2026-11-02): ordinals, cardinals, Franco digits are letters
+    "قسم ثان المحلة", "القسم التاني", "المرحلة الثانية", "قسم 2 المحلة", "cloud9 mall", "Cloud Nine Mall", "كلاود ناين",
+    "6th of October", "السادس من أكتوبر", "phase2", "3ezaby sa7el", "Hyper One", "عاشر رمضان", "007",
     "", " ", "المُهَنْدِسِين", "صيدليات العزبي - فرع المعادي", "B.TECH بي تك", "شارع9 المعادي", "ڤودافون",
     "Café Supreme", "مستشفى ٥٧٣٥٧", "El-Ezaby Pharmacy", "m3ady", "2al3a", "للسيارات", "بالمعادي", "والدقي",
     "Cairo Festival City Mall كايرو فستيفال", "ÇAĞLAYAN", "STRAẞE", "مـــول", "ﻣﻮﻝ", "ۀ ہ ھ", "۱۲۳ ١٢٣",
@@ -59,7 +62,8 @@ def text_cases(index_dir: str, n: int = 4000) -> list[dict]:
         toks = tn.tokens(s)
         out.append({"in": s, "norm": tn.normalize(s), "script": tn.script_of(tn.normalize(s)),
                     "tok": [{"t": t, "stems": tn.stems(t), "skel": tn.skeletons(t), "loose": tn.loose(t),
-                             "edits": tn.max_edits(t), "stop": tn.is_stopword(t)} for t in toks]})
+                             "edits": tn.max_edits(t), "stop": tn.is_stopword(t), "num": tn.number_value(t),
+                             "parts": list(tn.alnum_parts(t))} for t in toks]})
     # edit distances on near pairs
     return out
 
