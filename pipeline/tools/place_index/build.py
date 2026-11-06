@@ -293,6 +293,11 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
         if p.kind == "poi":
             c = T.BY_ID.get(p.cat)
             p.brand_key = bm.match([x for x in (p.name_ar, p.name_en, *p.alt) if x], p.cat, c.scat if c else None, p.brand)
+            # a chain's branch is what the chain is, whatever a source filed it under («CIB» a cultural centre, El Ezaby a beauty salon)
+            fix = bm.kind_of_branch(p.brand_key, c.scat if c else None)
+            if fix:
+                p.cat = fix
+                report["chain_kind_fixed"] = report.get("chain_kind_fixed", 0) + 1
     autob = E.auto_brands(places, bm.descriptive)
     for p in places:
         if not p.brand_key and p.pid in autob:

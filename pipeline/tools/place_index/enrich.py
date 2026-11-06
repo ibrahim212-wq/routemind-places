@@ -437,6 +437,7 @@ class BrandMatcher:
 
     def __init__(self, lexicon: dict):
         self.by_last: dict[str, list[tuple[tuple[str, ...], str, str]]] = defaultdict(list)
+        self.brand_cat = {b["id"]: b.get("category_id") or "" for b in lexicon.get("brands", [])}
         for b in lexicon.get("brands", []):
             aliases = set(b.get("aliases") or []) | {b.get("display_ar") or "", b.get("display_en") or ""}
             for a in aliases:
@@ -469,6 +470,13 @@ class BrandMatcher:
     def _ignorable(self, t: str) -> bool:
         return (tn.is_stopword(t) or t.isdigit() or t in self.descriptive or tn.stems(t)[-1] in self.descriptive
                 or t in M.AREA_TOKENS or tn.stems(t)[-1] in M.AREA_TOKENS)
+
+    def kind_of_branch(self, brand: str | None, scat: str | None) -> str | None:
+        """The taxonomy category a branch of this lexicon chain should carry when its own disagrees; None when it agrees."""
+        bcat = self.brand_cat.get(brand or "")
+        if not bcat or (scat and _brand_cat_ok(bcat, scat)):
+            return None
+        return next((c.id for c in T.CATS if bcat in (c.id, c.scat)), None)
 
     def _says_other_kind(self, words: list[str], bcat: str) -> bool:
         """A word of the name describes only kinds of place the brand is not ("Cleopatra Shopping
@@ -516,14 +524,14 @@ class BrandMatcher:
         best = None
         for name, trusted in [(n, False) for n in names] + ([(source_brand, True)] if source_brand else []):
             for alias, bid, bcat, alone, first, other in self._spans(name):
-                if known and bcat and not agrees(bcat):
-                    continue  # another kind of place under the same word
+                if known and bcat and not agrees(bcat) and not (alone and bcat in OWN_NAME_KINDS):
+                    continue  # another kind of place under the same word; a place called ONLY a bank's name is that bank («CIB» filed as a cultural centre)
                 if trusted and not known and bid not in in_names:
                     continue  # a source's brand on a "building" / "place" the name never ties to the chain
+                if len(alias) == 1 and not (alone or (first and agrees(bcat))):
+                    continue  # one word inside a longer name: a person, a family, a street («رشدي شحاته», even when a source says brand)
                 if not trusted:
                     if other:
-                        continue
-                    if len(alias) == 1 and not (alone or (first and agrees(bcat))):
                         continue
                     if len(alias) > 1 and not (alone or first or agrees(bcat)):
                         continue
@@ -533,12 +541,18 @@ class BrandMatcher:
         return best[1] if best else None
 
 
+# a name in these trades belongs to one licensed company, whatever a source filed the row under
+OWN_NAME_KINDS = {"bank", "atm", "pharmacy", "gas_station", "medical_lab", "radiology"}
+
+
 def _brand_cat_ok(brand_cat: str, scat: str) -> bool:
     if brand_cat == scat:
         return True
     related = [{"bank", "atm", "exchange"}, {"pharmacy", "clinic", "medical_lab"}, {"restaurant", "fast_food", "cafe",
                "pizza", "burger", "sweets", "bakery", "juice_bar"}, {"supermarket", "mall", "market"},
-               {"mobile_shop", "electronics_store", "appliance_store"}, {"gas_station", "car_repair", "oil_change"}]
+               {"mobile_shop", "electronics_store", "appliance_store"}, {"gas_station", "car_repair", "oil_change"},
+               {"clothing_store", "shoe_store", "sports_store"}, {"home_goods_store", "furniture_store", "hardware_store"},
+               {"sweets", "ice_cream"}]
     return any(brand_cat in g and scat in g for g in related)
 
 

@@ -474,6 +474,8 @@
       "terms_ar": [
         "زيت",
         "تغيير الزيت",
+        "غيار زيت",
+        "تغيير زيت",
         "زيوت",
         "فلتر زيت"
       ],
@@ -549,7 +551,6 @@
       "prominence_class": "workshop",
       "terms_ar": [
         "غسيل",
-        "مغسلة",
         "تلميع سيارات",
         "غسيل عربيات",
         "غسيل عربية",
@@ -963,6 +964,7 @@
       "prominence_class": "store",
       "terms_ar": [
         "موبايلات",
+        "موبايل",
         "محل موبايل",
         "تليفونات",
         "اكسسوارات موبايل"
@@ -5553,6 +5555,7 @@
       ],
       "products": [
         "شحن رصيد",
+        "شحن موبايل",
         "رصيد",
         "كارت شحن",
         "كروت شحن",
@@ -9380,11 +9383,27 @@
       ]
     },
     {
+      "id": "wash_either",
+      "label_ar": "مغسلة",
+      "label_en": "Laundry or car wash",
+      "categories": [
+        "laundry",
+        "car_wash"
+      ],
+      "products": [
+        "مغسلة",
+        "مغسله"
+      ],
+      "contexts": [],
+      "provider_words": []
+    },
+    {
       "id": "poultry",
       "label_ar": "فراخ",
       "label_en": "Poultry",
       "categories": [
         "butcher",
+        "grill",
         "supermarket"
       ],
       "products": [
@@ -17786,15 +17805,16 @@
     },
     {
       "id": "diwan",
-      "display_ar": "ديوان",
+      "display_ar": "مكتبة ديوان",
       "display_en": "Diwan Bookstores",
       "category_id": "bookshop",
       "aliases": [
-        "ديوان",
         "مكتبة ديوان",
-        "diwan"
+        "diwan",
+        "diwan bookstore",
+        "diwan bookstores"
       ],
-      "search_term": "ديوان",
+      "search_term": "مكتبة ديوان",
       "international": false
     },
     {
@@ -17916,6 +17936,2160 @@
         "roshdy"
       ],
       "search_term": "صيدليات رشدي",
+      "international": false
+    },
+    {
+      "id": "nbk",
+      "display_ar": "بنك الكويت الوطني",
+      "display_en": "National Bank of Kuwait",
+      "category_id": "bank",
+      "aliases": [
+        "بنك الكويت الوطني",
+        "كويت الوطني",
+        "nbk",
+        "national bank of kuwait",
+        "nbk egypt"
+      ],
+      "search_term": "بنك الكويت الوطني",
+      "international": false
+    },
+    {
+      "id": "nasser_bank",
+      "display_ar": "بنك ناصر الاجتماعي",
+      "display_en": "Nasser Social Bank",
+      "category_id": "bank",
+      "aliases": [
+        "بنك ناصر",
+        "ناصر الاجتماعي",
+        "nasser bank",
+        "nasser social bank",
+        "بنك ناصر الاجتماعى"
+      ],
+      "search_term": "بنك ناصر الاجتماعي",
+      "international": false
+    },
+    {
+      "id": "suez_canal_bank",
+      "display_ar": "بنك قناة السويس",
+      "display_en": "Suez Canal Bank",
+      "category_id": "bank",
+      "aliases": [
+        "بنك قناه السويس",
+        "قناة السويس بنك",
+        "suez canal bank",
+        "scb bank"
+      ],
+      "search_term": "بنك قناة السويس",
+      "international": false
+    },
+    {
+      "id": "bank_audi",
+      "display_ar": "بنك عودة",
+      "display_en": "Bank Audi",
+      "category_id": "bank",
+      "aliases": [
+        "بنك عوده",
+        "بنك عودة",
+        "bank audi",
+        "audi bank"
+      ],
+      "search_term": "بنك عودة",
+      "international": false
+    },
+    {
+      "id": "arab_african_bank",
+      "display_ar": "البنك العربي الأفريقي الدولي",
+      "display_en": "Arab African International Bank",
+      "category_id": "bank",
+      "aliases": [
+        "البنك العربي الافريقي",
+        "العربي الافريقي الدولي",
+        "aaib",
+        "arab african bank",
+        "arab african international bank"
+      ],
+      "search_term": "البنك العربي الأفريقي الدولي",
+      "international": false
+    },
+    {
+      "id": "arab_bank",
+      "display_ar": "البنك العربي",
+      "display_en": "Arab Bank",
+      "category_id": "bank",
+      "aliases": [
+        "البنك العربى",
+        "arab bank",
+        "arab bank egypt"
+      ],
+      "search_term": "البنك العربي",
+      "international": false
+    },
+    {
+      "id": "agri_bank",
+      "display_ar": "البنك الزراعي المصري",
+      "display_en": "Agricultural Bank of Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "البنك الزراعي",
+        "البنك الزراعى",
+        "بنك زراعي",
+        "agricultural bank",
+        "agri bank egypt"
+      ],
+      "search_term": "البنك الزراعي المصري",
+      "international": false
+    },
+    {
+      "id": "credit_agricole",
+      "display_ar": "كريدي أجريكول",
+      "display_en": "Crédit Agricole Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "كريدي اجريكول",
+        "كريدى اجريكول",
+        "كريدي أجريكول مصر",
+        "credit agricole",
+        "credit agricole egypt"
+      ],
+      "search_term": "كريدي أجريكول",
+      "international": false
+    },
+    {
+      "id": "united_bank",
+      "display_ar": "البنك المتحد",
+      "display_en": "The United Bank",
+      "category_id": "bank",
+      "aliases": [
+        "البنك المتحد",
+        "البنك المتحد المصري",
+        "united bank",
+        "the united bank",
+        "united bank of egypt"
+      ],
+      "search_term": "البنك المتحد",
+      "international": false
+    },
+    {
+      "id": "aib_bank",
+      "display_ar": "بنك الاستثمار العربي",
+      "display_en": "Arab Investment Bank",
+      "category_id": "bank",
+      "aliases": [
+        "بنك الاستثمار العربى",
+        "الاستثمار العربي",
+        "arab investment bank",
+        "aib bank"
+      ],
+      "search_term": "بنك الاستثمار العربي",
+      "international": false
+    },
+    {
+      "id": "attijariwafa",
+      "display_ar": "التجاري وفا بنك",
+      "display_en": "Attijariwafa Bank Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "التجارى وفا بنك",
+        "تجاري وفا",
+        "attijariwafa",
+        "attijariwafa bank"
+      ],
+      "search_term": "التجاري وفا بنك",
+      "international": false
+    },
+    {
+      "id": "emirates_nbd",
+      "display_ar": "بنك الإمارات دبي الوطني",
+      "display_en": "Emirates NBD Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "الامارات دبي الوطني",
+        "بنك الامارات دبي",
+        "emirates nbd",
+        "enbd"
+      ],
+      "search_term": "بنك الإمارات دبي الوطني",
+      "international": false
+    },
+    {
+      "id": "fab_misr",
+      "display_ar": "بنك أبوظبي الأول مصر",
+      "display_en": "First Abu Dhabi Bank Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "ابوظبي الاول",
+        "بنك ابوظبي الاول",
+        "fab misr",
+        "first abu dhabi bank",
+        "fab egypt"
+      ],
+      "search_term": "بنك أبوظبي الأول مصر",
+      "international": false
+    },
+    {
+      "id": "mashreq_egypt",
+      "display_ar": "بنك المشرق",
+      "display_en": "Mashreq Bank Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "بنك المشرق",
+        "مشرق بنك",
+        "mashreq bank",
+        "mashreq egypt"
+      ],
+      "search_term": "بنك المشرق",
+      "international": false
+    },
+    {
+      "id": "blom_bank",
+      "display_ar": "بنك بلوم مصر",
+      "display_en": "Blom Bank Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "بنك بلوم",
+        "بلوم مصر",
+        "blom bank",
+        "blom egypt"
+      ],
+      "search_term": "بنك بلوم مصر",
+      "international": false
+    },
+    {
+      "id": "al_baraka_bank",
+      "display_ar": "بنك البركة مصر",
+      "display_en": "Al Baraka Bank Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "بنك البركه",
+        "بنك البركة",
+        "al baraka bank",
+        "baraka bank egypt"
+      ],
+      "search_term": "بنك البركة مصر",
+      "international": false
+    },
+    {
+      "id": "kfh_egypt",
+      "display_ar": "بيت التمويل الكويتي مصر",
+      "display_en": "KFH Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "بيت التمويل الكويتي",
+        "kfh",
+        "kuwait finance house",
+        "ahli united bank",
+        "ahli united"
+      ],
+      "search_term": "بيت التمويل الكويتي مصر",
+      "international": false
+    },
+    {
+      "id": "abk_egypt",
+      "display_ar": "البنك الأهلي الكويتي مصر",
+      "display_en": "Al Ahli Bank of Kuwait Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "البنك الاهلي الكويتي",
+        "الاهلي الكويتي",
+        "abk egypt",
+        "ahli bank of kuwait"
+      ],
+      "search_term": "البنك الأهلي الكويتي مصر",
+      "international": false
+    },
+    {
+      "id": "edbe",
+      "display_ar": "بنك تنمية الصادرات",
+      "display_en": "Export Development Bank of Egypt",
+      "category_id": "bank",
+      "aliases": [
+        "تنمية الصادرات",
+        "بنك تنمية الصادرات",
+        "export development bank",
+        "edbe"
+      ],
+      "search_term": "بنك تنمية الصادرات",
+      "international": false
+    },
+    {
+      "id": "arab_intl_bank",
+      "display_ar": "المصرف العربي الدولي",
+      "display_en": "Arab International Bank",
+      "category_id": "bank",
+      "aliases": [
+        "المصرف العربي الدولي",
+        "arab international bank",
+        "aib egypt"
+      ],
+      "search_term": "المصرف العربي الدولي",
+      "international": false
+    },
+    {
+      "id": "fawry",
+      "display_ar": "منفذ فوري",
+      "display_en": "Fawry",
+      "category_id": "electricity_payment",
+      "aliases": [
+        "منفذ فوري",
+        "فوري للدفع",
+        "fawry",
+        "fawry pay"
+      ],
+      "search_term": "منفذ فوري",
+      "international": false
+    },
+    {
+      "id": "care_pharmacy",
+      "display_ar": "صيدليات كير",
+      "display_en": "Care Pharmacies",
+      "category_id": "pharmacy",
+      "aliases": [
+        "كير فارماسي",
+        "صيدليات كير",
+        "صيدلية كير",
+        "care pharmacy",
+        "care pharmacies"
+      ],
+      "search_term": "صيدليات كير",
+      "international": false
+    },
+    {
+      "id": "omar_effendi",
+      "display_ar": "عمر أفندي",
+      "display_en": "Omar Effendi",
+      "category_id": "mall",
+      "aliases": [
+        "عمر افندي",
+        "عمر افندى",
+        "omar effendi",
+        "omar afandi",
+        "omar efendi"
+      ],
+      "search_term": "عمر أفندي",
+      "international": false
+    },
+    {
+      "id": "nassajoon",
+      "display_ar": "النساجون الشرقيون",
+      "display_en": "Oriental Weavers",
+      "category_id": "home_goods_store",
+      "aliases": [
+        "النساجون الشرقيون",
+        "النساجون الشرقيين",
+        "النساجون",
+        "oriental weavers",
+        "orientalweavers"
+      ],
+      "search_term": "النساجون الشرقيون",
+      "international": false
+    },
+    {
+      "id": "tawheed_nour",
+      "display_ar": "التوحيد والنور",
+      "display_en": "Al Tawheed wa Al Nour",
+      "category_id": "clothing_store",
+      "aliases": [
+        "التوحيد والنور",
+        "التوحيد و النور",
+        "al tawheed wal nour",
+        "tawheed and nour"
+      ],
+      "search_term": "التوحيد والنور",
+      "international": false
+    },
+    {
+      "id": "town_team",
+      "display_ar": "تاون تيم",
+      "display_en": "Town Team",
+      "category_id": "clothing_store",
+      "aliases": [
+        "تاون تيم",
+        "town team",
+        "townteam"
+      ],
+      "search_term": "تاون تيم",
+      "international": false
+    },
+    {
+      "id": "hm_eg",
+      "display_ar": "إتش آند إم",
+      "display_en": "H&M",
+      "category_id": "clothing_store",
+      "aliases": [
+        "اتش اند ام",
+        "اتش ام",
+        "h&m",
+        "h and m",
+        "hm store"
+      ],
+      "search_term": "إتش آند إم",
+      "international": false
+    },
+    {
+      "id": "zara",
+      "display_ar": "زارا",
+      "display_en": "Zara",
+      "category_id": "clothing_store",
+      "aliases": [
+        "زارا",
+        "zara",
+        "zara egypt"
+      ],
+      "search_term": "زارا",
+      "international": false
+    },
+    {
+      "id": "bershka",
+      "display_ar": "برشكا",
+      "display_en": "Bershka",
+      "category_id": "clothing_store",
+      "aliases": [
+        "برشكا",
+        "bershka"
+      ],
+      "search_term": "برشكا",
+      "international": false
+    },
+    {
+      "id": "pull_bear",
+      "display_ar": "بول آند بير",
+      "display_en": "Pull&Bear",
+      "category_id": "clothing_store",
+      "aliases": [
+        "بول اند بير",
+        "بول اند بيير",
+        "pull and bear",
+        "pull&bear",
+        "pull bear"
+      ],
+      "search_term": "بول آند بير",
+      "international": false
+    },
+    {
+      "id": "stradivarius",
+      "display_ar": "ستراديفاريوس",
+      "display_en": "Stradivarius",
+      "category_id": "clothing_store",
+      "aliases": [
+        "ستراديفاريوس",
+        "stradivarius"
+      ],
+      "search_term": "ستراديفاريوس",
+      "international": false
+    },
+    {
+      "id": "massimo_dutti",
+      "display_ar": "ماسيمو دوتي",
+      "display_en": "Massimo Dutti",
+      "category_id": "clothing_store",
+      "aliases": [
+        "ماسيمو دوتي",
+        "massimo dutti"
+      ],
+      "search_term": "ماسيمو دوتي",
+      "international": false
+    },
+    {
+      "id": "lc_waikiki",
+      "display_ar": "إل سي وايكيكي",
+      "display_en": "LC Waikiki",
+      "category_id": "clothing_store",
+      "aliases": [
+        "ال سي وايكيكي",
+        "ال سي ويكيكي",
+        "lc waikiki",
+        "lcw",
+        "lc wakiki"
+      ],
+      "search_term": "إل سي وايكيكي",
+      "international": false
+    },
+    {
+      "id": "defacto",
+      "display_ar": "ديفاكتو",
+      "display_en": "DeFacto",
+      "category_id": "clothing_store",
+      "aliases": [
+        "ديفاكتو",
+        "defacto",
+        "de facto"
+      ],
+      "search_term": "ديفاكتو",
+      "international": false
+    },
+    {
+      "id": "mango",
+      "display_ar": "مانجو فاشون",
+      "display_en": "Mango Fashion",
+      "category_id": "clothing_store",
+      "aliases": [
+        "مانجو ملابس",
+        "مانجو فاشون",
+        "mango fashion",
+        "mango store",
+        "mango clothes"
+      ],
+      "search_term": "مانجو فاشون",
+      "international": false
+    },
+    {
+      "id": "max_fashion",
+      "display_ar": "ماكس فاشون",
+      "display_en": "Max Fashion",
+      "category_id": "clothing_store",
+      "aliases": [
+        "ماكس فاشون",
+        "max fashion",
+        "max fashion store"
+      ],
+      "search_term": "ماكس فاشون",
+      "international": false
+    },
+    {
+      "id": "splash_fashion",
+      "display_ar": "سبلاش فاشون",
+      "display_en": "Splash",
+      "category_id": "clothing_store",
+      "aliases": [
+        "سبلاش فاشون",
+        "splash fashion",
+        "splash egypt"
+      ],
+      "search_term": "سبلاش فاشون",
+      "international": false
+    },
+    {
+      "id": "centrepoint",
+      "display_ar": "سنتربوينت",
+      "display_en": "Centrepoint",
+      "category_id": "clothing_store",
+      "aliases": [
+        "سنتربوينت",
+        "سنتر بوينت",
+        "centrepoint",
+        "centre point"
+      ],
+      "search_term": "سنتربوينت",
+      "international": false
+    },
+    {
+      "id": "babyshop",
+      "display_ar": "بيبي شوب",
+      "display_en": "Babyshop",
+      "category_id": "clothing_store",
+      "aliases": [
+        "بيبي شوب",
+        "babyshop",
+        "baby shop"
+      ],
+      "search_term": "بيبي شوب",
+      "international": false
+    },
+    {
+      "id": "mothercare",
+      "display_ar": "مذركير",
+      "display_en": "Mothercare",
+      "category_id": "clothing_store",
+      "aliases": [
+        "مذركير",
+        "ماذركير",
+        "mothercare"
+      ],
+      "search_term": "مذركير",
+      "international": false
+    },
+    {
+      "id": "ravin",
+      "display_ar": "رافين",
+      "display_en": "Ravin",
+      "category_id": "clothing_store",
+      "aliases": [
+        "رافين",
+        "رافن",
+        "ravin",
+        "ravin jeans"
+      ],
+      "search_term": "رافين",
+      "international": false
+    },
+    {
+      "id": "mobaco",
+      "display_ar": "موباكو",
+      "display_en": "Mobaco",
+      "category_id": "clothing_store",
+      "aliases": [
+        "موباكو",
+        "mobaco",
+        "mobaco shirts"
+      ],
+      "search_term": "موباكو",
+      "international": false
+    },
+    {
+      "id": "dice_sport",
+      "display_ar": "دايس",
+      "display_en": "Dice Sport & Casual",
+      "category_id": "clothing_store",
+      "aliases": [
+        "دايس سبورت",
+        "دايس للملابس",
+        "dice sport",
+        "dice jeans"
+      ],
+      "search_term": "دايس",
+      "international": false
+    },
+    {
+      "id": "american_eagle",
+      "display_ar": "أمريكان إيجل",
+      "display_en": "American Eagle",
+      "category_id": "clothing_store",
+      "aliases": [
+        "امريكان ايجل",
+        "american eagle",
+        "american eagle outfitters"
+      ],
+      "search_term": "أمريكان إيجل",
+      "international": false
+    },
+    {
+      "id": "marks_spencer",
+      "display_ar": "ماركس آند سبنسر",
+      "display_en": "Marks & Spencer",
+      "category_id": "clothing_store",
+      "aliases": [
+        "ماركس اند سبنسر",
+        "ماركس اند سبينسر",
+        "marks and spencer",
+        "marks & spencer"
+      ],
+      "search_term": "ماركس آند سبنسر",
+      "international": false
+    },
+    {
+      "id": "lacoste",
+      "display_ar": "لاكوست",
+      "display_en": "Lacoste",
+      "category_id": "clothing_store",
+      "aliases": [
+        "لاكوست",
+        "lacoste"
+      ],
+      "search_term": "لاكوست",
+      "international": false
+    },
+    {
+      "id": "levis",
+      "display_ar": "ليفايز",
+      "display_en": "Levi's",
+      "category_id": "clothing_store",
+      "aliases": [
+        "ليفايز",
+        "ليفيس",
+        "levis",
+        "levi's",
+        "levi strauss"
+      ],
+      "search_term": "ليفايز",
+      "international": false
+    },
+    {
+      "id": "timberland",
+      "display_ar": "تيمبرلاند",
+      "display_en": "Timberland",
+      "category_id": "shoe_store",
+      "aliases": [
+        "تيمبرلاند",
+        "timberland"
+      ],
+      "search_term": "تيمبرلاند",
+      "international": false
+    },
+    {
+      "id": "adidas",
+      "display_ar": "أديداس",
+      "display_en": "Adidas",
+      "category_id": "sports_store",
+      "aliases": [
+        "اديداس",
+        "ادیداس",
+        "adidas",
+        "adidas store"
+      ],
+      "search_term": "أديداس",
+      "international": false
+    },
+    {
+      "id": "nike",
+      "display_ar": "نايك",
+      "display_en": "Nike",
+      "category_id": "sports_store",
+      "aliases": [
+        "نايك",
+        "نايكي",
+        "nike",
+        "nike store"
+      ],
+      "search_term": "نايك",
+      "international": false
+    },
+    {
+      "id": "puma",
+      "display_ar": "بوما",
+      "display_en": "Puma",
+      "category_id": "sports_store",
+      "aliases": [
+        "بوما",
+        "puma",
+        "puma store"
+      ],
+      "search_term": "بوما",
+      "international": false
+    },
+    {
+      "id": "reebok",
+      "display_ar": "ريبوك",
+      "display_en": "Reebok",
+      "category_id": "sports_store",
+      "aliases": [
+        "ريبوك",
+        "reebok"
+      ],
+      "search_term": "ريبوك",
+      "international": false
+    },
+    {
+      "id": "skechers",
+      "display_ar": "سكيتشرز",
+      "display_en": "Skechers",
+      "category_id": "shoe_store",
+      "aliases": [
+        "سكيتشرز",
+        "سكيتشرس",
+        "skechers"
+      ],
+      "search_term": "سكيتشرز",
+      "international": false
+    },
+    {
+      "id": "new_balance",
+      "display_ar": "نيو بالانس",
+      "display_en": "New Balance",
+      "category_id": "sports_store",
+      "aliases": [
+        "نيو بالانس",
+        "new balance"
+      ],
+      "search_term": "نيو بالانس",
+      "international": false
+    },
+    {
+      "id": "decathlon",
+      "display_ar": "ديكاتلون",
+      "display_en": "Decathlon",
+      "category_id": "sports_store",
+      "aliases": [
+        "ديكاتلون",
+        "ديكاتلون مصر",
+        "decathlon",
+        "decathlon egypt"
+      ],
+      "search_term": "ديكاتلون",
+      "international": false
+    },
+    {
+      "id": "bata",
+      "display_ar": "باتا",
+      "display_en": "Bata",
+      "category_id": "shoe_store",
+      "aliases": [
+        "باتا",
+        "باتا للاحذية",
+        "bata",
+        "bata shoes"
+      ],
+      "search_term": "باتا",
+      "international": false
+    },
+    {
+      "id": "aldo",
+      "display_ar": "ألدو للأحذية",
+      "display_en": "Aldo",
+      "category_id": "shoe_store",
+      "aliases": [
+        "الدو للاحذية",
+        "aldo",
+        "aldo shoes"
+      ],
+      "search_term": "ألدو للأحذية",
+      "international": false
+    },
+    {
+      "id": "clarks",
+      "display_ar": "كلاركس",
+      "display_en": "Clarks",
+      "category_id": "shoe_store",
+      "aliases": [
+        "كلاركس",
+        "clarks",
+        "clarks shoes"
+      ],
+      "search_term": "كلاركس",
+      "international": false
+    },
+    {
+      "id": "hush_puppies",
+      "display_ar": "هاش باباي",
+      "display_en": "Hush Puppies",
+      "category_id": "shoe_store",
+      "aliases": [
+        "هاش باباي",
+        "هاش بابيز",
+        "hush puppies"
+      ],
+      "search_term": "هاش باباي",
+      "international": false
+    },
+    {
+      "id": "the_body_shop",
+      "display_ar": "ذا بودي شوب",
+      "display_en": "The Body Shop",
+      "category_id": "cosmetics",
+      "aliases": [
+        "بودي شوب",
+        "ذا بودي شوب",
+        "the body shop",
+        "body shop"
+      ],
+      "search_term": "ذا بودي شوب",
+      "international": false
+    },
+    {
+      "id": "sephora",
+      "display_ar": "سيفورا",
+      "display_en": "Sephora",
+      "category_id": "cosmetics",
+      "aliases": [
+        "سيفورا",
+        "سيفورا مصر",
+        "sephora",
+        "sephora egypt"
+      ],
+      "search_term": "سيفورا",
+      "international": false
+    },
+    {
+      "id": "bath_body_works",
+      "display_ar": "باث آند بودي ووركس",
+      "display_en": "Bath & Body Works",
+      "category_id": "cosmetics",
+      "aliases": [
+        "باث اند بودي ووركس",
+        "باث اند بودي",
+        "bath and body works",
+        "bath & body works"
+      ],
+      "search_term": "باث آند بودي ووركس",
+      "international": false
+    },
+    {
+      "id": "yves_rocher",
+      "display_ar": "إيف روشيه",
+      "display_en": "Yves Rocher",
+      "category_id": "cosmetics",
+      "aliases": [
+        "ايف روشيه",
+        "ايف روشية",
+        "yves rocher"
+      ],
+      "search_term": "إيف روشيه",
+      "international": false
+    },
+    {
+      "id": "magrabi",
+      "display_ar": "مغربي للعيون",
+      "display_en": "Magrabi Optical",
+      "category_id": "optician",
+      "aliases": [
+        "مغربي للعيون",
+        "مغربي لتجارة النظارات",
+        "مغربي بصريات",
+        "magrabi",
+        "magrabi optics",
+        "magrabi eye"
+      ],
+      "search_term": "مغربي للعيون",
+      "international": false
+    },
+    {
+      "id": "pandora",
+      "display_ar": "باندورا",
+      "display_en": "Pandora",
+      "category_id": "jewelry_store",
+      "aliases": [
+        "باندورا",
+        "pandora",
+        "pandora jewelry"
+      ],
+      "search_term": "باندورا",
+      "international": false
+    },
+    {
+      "id": "swarovski",
+      "display_ar": "سواروفسكي",
+      "display_en": "Swarovski",
+      "category_id": "jewelry_store",
+      "aliases": [
+        "سواروفسكي",
+        "swarovski"
+      ],
+      "search_term": "سواروفسكي",
+      "international": false
+    },
+    {
+      "id": "b_laban",
+      "display_ar": "بي لبن",
+      "display_en": "B.Laban",
+      "category_id": "sweets",
+      "aliases": [
+        "بي لبن",
+        "بى لبن",
+        "b laban",
+        "b.laban",
+        "blaban"
+      ],
+      "search_term": "بي لبن",
+      "international": false
+    },
+    {
+      "id": "el_malky",
+      "display_ar": "حلويات المالكي",
+      "display_en": "El Malky",
+      "category_id": "sweets",
+      "aliases": [
+        "المالكي للحلويات",
+        "حلواني المالكي",
+        "el malky",
+        "al malki sweets",
+        "el maleky"
+      ],
+      "search_term": "حلويات المالكي",
+      "international": false
+    },
+    {
+      "id": "mandarine_koueider",
+      "display_ar": "ماندرين كويدر",
+      "display_en": "Mandarine Koueider",
+      "category_id": "sweets",
+      "aliases": [
+        "ماندرين كويدر",
+        "ماندارين كويدر",
+        "mandarine koueider",
+        "mandarin koueider"
+      ],
+      "search_term": "ماندرين كويدر",
+      "international": false
+    },
+    {
+      "id": "la_poire",
+      "display_ar": "لا بوار",
+      "display_en": "La Poire",
+      "category_id": "bakery",
+      "aliases": [
+        "لا بوار",
+        "لابوار",
+        "la poire",
+        "la poire cafe"
+      ],
+      "search_term": "لا بوار",
+      "international": false
+    },
+    {
+      "id": "maison_thomas",
+      "display_ar": "ميزون توماس",
+      "display_en": "Maison Thomas",
+      "category_id": "restaurant",
+      "aliases": [
+        "ميزون توماس",
+        "maison thomas",
+        "maison thomas pizza"
+      ],
+      "search_term": "ميزون توماس",
+      "international": false
+    },
+    {
+      "id": "brioche_doree",
+      "display_ar": "بريوش دوريه",
+      "display_en": "Brioche Dorée",
+      "category_id": "bakery",
+      "aliases": [
+        "بريوش دوريه",
+        "بريوش دورييه",
+        "brioche doree",
+        "brioche doree cafe"
+      ],
+      "search_term": "بريوش دوريه",
+      "international": false
+    },
+    {
+      "id": "cinnabon",
+      "display_ar": "سينابون",
+      "display_en": "Cinnabon",
+      "category_id": "bakery",
+      "aliases": [
+        "سينابون",
+        "cinnabon"
+      ],
+      "search_term": "سينابون",
+      "international": false
+    },
+    {
+      "id": "krispy_kreme",
+      "display_ar": "كريسبي كريم",
+      "display_en": "Krispy Kreme",
+      "category_id": "bakery",
+      "aliases": [
+        "كريسبي كريم",
+        "كريسبى كريم",
+        "krispy kreme"
+      ],
+      "search_term": "كريسبي كريم",
+      "international": false
+    },
+    {
+      "id": "dunkin",
+      "display_ar": "دانكن",
+      "display_en": "Dunkin'",
+      "category_id": "cafe",
+      "aliases": [
+        "دانكن",
+        "دانكن دونتس",
+        "دانكن دوناتس",
+        "dunkin",
+        "dunkin donuts",
+        "dunkin'"
+      ],
+      "search_term": "دانكن",
+      "international": false
+    },
+    {
+      "id": "baskin_robbins",
+      "display_ar": "باسكن روبنز",
+      "display_en": "Baskin Robbins",
+      "category_id": "ice_cream",
+      "aliases": [
+        "باسكن روبنز",
+        "باسكين روبنز",
+        "باسكن روبينز",
+        "baskin robbins",
+        "baskin"
+      ],
+      "search_term": "باسكن روبنز",
+      "international": false
+    },
+    {
+      "id": "cold_stone",
+      "display_ar": "كولد ستون",
+      "display_en": "Cold Stone Creamery",
+      "category_id": "ice_cream",
+      "aliases": [
+        "كولد ستون",
+        "cold stone",
+        "cold stone creamery"
+      ],
+      "search_term": "كولد ستون",
+      "international": false
+    },
+    {
+      "id": "gelatti_azza",
+      "display_ar": "جيلاتي عزة",
+      "display_en": "Gelatti Azza",
+      "category_id": "ice_cream",
+      "aliases": [
+        "جيلاتي عزة",
+        "جيلاتي عزه",
+        "جيلاتى عزة",
+        "gelatti azza",
+        "gelati azza",
+        "gelatti ezza"
+      ],
+      "search_term": "جيلاتي عزة",
+      "international": false
+    },
+    {
+      "id": "hardees",
+      "display_ar": "هارديز",
+      "display_en": "Hardee's",
+      "category_id": "burger",
+      "aliases": [
+        "هارديز",
+        "هاردييز",
+        "hardees",
+        "hardee's"
+      ],
+      "search_term": "هارديز",
+      "international": false
+    },
+    {
+      "id": "dominos",
+      "display_ar": "دومينوز",
+      "display_en": "Domino's Pizza",
+      "category_id": "pizza",
+      "aliases": [
+        "دومينوز",
+        "دومينوز بيتزا",
+        "dominos",
+        "domino's",
+        "dominos pizza",
+        "domino pizza"
+      ],
+      "search_term": "دومينوز",
+      "international": false
+    },
+    {
+      "id": "burger_king",
+      "display_ar": "برجر كينج",
+      "display_en": "Burger King",
+      "category_id": "burger",
+      "aliases": [
+        "برجر كنج",
+        "برجر كينج",
+        "برغر كينج",
+        "burger king",
+        "burgerking"
+      ],
+      "search_term": "برجر كينج",
+      "international": false
+    },
+    {
+      "id": "papa_johns",
+      "display_ar": "بابا جونز",
+      "display_en": "Papa John's",
+      "category_id": "pizza",
+      "aliases": [
+        "بابا جونز",
+        "بابا جونس",
+        "بابا جونز بيتزا",
+        "papa johns",
+        "papa john's",
+        "papa jones"
+      ],
+      "search_term": "بابا جونز",
+      "international": false
+    },
+    {
+      "id": "subway",
+      "display_ar": "صب واي",
+      "display_en": "Subway Sandwiches",
+      "category_id": "fast_food",
+      "aliases": [
+        "صب واي",
+        "سب واي",
+        "subway sandwiches"
+      ],
+      "search_term": "صب واي",
+      "international": false
+    },
+    {
+      "id": "chilis",
+      "display_ar": "تشيليز",
+      "display_en": "Chili's",
+      "category_id": "restaurant",
+      "aliases": [
+        "تشيليز",
+        "شيليز",
+        "تشيلز",
+        "chilis",
+        "chili's"
+      ],
+      "search_term": "تشيليز",
+      "international": false
+    },
+    {
+      "id": "tgi_fridays",
+      "display_ar": "تي جي آي فرايديز",
+      "display_en": "TGI Fridays",
+      "category_id": "restaurant",
+      "aliases": [
+        "تي جي اي فرايديز",
+        "تي جي اي",
+        "tgi fridays",
+        "tgif",
+        "tgi friday"
+      ],
+      "search_term": "تي جي آي فرايديز",
+      "international": false
+    },
+    {
+      "id": "little_caesars",
+      "display_ar": "ليتل سيزرز",
+      "display_en": "Little Caesars",
+      "category_id": "pizza",
+      "aliases": [
+        "ليتل سيزرز",
+        "ليتل سيزر",
+        "little caesars"
+      ],
+      "search_term": "ليتل سيزرز",
+      "international": false
+    },
+    {
+      "id": "sbarro",
+      "display_ar": "سبارو",
+      "display_en": "Sbarro",
+      "category_id": "pizza",
+      "aliases": [
+        "سبارو بيتزا",
+        "سبارو",
+        "sbarro",
+        "sbarro pizza"
+      ],
+      "search_term": "سبارو",
+      "international": false
+    },
+    {
+      "id": "zooba",
+      "display_ar": "زوبا",
+      "display_en": "Zooba",
+      "category_id": "restaurant",
+      "aliases": [
+        "زوبا",
+        "زووبا",
+        "zooba",
+        "zooba eats"
+      ],
+      "search_term": "زوبا",
+      "international": false
+    },
+    {
+      "id": "felfela",
+      "display_ar": "فلفلة",
+      "display_en": "Felfela",
+      "category_id": "restaurant",
+      "aliases": [
+        "فلفلة",
+        "فلفله",
+        "مطعم فلفلة",
+        "felfela",
+        "felfela restaurant"
+      ],
+      "search_term": "فلفلة",
+      "international": false
+    },
+    {
+      "id": "abou_elsid",
+      "display_ar": "مطعم أبو السيد",
+      "display_en": "Abou El Sid",
+      "category_id": "restaurant",
+      "aliases": [
+        "مطعم ابو السيد",
+        "abou el sid",
+        "abou elsid",
+        "abu el sid"
+      ],
+      "search_term": "مطعم أبو السيد",
+      "international": false
+    },
+    {
+      "id": "el_shabrawy",
+      "display_ar": "الشبراوي",
+      "display_en": "El Shabrawy",
+      "category_id": "restaurant",
+      "aliases": [
+        "الشبراوي",
+        "مطعم الشبراوي",
+        "الشبراوى",
+        "el shabrawy",
+        "shabrawy",
+        "el shabrawi"
+      ],
+      "search_term": "الشبراوي",
+      "international": false
+    },
+    {
+      "id": "arabiata",
+      "display_ar": "عربياتا",
+      "display_en": "Arabiata",
+      "category_id": "restaurant",
+      "aliases": [
+        "عربياتا",
+        "ارابياتا",
+        "arabiata"
+      ],
+      "search_term": "عربياتا",
+      "international": false
+    },
+    {
+      "id": "kadoura",
+      "display_ar": "كادورا",
+      "display_en": "Kadoura",
+      "category_id": "restaurant",
+      "aliases": [
+        "كادورا",
+        "مطعم كادورا",
+        "kadoura",
+        "kadoura chicken"
+      ],
+      "search_term": "كادورا",
+      "international": false
+    },
+    {
+      "id": "shawermer",
+      "display_ar": "شاورمر",
+      "display_en": "Shawermer",
+      "category_id": "fast_food",
+      "aliases": [
+        "شاورمر",
+        "shawermer",
+        "shawarmer"
+      ],
+      "search_term": "شاورمر",
+      "international": false
+    },
+    {
+      "id": "city_crepe",
+      "display_ar": "سيتي كريب",
+      "display_en": "City Crepe",
+      "category_id": "fast_food",
+      "aliases": [
+        "سيتي كريب",
+        "سيتى كريب",
+        "city crepe",
+        "city crepe egypt"
+      ],
+      "search_term": "سيتي كريب",
+      "international": false
+    },
+    {
+      "id": "koshary_tahrir",
+      "display_ar": "كشري التحرير",
+      "display_en": "Koshary El Tahrir",
+      "category_id": "koshary",
+      "aliases": [
+        "كشري التحرير",
+        "كشرى التحرير",
+        "koshary tahrir",
+        "koshary el tahrir",
+        "koshari el tahrir"
+      ],
+      "search_term": "كشري التحرير",
+      "international": false
+    },
+    {
+      "id": "koshary_hend",
+      "display_ar": "كشري هند",
+      "display_en": "Koshary Hend",
+      "category_id": "koshary",
+      "aliases": [
+        "كشري هند",
+        "كشرى هند",
+        "koshary hend",
+        "koshari hend"
+      ],
+      "search_term": "كشري هند",
+      "international": false
+    },
+    {
+      "id": "abou_auf",
+      "display_ar": "أبو عوف",
+      "display_en": "Abou Auf",
+      "category_id": "supermarket",
+      "aliases": [
+        "ابو عوف",
+        "ابو عوف كافيه",
+        "ابو عوف للبن",
+        "abu auf",
+        "abou auf",
+        "abou aouf",
+        "abo auf"
+      ],
+      "search_term": "أبو عوف",
+      "international": false
+    },
+    {
+      "id": "caribou_coffee",
+      "display_ar": "كاريبو كوفي",
+      "display_en": "Caribou Coffee",
+      "category_id": "cafe",
+      "aliases": [
+        "كاريبو كوفي",
+        "caribou coffee",
+        "caribou"
+      ],
+      "search_term": "كاريبو كوفي",
+      "international": false
+    },
+    {
+      "id": "coffee_bean",
+      "display_ar": "ذا كوفي بين",
+      "display_en": "The Coffee Bean & Tea Leaf",
+      "category_id": "cafe",
+      "aliases": [
+        "كوفي بين",
+        "ذا كوفي بين",
+        "coffee bean",
+        "the coffee bean",
+        "coffee bean and tea leaf"
+      ],
+      "search_term": "ذا كوفي بين",
+      "international": false
+    },
+    {
+      "id": "beanos",
+      "display_ar": "بينوز",
+      "display_en": "Beano's Cafe",
+      "category_id": "cafe",
+      "aliases": [
+        "بينوز",
+        "beanos",
+        "beano's",
+        "beanos cafe"
+      ],
+      "search_term": "بينوز",
+      "international": false
+    },
+    {
+      "id": "cafe_supreme",
+      "display_ar": "كافيه سوبريم",
+      "display_en": "Cafe Supreme",
+      "category_id": "cafe",
+      "aliases": [
+        "كافيه سوبريم",
+        "سوبريم كافيه",
+        "cafe supreme",
+        "supreme cafe"
+      ],
+      "search_term": "كافيه سوبريم",
+      "international": false
+    },
+    {
+      "id": "movenpick",
+      "display_ar": "موفنبيك",
+      "display_en": "Mövenpick",
+      "category_id": "hotel",
+      "aliases": [
+        "موفنبيك",
+        "موڤنبيك",
+        "مفنبيك",
+        "movenpick",
+        "moevenpick",
+        "mövenpick"
+      ],
+      "search_term": "موفنبيك",
+      "international": false
+    },
+    {
+      "id": "hilton",
+      "display_ar": "هيلتون",
+      "display_en": "Hilton",
+      "category_id": "hotel",
+      "aliases": [
+        "هيلتون",
+        "هيلتون فندق",
+        "hilton",
+        "hilton hotel"
+      ],
+      "search_term": "هيلتون",
+      "international": false
+    },
+    {
+      "id": "marriott",
+      "display_ar": "ماريوت",
+      "display_en": "Marriott",
+      "category_id": "hotel",
+      "aliases": [
+        "ماريوت",
+        "ماريوت فندق",
+        "marriott",
+        "marriott hotel"
+      ],
+      "search_term": "ماريوت",
+      "international": false
+    },
+    {
+      "id": "steigenberger",
+      "display_ar": "شتايجنبرجر",
+      "display_en": "Steigenberger",
+      "category_id": "hotel",
+      "aliases": [
+        "شتايجنبرجر",
+        "ستيجنبرجر",
+        "steigenberger"
+      ],
+      "search_term": "شتايجنبرجر",
+      "international": false
+    },
+    {
+      "id": "rixos",
+      "display_ar": "ريكسوس",
+      "display_en": "Rixos",
+      "category_id": "hotel",
+      "aliases": [
+        "ريكسوس",
+        "rixos"
+      ],
+      "search_term": "ريكسوس",
+      "international": false
+    },
+    {
+      "id": "pyramisa",
+      "display_ar": "بيراميزا",
+      "display_en": "Pyramisa",
+      "category_id": "hotel",
+      "aliases": [
+        "بيراميزا",
+        "بيراميسا",
+        "pyramisa"
+      ],
+      "search_term": "بيراميزا",
+      "international": false
+    },
+    {
+      "id": "jaz_hotels",
+      "display_ar": "فنادق جاز",
+      "display_en": "Jaz Hotels",
+      "category_id": "hotel",
+      "aliases": [
+        "جاز هوتيل",
+        "فنادق جاز",
+        "jaz hotel",
+        "jaz hotels",
+        "jaz resort"
+      ],
+      "search_term": "فنادق جاز",
+      "international": false
+    },
+    {
+      "id": "tolip",
+      "display_ar": "توليب",
+      "display_en": "Tolip Hotels",
+      "category_id": "hotel",
+      "aliases": [
+        "توليب",
+        "فنادق توليب",
+        "tolip",
+        "tolip hotel",
+        "tolip hotels"
+      ],
+      "search_term": "توليب",
+      "international": false
+    },
+    {
+      "id": "holiday_inn",
+      "display_ar": "هوليداي إن",
+      "display_en": "Holiday Inn",
+      "category_id": "hotel",
+      "aliases": [
+        "هوليداي ان",
+        "هوليداي إن",
+        "holiday inn"
+      ],
+      "search_term": "هوليداي إن",
+      "international": false
+    },
+    {
+      "id": "novotel",
+      "display_ar": "نوفوتيل",
+      "display_en": "Novotel",
+      "category_id": "hotel",
+      "aliases": [
+        "نوفوتيل",
+        "novotel"
+      ],
+      "search_term": "نوفوتيل",
+      "international": false
+    },
+    {
+      "id": "radisson",
+      "display_ar": "راديسون",
+      "display_en": "Radisson",
+      "category_id": "hotel",
+      "aliases": [
+        "راديسون",
+        "radisson",
+        "radisson blu"
+      ],
+      "search_term": "راديسون",
+      "international": false
+    },
+    {
+      "id": "sofitel",
+      "display_ar": "سوفيتل",
+      "display_en": "Sofitel",
+      "category_id": "hotel",
+      "aliases": [
+        "سوفيتل",
+        "sofitel"
+      ],
+      "search_term": "سوفيتل",
+      "international": false
+    },
+    {
+      "id": "iberotel",
+      "display_ar": "إيبروتيل",
+      "display_en": "Iberotel",
+      "category_id": "hotel",
+      "aliases": [
+        "ايبروتيل",
+        "ايبيروتيل",
+        "iberotel"
+      ],
+      "search_term": "إيبروتيل",
+      "international": false
+    },
+    {
+      "id": "four_seasons",
+      "display_ar": "فورسيزونز",
+      "display_en": "Four Seasons",
+      "category_id": "hotel",
+      "aliases": [
+        "فورسيزونز",
+        "فور سيزونز",
+        "four seasons",
+        "four seasons hotel"
+      ],
+      "search_term": "فورسيزونز",
+      "international": false
+    },
+    {
+      "id": "kempinski",
+      "display_ar": "كمبينسكي",
+      "display_en": "Kempinski",
+      "category_id": "hotel",
+      "aliases": [
+        "كمبينسكي",
+        "kempinski"
+      ],
+      "search_term": "كمبينسكي",
+      "international": false
+    },
+    {
+      "id": "hyatt",
+      "display_ar": "هيات ريجنسي",
+      "display_en": "Hyatt",
+      "category_id": "hotel",
+      "aliases": [
+        "حياة ريجنسي",
+        "هيات",
+        "هايات",
+        "hyatt",
+        "hyatt regency"
+      ],
+      "search_term": "هيات ريجنسي",
+      "international": false
+    },
+    {
+      "id": "intercontinental",
+      "display_ar": "إنتركونتيننتال",
+      "display_en": "InterContinental",
+      "category_id": "hotel",
+      "aliases": [
+        "انتركونتيننتال",
+        "انتركونتننتال",
+        "intercontinental",
+        "inter continental"
+      ],
+      "search_term": "إنتركونتيننتال",
+      "international": false
+    },
+    {
+      "id": "sixt",
+      "display_ar": "سيكست",
+      "display_en": "Sixt",
+      "category_id": "car_rental",
+      "aliases": [
+        "سيكست",
+        "سيكست لتاجير السيارات",
+        "sixt",
+        "sixt rent a car"
+      ],
+      "search_term": "سيكست",
+      "international": false
+    },
+    {
+      "id": "hertz",
+      "display_ar": "هرتز",
+      "display_en": "Hertz",
+      "category_id": "car_rental",
+      "aliases": [
+        "هرتز",
+        "هيرتز",
+        "hertz",
+        "hertz rent a car"
+      ],
+      "search_term": "هرتز",
+      "international": false
+    },
+    {
+      "id": "avis",
+      "display_ar": "أفيس",
+      "display_en": "Avis",
+      "category_id": "car_rental",
+      "aliases": [
+        "افيس",
+        "افيس لتاجير السيارات",
+        "avis",
+        "avis rent a car"
+      ],
+      "search_term": "أفيس",
+      "international": false
+    },
+    {
+      "id": "europcar",
+      "display_ar": "يوروب كار",
+      "display_en": "Europcar",
+      "category_id": "car_rental",
+      "aliases": [
+        "يوروب كار",
+        "يوروبكار",
+        "europcar"
+      ],
+      "search_term": "يوروب كار",
+      "international": false
+    },
+    {
+      "id": "enterprise_rent_a_car",
+      "display_ar": "إنتربرايز لتأجير السيارات",
+      "display_en": "Enterprise Rent-A-Car",
+      "category_id": "car_rental",
+      "aliases": [
+        "انتربرايز لتاجير السيارات",
+        "انتربرايز رنت اي كار",
+        "enterprise rent a car",
+        "enterprise car rental"
+      ],
+      "search_term": "إنتربرايز لتأجير السيارات",
+      "international": false
+    },
+    {
+      "id": "fit_fix",
+      "display_ar": "فيت فيكس",
+      "display_en": "Fit Fix",
+      "category_id": "car_repair",
+      "aliases": [
+        "فيت فيكس",
+        "فت فيكس",
+        "fit fix",
+        "fitfix",
+        "fit fix bridgestone"
+      ],
+      "search_term": "فيت فيكس",
+      "international": false
+    },
+    {
+      "id": "ola_energy",
+      "display_ar": "أولا إنرجي",
+      "display_en": "Ola Energy",
+      "category_id": "gas_station",
+      "aliases": [
+        "اولا انرجي",
+        "اولا للطاقة",
+        "أولا إنرجي",
+        "ola energy",
+        "ola petrol",
+        "oilibya",
+        "اويل ليبيا",
+        "اوليبيا"
+      ],
+      "search_term": "أولا إنرجي",
+      "international": false
+    },
+    {
+      "id": "taqa_arabia",
+      "display_ar": "طاقة عربية",
+      "display_en": "Taqa Arabia",
+      "category_id": "gas_station",
+      "aliases": [
+        "طاقة عربية",
+        "طاقه عربيه",
+        "taqa arabia",
+        "taqa arabia cng"
+      ],
+      "search_term": "طاقة عربية",
+      "international": false
+    },
+    {
+      "id": "petrotrade",
+      "display_ar": "بترو تريد",
+      "display_en": "Petrotrade",
+      "category_id": "gas_station",
+      "aliases": [
+        "بترو تريد",
+        "بتروتريد",
+        "petrotrade",
+        "petro trade"
+      ],
+      "search_term": "بترو تريد",
+      "international": false
+    },
+    {
+      "id": "aramex",
+      "display_ar": "أرامكس",
+      "display_en": "Aramex",
+      "category_id": "shipping",
+      "aliases": [
+        "ارامكس",
+        "aramex"
+      ],
+      "search_term": "أرامكس",
+      "international": false
+    },
+    {
+      "id": "dhl",
+      "display_ar": "دي إتش إل",
+      "display_en": "DHL",
+      "category_id": "shipping",
+      "aliases": [
+        "دي اتش ال",
+        "دى اتش ال",
+        "dhl",
+        "dhl express"
+      ],
+      "search_term": "دي إتش إل",
+      "international": false
+    },
+    {
+      "id": "fedex",
+      "display_ar": "فيديكس",
+      "display_en": "FedEx",
+      "category_id": "shipping",
+      "aliases": [
+        "فيديكس",
+        "فيدكس",
+        "fedex",
+        "fed ex"
+      ],
+      "search_term": "فيديكس",
+      "international": false
+    },
+    {
+      "id": "egyptair",
+      "display_ar": "مصر للطيران",
+      "display_en": "EgyptAir",
+      "category_id": "travel_agency",
+      "aliases": [
+        "مصر للطيران",
+        "مصر للطيران فرع",
+        "ايجيبت اير",
+        "egyptair",
+        "egypt air",
+        "egypt air office"
+      ],
+      "search_term": "مصر للطيران",
+      "international": false
+    },
+    {
+      "id": "misr_travel",
+      "display_ar": "مصر للسياحة",
+      "display_en": "Misr Travel",
+      "category_id": "travel_agency",
+      "aliases": [
+        "مصر للسياحه",
+        "مصر للسياحة",
+        "misr travel",
+        "masr travel"
+      ],
+      "search_term": "مصر للسياحة",
+      "international": false
+    },
+    {
+      "id": "go_bus",
+      "display_ar": "جو باص",
+      "display_en": "Go Bus",
+      "category_id": "bus_station",
+      "aliases": [
+        "جو باص",
+        "جوباص",
+        "go bus",
+        "gobus"
+      ],
+      "search_term": "جو باص",
+      "international": false
+    },
+    {
+      "id": "super_jet",
+      "display_ar": "سوبر جت",
+      "display_en": "Super Jet",
+      "category_id": "bus_station",
+      "aliases": [
+        "سوبر جت",
+        "سوبرجت",
+        "super jet",
+        "superjet"
+      ],
+      "search_term": "سوبر جت",
+      "international": false
+    },
+    {
+      "id": "raya_shop",
+      "display_ar": "راية شوب",
+      "display_en": "Raya Shop",
+      "category_id": "electronics_store",
+      "aliases": [
+        "راية شوب",
+        "رايه شوب",
+        "raya shop",
+        "raya store"
+      ],
+      "search_term": "راية شوب",
+      "international": false
+    },
+    {
+      "id": "two_b",
+      "display_ar": "تو بي",
+      "display_en": "2B",
+      "category_id": "electronics_store",
+      "aliases": [
+        "تو بي",
+        "تو بى كمبيوتر",
+        "2b",
+        "2b computer",
+        "2b egypt"
+      ],
+      "search_term": "تو بي",
+      "international": false
+    },
+    {
+      "id": "dream_2000",
+      "display_ar": "دريم 2000",
+      "display_en": "Dream 2000",
+      "category_id": "mobile_shop",
+      "aliases": [
+        "دريم 2000",
+        "دريم٢٠٠٠",
+        "dream 2000",
+        "dream2000"
+      ],
+      "search_term": "دريم 2000",
+      "international": false
+    },
+    {
+      "id": "radioshack_eg",
+      "display_ar": "راديو شاك",
+      "display_en": "RadioShack Egypt",
+      "category_id": "electronics_store",
+      "aliases": [
+        "راديو شاك",
+        "راديوشاك",
+        "radioshack",
+        "radio shack"
+      ],
+      "search_term": "راديو شاك",
+      "international": false
+    },
+    {
+      "id": "el_araby",
+      "display_ar": "العربي جروب",
+      "display_en": "El Araby Group",
+      "category_id": "appliance_store",
+      "aliases": [
+        "العربي للتجارة",
+        "معرض العربي",
+        "العربي جروب",
+        "العربى جروب",
+        "elaraby",
+        "el araby group"
+      ],
+      "search_term": "العربي جروب",
+      "international": false
+    },
+    {
+      "id": "home_centre",
+      "display_ar": "هوم سنتر",
+      "display_en": "Home Centre",
+      "category_id": "home_goods_store",
+      "aliases": [
+        "هوم سنتر",
+        "هوم سنتر ديكور",
+        "home centre",
+        "home center"
+      ],
+      "search_term": "هوم سنتر",
+      "international": false
+    },
+    {
+      "id": "ceramica_cleopatra",
+      "display_ar": "سيراميكا كليوباترا",
+      "display_en": "Ceramica Cleopatra",
+      "category_id": "home_goods_store",
+      "aliases": [
+        "سيراميكا كليوباترا",
+        "سيراميكا كليوباترا جروب",
+        "ceramica cleopatra",
+        "cleopatra ceramics"
+      ],
+      "search_term": "سيراميكا كليوباترا",
+      "international": false
+    },
+    {
+      "id": "glc_paints",
+      "display_ar": "جي إل سي للدهانات",
+      "display_en": "GLC Paints",
+      "category_id": "hardware_store",
+      "aliases": [
+        "جي ال سي",
+        "جي ال سي للدهانات",
+        "glc",
+        "glc paints"
+      ],
+      "search_term": "جي إل سي للدهانات",
+      "international": false
+    },
+    {
+      "id": "samir_ali",
+      "display_ar": "سمير وعلي",
+      "display_en": "Samir & Ali",
+      "category_id": "bookshop",
+      "aliases": [
+        "سمير وعلي",
+        "سمير و علي",
+        "samir and ali",
+        "samir aly",
+        "samir & ali",
+        "samir ali stationery"
+      ],
+      "search_term": "سمير وعلي",
+      "international": false
+    },
+    {
+      "id": "dar_el_shorouk",
+      "display_ar": "دار الشروق",
+      "display_en": "Dar El Shorouk",
+      "category_id": "bookshop",
+      "aliases": [
+        "دار الشروق",
+        "مكتبة دار الشروق",
+        "dar el shorouk",
+        "dar elshorouk",
+        "shorouk bookstore"
+      ],
+      "search_term": "دار الشروق",
+      "international": false
+    },
+    {
+      "id": "vox_cinemas",
+      "display_ar": "فوكس سينما",
+      "display_en": "VOX Cinemas",
+      "category_id": "cinema",
+      "aliases": [
+        "فوكس سينما",
+        "فوكس سينيما",
+        "vox cinemas",
+        "vox cinema",
+        "vox"
+      ],
+      "search_term": "فوكس سينما",
+      "international": false
+    },
+    {
+      "id": "magic_planet",
+      "display_ar": "ماجيك بلانيت",
+      "display_en": "Magic Planet",
+      "category_id": "amusement_park",
+      "aliases": [
+        "ماجيك بلانيت",
+        "ماجك بلانيت",
+        "magic planet"
+      ],
+      "search_term": "ماجيك بلانيت",
+      "international": false
+    },
+    {
+      "id": "gourmet_egypt",
+      "display_ar": "جورميه إيجيبت",
+      "display_en": "Gourmet Egypt",
+      "category_id": "supermarket",
+      "aliases": [
+        "جورميه",
+        "جورميه ايجيبت",
+        "جورميه ماركت",
+        "gourmet egypt"
+      ],
+      "search_term": "جورميه إيجيبت",
+      "international": false
+    },
+    {
+      "id": "alfa_market",
+      "display_ar": "ألفا ماركت",
+      "display_en": "Alfa Market",
+      "category_id": "supermarket",
+      "aliases": [
+        "الفا ماركت",
+        "ألفا ماركت",
+        "alfa market"
+      ],
+      "search_term": "ألفا ماركت",
+      "international": false
+    },
+    {
+      "id": "othaim_markets",
+      "display_ar": "أسواق العثيم",
+      "display_en": "Othaim Markets",
+      "category_id": "supermarket",
+      "aliases": [
+        "اسواق العثيم",
+        "العثيم ماركت",
+        "othaim markets",
+        "othaim market",
+        "al othaim"
+      ],
+      "search_term": "أسواق العثيم",
+      "international": false
+    },
+    {
+      "id": "circle_k",
+      "display_ar": "سيركل كيه",
+      "display_en": "Circle K",
+      "category_id": "supermarket",
+      "aliases": [
+        "سيركل كيه",
+        "سيركل كى",
+        "circle k",
+        "circlek"
+      ],
+      "search_term": "سيركل كيه",
+      "international": false
+    },
+    {
+      "id": "cairo_scan",
+      "display_ar": "كايرو سكان",
+      "display_en": "Cairo Scan",
+      "category_id": "radiology",
+      "aliases": [
+        "كايرو سكان",
+        "معمل كايرو سكان",
+        "cairo scan",
+        "cairoscan"
+      ],
+      "search_term": "كايرو سكان",
+      "international": false
+    },
+    {
+      "id": "alfa_scan",
+      "display_ar": "ألفا سكان",
+      "display_en": "Alfa Scan",
+      "category_id": "radiology",
+      "aliases": [
+        "الفا سكان",
+        "ألفا سكان",
+        "alfa scan"
+      ],
+      "search_term": "ألفا سكان",
+      "international": false
+    },
+    {
+      "id": "saudi_german_hospital",
+      "display_ar": "المستشفى السعودي الألماني",
+      "display_en": "Saudi German Hospital",
+      "category_id": "hospital",
+      "aliases": [
+        "السعودي الالماني",
+        "المستشفى السعودي الالماني",
+        "مستشفى السعودي الالماني",
+        "saudi german hospital",
+        "saudi german"
+      ],
+      "search_term": "المستشفى السعودي الألماني",
       "international": false
     }
   ],

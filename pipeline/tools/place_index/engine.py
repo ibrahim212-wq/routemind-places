@@ -101,6 +101,10 @@ TUNING = {
     "area_reach_m": 25000.0,       # a query that names a town does not answer from another town
     "longtail_penalty": 0.25,      # a long-tail row (longtail.py) answers under every stronger real match
     "join_terms": 12,              # terms per word in the two-word join: the word's own forms, then its commonest completions
+    "kind_near_m": 15000.0,        # a kind's rows beyond this lose to any row inside it
+    "kind_far_cut": 0.6,
+    "relax_text": 0.55,            # _relaxed: a row of the asked kind with this much of the words keeps its place
+    "relax_step": 0.001,
     "typing_cap": 400, "brand_cap": 300,  # rows fully scored per keystroke: only the first ten are read (speed, criterion 4)
     "typing_cut_len": 4,           # … a longer word may be a whole name typed in full («الرحاب», «مدينتي»): every row of it is scored
     "far_tail": 0.08, "far_tail_m": 20000.0,  # past the exponential's reach the nearer branch still wins («مكتب بريد» from Alamein)
@@ -161,6 +165,9 @@ REL_SKIP = {"من", "ل", "to", "from", "of", "the"}
 
 def _toks(s: str) -> list[str]:
     return tn.tokens(s)
+
+
+KIND_FILLER = {"محل", "محلات", "مكان", "اماكن", "shop", "store", "place"}
 
 
 def relative_split(raw: str) -> tuple[str, str, str] | None:
@@ -313,6 +320,7 @@ class Parsed:
     area_led: bool = True            # the area was led by «في» (False: a trailing word read as an area)
     need: dict | None = None         # «شاشه عربيات»: a product / service the query asks for (Lexicon.needs)
     complete: tuple | None = None    # «مطع»: (search category, the kind word the typed word is the start of)
+    area_soft: bool = False          # nothing stands in the named area: the nearest to it answers, however far
 
     @property
     def kind(self) -> str:
@@ -431,7 +439,7 @@ class Engine:
 
     # ── 1 parse ─────────────────────────────────────────────────────────────
 
-    def parse(self, raw: str, lat: float, lng: float, no_area: bool = False) -> Parsed:
+    def parse(self, raw: str, lat: float, lng: float, no_area: bool = False, read_area: bool = False) -> Parsed:
         """Phrases first (scope, intent), then ONE longest-window scan over brands, lexicon entities
         and categories at once — the longest window wins, ties go brand > entity > category (the
         Dart QueryParser's rule) — then a second category scan over what is left, then the area."""
@@ -555,6 +563,8 @@ class Engine:
                 if not used[i] and t in OPEN_WORDS:
                     used[i] = True
                     p.open_now = True
+                elif not used[i] and t in KIND_FILLER:
+                    used[i] = True  # «محل اثاث»: «محل» says nothing more than the kind does
         if p.scat is None:
             for i, k in enumerate(keys):
                 if not used[i] and k in self.lx.medicines:
@@ -577,11 +587,13 @@ class Engine:
             i, n = entity_span
             others = [j for j in range(len(toks)) if not used[j] and toks[j] not in STREET_WORDS
                       and toks[j] not in IN_WORDS and not (i <= j < i + n)]
-            if p.scat or p.brand or (others and ent["kind"] != "road"):
+            if not no_area and (p.scat or p.brand or (others and ent["kind"] != "road")):
                 # «صيدلية جنب سيتي ستارز», «شارع 9 المعادي»: the entity is WHERE, the rest is WHAT
                 p.area = {"name": ent["ar"], "lat": ent["lat"], "lng": ent["lng"], "radius": ent["radius"],
                           "cat": ent["kind"], "road": ent["kind"] == "road"}
                 p.scope = "in_area" if p.scope == "anchor" else p.scope
+                if p.scat or p.brand:
+                    p.area_led = i > 0 and toks[i - 1] in IN_WORDS
             elif others:
                 for j in range(n):
                     used[i + j] = False  # a road named inside a longer query is just words
@@ -601,7 +613,7 @@ class Engine:
         rest = [i for i in range(len(toks)) if not used[i]]
         self._parsed_target = bool(p.scat or p.brand)
         if p.area is None and rest and not no_area and \
-                (p.scat or p.brand or p.street or p.typed or any(toks[i] in IN_WORDS for i in rest)):
+                (read_area or p.scat or p.brand or p.street or p.typed or any(toks[i] in IN_WORDS for i in rest)):
             area = self._find_area(toks, used, lat, lng)
             if area:
                 p.area_led = area.pop("led")
@@ -903,6 +915,8 @@ class Engine:
             p.residual = [t for t in p.cat_words if not tn.is_stopword(t)]
             p.scat, p.cat_words = None, []
             out = [r for r in self._search(p, lat, lng, limit, route, dest, dbs, explain) if r.dist <= self.T["kind_fallback_m"]]
+        if not route:
+            out = self._relaxed(raw, p, out, lat, lng, limit, dest, dbs, explain, near)
         # a category + name query knows from its own scoring whether a whole name was typed: most keystrokes are not one
         if p.kind in ("category", "cat_name") and not p.brand and (p.kind == "category" or self._saw_exact):
             exact = self._exact_names(raw, lat, lng, dbs, p.cat_words)
@@ -910,6 +924,46 @@ class Engine:
                 seen = {r.pid for r in exact}
                 out = (exact + [r for r in out if r.pid not in seen])[:limit]
         return out
+
+    def _relaxed(self, raw: str, p: Parsed, out: list, lat: float, lng: float, limit: int, dest, dbs, explain,
+                 near: bool) -> list[Result]:
+        """No reading found what the query really asks for (no row matched its words for real). What it does know still
+        answers, ahead of the rows that merely resemble it: a list is never empty or unrelated because of one word.
+          «صيدليه 24 ساعه», «مكتب سياحة وسفريات»: the kind, without the words no place of that kind carries
+          «رشدي السويس», «صيدلية في العريش»: nothing there: the nearest to that place, however far
+          «دومينوز سموحه», «بلبن قنا»: a name + a town nobody read as one: the name, nearest to the town"""
+        if any(r.tier >= 2 for r in out) or len(p.tokens) < 2:
+            return out
+        q = self.parse(raw, lat, lng)  # the first reading: the retries before this one changed `p`
+        if q.kind == "name" and not q.brand and not q.scat and q.area is None and len(q.residual) >= 2:
+            q = self.parse(raw, lat, lng, read_area=True)
+            if q.area is None:
+                return out
+        elif q.kind == "cat_name" and not q.brand:
+            if q.street or any(self._areas_named([w]) for w in q.cat_words):
+                return out  # «البلو هول دهب»: the kind word is a town too, and the rows that resemble the name are the answer
+            q.residual = []
+        elif q.brand and q.residual_beyond_brand:
+            i, n = q.brand_span  # «خدمة عملاء فودافون»: the chain, without the words none of its branches carries
+            q.residual = q.tokens[i:i + n]
+            q.residual_beyond_brand = False
+        elif q.area is None or q.kind not in ("brand", "category"):
+            return out  # «شارع الثوره ملوي»: never the street of that name in another town
+        scat = q.scat
+        q.area_soft = True
+        if near:
+            q.near = True
+        got = [r for r in self._search(q, lat, lng, limit, None, dest, dbs, explain) if r.tier >= 2]
+        # a row of the asked kind whose name carries most of the words («مستشفى اسيوط الجامعي» → «مستشفى جامعة أسيوط») stays above the kind's other rows
+        good = [r for r in out if scat and r.text >= self.T["relax_text"] and (r.scat == scat or r.scat in SCAT_FAMILY.get(scat, ()))]
+        seen = {r.pid for r in good}
+        got = [r for r in got if r.pid not in seen]
+        if good and got:
+            floor = min(r.score for r in good)
+            for i, r in enumerate(got):
+                r.score = min(r.score, floor - self.T["relax_step"] * (i + 1))
+        seen |= {r.pid for r in got}
+        return (good + got + [r for r in out if r.pid not in seen])[:limit]
 
     def _text_scope(self, lat: float, lng: float) -> list[str]:
         """The files a name is looked for in: the national file and the tiles around the anchor
@@ -1029,7 +1083,7 @@ class Engine:
                 te = T["expansion_factor"] * self._text_score(exp, c, row)
                 if te > text:
                     text, tier = te, min(self._tier, 2)  # another name of the entity is not what was typed
-            if p.area and kind != "name" and d > max(p.area["radius"] * 2.2, 4000):
+            if p.area and kind != "name" and not p.area_soft and d > max(p.area["radius"] * 2.2, 4000):
                 continue
             catm = 0.0
             if p.need is not None:
@@ -1052,6 +1106,8 @@ class Engine:
                     w = T["w_category"]
                     text_part = 1.0
                 prox = math.exp(-d / tau) + T["far_tail"] / (1.0 + d / T["far_tail_m"])
+                if d > T["kind_near_m"]:
+                    prox -= T["kind_far_cut"]  # a shop whose name says it all, 80 km away, never stands above the one down the road
                 tier = 2
                 if p.need is not None and d > T["need_far_m"]:
                     continue
@@ -1104,7 +1160,8 @@ class Engine:
                     w = T["w_area"] if row["kind"] == 1 else T["w_name"]
                     prox = 1.0 / (1.0 + d / T["name_half_m"])
                 text_part = text
-                if p.area and not p.area.get("road") and not p.area_led and d > max(p.area["radius"] * 3, T["area_reach_m"]):
+                if p.area and not p.area_soft and not p.area.get("road") and not p.area_led and \
+                        d > max(p.area["radius"] * 3, T["area_reach_m"]):
                     continue  # «شارع الجلاء قنا» is not the street in Sohag; nothing there = the reading without the town
                 if tier < 2 and d_user > T["fallback_far_m"] and row["pop"] < T["fallback_far_pop"]:
                     continue
