@@ -34,7 +34,7 @@ GROUP_M = 400.0           # mentions of one name this close are one place
 KNOWN_M = 1200.0          # a mention of a place on record this near is that place: it already counted (enrich.mentions)
 STREET_KNOWN_M = 3000.0   # a street of that name this near is that street
 MAX_WORDS = 6
-CELL = 0.02               # ≈ 2 km grid
+KNOWN_SCAN_MAX = 4000     # a word on more rows than this says nothing about one place
 
 _REL = r"(?:بجوار|بجانب|بجنب|جنب|امام|أمام|إمام|قدام|خلف|ورا|وراء|داخل|جوه|تحت|فوق|عند|next to|behind|opposite|in front of|inside|near)"
 _RE_REL = re.compile(_REL + r"\s+([^\d,،؛:;\-–—\.\(\)\\/\n\r|]{3,60})", re.I)
@@ -71,30 +71,30 @@ def _same_name(a: list[str], b: list[str]) -> bool:
 
 
 class _Known:
-    """Who is already on record, by a coarse grid: name words of every place and street."""
+    """Who is already on record, by name word: a name is looked up through its rarest word, so Cairo costs what Sohag costs."""
 
     def __init__(self, places: list):
-        self.grid: dict[tuple[int, int], list] = defaultdict(list)
+        self.by_word: dict[str, list] = defaultdict(list)
         for p in places:
             names = [_words(n) for n in (p.name_ar, p.name_en, *p.alt) if n]
-            self.grid[self._cell(p.lat, p.lng)].append((p.lat, p.lng, p.kind, names))
-
-    @staticmethod
-    def _cell(lat: float, lng: float) -> tuple[int, int]:
-        return int(math.floor(lat / CELL)), int(math.floor(lng / CELL))
+            entry = (p.lat, p.lng, p.kind, names)
+            for w in {w for n in names for w in n}:
+                self.by_word[w].append(entry)
 
     def has(self, words: list[str], lat: float, lng: float, radius: float, street: bool | None = None) -> bool:
-        reach = max(1, int(math.ceil(radius / 111000.0 / CELL)))
-        ci, cj = self._cell(lat, lng)
-        for di in range(-reach, reach + 1):
-            for dj in range(-reach, reach + 1):
-                for plat, plng, kind, names in self.grid.get((ci + di, cj + dj), ()):
-                    if street is not None and (kind == "street") != street:
-                        continue
-                    if R.haversine(lat, lng, plat, plng) > radius:
-                        continue
-                    if any(_same_name(words, n) for n in names):
-                        return True
+        if not words:
+            return False
+        # every word's list but the commonest words': a shorter name on record («الزمالك» for «نادي الزمالك») may lack the rarest word
+        lists = sorted((self.by_word.get(w, ()) for w in set(words)), key=len)
+        dlat = radius / 111000.0
+        for i, rows in enumerate(lists):
+            if i and len(rows) > KNOWN_SCAN_MAX:
+                break
+            for plat, plng, kind, names in rows:
+                if abs(plat - lat) > dlat or (street is not None and (kind == "street") != street):
+                    continue
+                if R.haversine(lat, lng, plat, plng) <= radius and any(_same_name(words, n) for n in names):
+                    return True
         return False
 
 

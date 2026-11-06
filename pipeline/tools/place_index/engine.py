@@ -62,7 +62,7 @@ TUNING = {
     # admission
     "min_text_name": 0.50, "min_text_cat_name": 0.42, "min_text_brand_other": 0.85, "max_postings": 4000,
     "prefix_terms": 48,
-    "fuzzy_terms": 6, "driver_df": 2500, "max_drivers": 2, "max_candidates": 3000, "collapse_m": 150.0, "street_word_boost": 0.12, "closed_penalty": 0.15,
+    "fuzzy_terms": 6, "driver_df": 2500, "max_drivers": 2, "max_candidates": 800, "collapse_m": 150.0, "street_word_boost": 0.12, "closed_penalty": 0.15,
     "nearby_query_tau_scale": 0.6,  # «قريب» shortens tau
     "area_trailing_max_m": 40000.0, "area_trailing_small_m": 15000.0, "refine_m": 10000.0, "expansion_factor": 0.96,  # a trailing word names an area only this near (or a city)
     "w_street": (0.48, 0.34, 0.10, 0.08, 0.00),  # street queries: the same street name is in every town
@@ -100,6 +100,9 @@ TUNING = {
     "fallback_far_pop": 0.6,       # … («الاقصور» is Luxor; "tyre shop" is not a tattoo shop in Hurghada)
     "area_reach_m": 25000.0,       # a query that names a town does not answer from another town
     "longtail_penalty": 0.25,      # a long-tail row (longtail.py) answers under every stronger real match
+    "join_terms": 12,              # terms per word in the two-word join: the word's own forms, then its commonest completions
+    "typing_cap": 400, "brand_cap": 300,  # rows fully scored per keystroke: only the first ten are read (speed, criterion 4)
+    "typing_cut_len": 4,           # … a longer word may be a whole name typed in full («الرحاب», «مدينتي»): every row of it is scored
     "far_tail": 0.08, "far_tail_m": 20000.0,  # past the exponential's reach the nearer branch still wins («مكتب بريد» from Alamein)
     "need_far_m": 60000.0,         # a product or service nobody near sells: an empty answer, not a shop in another governorate
     "kind_fallback_m": 60000.0,    # a kind with nothing near read as a name («جزار» → a village 200 km away) stays near too
@@ -900,7 +903,8 @@ class Engine:
             p.residual = [t for t in p.cat_words if not tn.is_stopword(t)]
             p.scat, p.cat_words = None, []
             out = [r for r in self._search(p, lat, lng, limit, route, dest, dbs, explain) if r.dist <= self.T["kind_fallback_m"]]
-        if p.kind in ("category", "cat_name") and not p.brand:
+        # a category + name query knows from its own scoring whether a whole name was typed: most keystrokes are not one
+        if p.kind in ("category", "cat_name") and not p.brand and (p.kind == "category" or self._saw_exact):
             exact = self._exact_names(raw, lat, lng, dbs, p.cat_words)
             if exact:
                 seen = {r.pid for r in exact}
@@ -963,7 +967,7 @@ class Engine:
             out.append(Result(db, pid, row["pid"], row["kind"], row["cat"], row["scat"], row["lat"], row["lng"],
                               row["name_ar"], row["name_en"], d, s, 1.0, {}, dict(row), d, 3))
         out.sort(key=_rank)
-        return self._collapse(out)[:3]
+        return self._collapse(out, 3)
 
     def _search(self, p: Parsed, lat: float, lng: float, limit: int, route, dest, dbs, explain) -> list[Result]:
         T = self.T
@@ -977,6 +981,7 @@ class Engine:
         tau = self._tau(p)
         if p.near:
             tau *= T["nearby_query_tau_scale"]
+        self._saw_exact = False
         typing = kind == "name" and not p.street and bool(p.residual) and len("".join(p.residual)) <= T["typing_len"]
         self._typing_now = typing
         scope = dbs or self._text_scope(alat, alng)
@@ -989,19 +994,22 @@ class Engine:
         for exp in p.expansions:
             self._text_candidates(exp, scope, cands, prefix=False)  # another WHOLE name of the entity: no completions
         # category / brand / need: the kinds that sell it, and the shops whose own names say they do
-        if p.need is not None and kind in ("category", "cat_name"):
+        # only a query that is ALL kind reads the kind's rows: a row of the kind without the rest of the words is dropped below (min_text_cat_name): reading them all cost every keystroke
+        if p.need is not None and kind == "category":
             for sc in p.need["cats"]:
                 self._category_candidates(sc, alat, alng, scope, cands, p, route)
             nscope = self.ix.near(alat, alng, T["need_radius_m"])
             for ph in p.need["provider"]:
                 self._text_candidates(list(ph), nscope, cands, prefix=False)
-        elif p.scat and (kind in ("category", "cat_name")):
+        elif p.scat and kind == "category":
             self._category_candidates(p.scat, alat, alng, scope, cands, p, route)
         if p.complete is not None:
             self._category_candidates(p.complete[0], alat, alng, scope, cands, p, route)
         if p.brand:
             self._brand_candidates(p.brand, alat, alng, cands)
 
+        if typing and not route and len(cands) > T["typing_cap"] and len("".join(p.residual)) <= T["typing_cut_len"]:
+            cands = self._typing_cut(cands, scope, alat, alng)
         out: list[Result] = []
         for (db, pid), c in cands.items():
             row = c.get("row") or self._row(db, pid)
@@ -1117,6 +1125,8 @@ class Engine:
                 if p.road_word and row["cat"] in ("road", "highway", "axis", "bridge"):
                     s += T["road_word_boost"]
             s += T["tier_gap"] * min(tier, 2) + (T["exact_bonus"] if tier == 3 else 0.0)
+            if tier == 3:
+                self._saw_exact = True
             out.append(Result(db, pid, row["pid"], row["kind"], row["cat"], row["scat"], row["lat"], row["lng"],
                               row["name_ar"], row["name_en"], d_user, s, text,
                               {"text": round(text_part, 3), "prox": round(prox, 3), "pop": row["pop"],
@@ -1129,7 +1139,28 @@ class Engine:
         out.sort(key=_rank)
         if kind == "name":
             out = self._detected_brand(out, alat, alng, tau)
-        return self._collapse(out)[:limit]
+        return self._collapse(out, limit)
+
+    def _typing_cut(self, cands: dict, scope: list, lat: float, lng: float) -> dict:
+        """While a word is being typed thousands of names start with it and ten are read. Every candidate is ranked on what needs no
+        text work (distance, prominence, confidence: the typing profile without its text term) and only the best typing_cap are scored."""
+        T = self.T
+        w = T["w_typing"]
+        rank = {db: i for i, db in enumerate(scope)}
+        order = []
+        for k, c in cands.items():
+            row = c.get("row") or self._row(k[0], k[1])
+            if row is None:
+                continue
+            c["row"] = row
+            d = haversine(lat, lng, row["lat"], row["lng"])
+            if row["srcs"] & APPROX_BIT:
+                d = max(d, T["approx_m"])
+            cheap = w[1] / (1.0 + d / T["typing_half_m"]) + w[2] * row["pop"] + w[3] * row["conf"]
+            order.append((-cheap, rank.get(k[0], len(rank)), k[1], k))
+        order.sort()
+        keep = {x[3] for x in order[:T["typing_cap"]]}
+        return {k: c for k, c in cands.items() if k in keep}
 
     def _chain_strength(self, out: list) -> None:
         """Many places answering with one brand — or one name — are a chain the user is likely after («baz» →
@@ -1337,8 +1368,8 @@ class Engine:
             # driver alone, so the cap below can never drop it
             a, b = usable[0][1], usable[1][1]
             for db in scope:
-                ta = [t for d, t, _ in a if d == db]
-                tb = [t for d, t, _ in b if d == db]
+                ta = [t for d, t, _ in a if d == db][:T["join_terms"]]
+                tb = [t for d, t, _ in b if d == db][:T["join_terms"]]
                 if not ta or not tb:
                     continue
                 sql = ("SELECT DISTINCT x.id FROM tok x JOIN tok y ON y.id = x.id AND y.t IN ("
@@ -1427,6 +1458,8 @@ class Engine:
             join = (field_ & 4) != 0
             gen = (field_ & 8) != 0
             fld = field_ & 3
+            if fld >= 2 and best >= T["f_addr"]:
+                break  # the address and the area come last and can add nothing to a name match this good
             ts = tn.stems(t)
             real = True
             if t == q:
@@ -1458,6 +1491,8 @@ class Engine:
             elif last and q_sq != q and tn.squeeze_latin(t).startswith(q_sq):
                 qual = self._prefix_qual(q_sq, q_sq, tn.squeeze_latin(t), [tn.squeeze_latin(t)], first)
             else:
+                if real_best >= T["q_skel"] + T["first_word_bonus"]:
+                    continue  # no fallback reaches a real match this good: the skeletons and typos of this name cost most of a keystroke
                 real = False
                 qual = 0.0
                 t_sk = [s for s in tn.skeletons(t) if len(s) >= 2]
@@ -1636,16 +1671,20 @@ class Engine:
             radius *= 2
 
     def _brand_candidates(self, brand, lat, lng, cands):
-        for db in self.ix.near(lat, lng, 25000):
+        found = []
+        for i, db in enumerate(self.ix.near(lat, lng, 25000)):
             for r in self.ix.cons[db].execute("SELECT * FROM place WHERE brand = ?", (brand,)):
-                c = cands.setdefault((db, r["id"]), {"m": {}})
-                c["row"] = dict(r)
-                c["_db"] = db
+                found.append((haversine(lat, lng, r["lat"], r["lng"]), i, r["id"], db, dict(r)))
+        found.sort(key=lambda x: x[:3])  # a chain has thousands of branches and the nearest are what is asked for
+        for _, _, pid, db, row in found[:self.T["brand_cap"]]:
+            c = cands.setdefault((db, pid), {"m": {}})
+            c["row"] = row
+            c["_db"] = db
 
     def _route_distance(self, route, lat, lng):
         return min(haversine(lat, lng, a, b) for a, b in route[:: max(1, len(route) // 200)])
 
-    def _collapse(self, rs: list[Result]) -> list[Result]:
+    def _collapse(self, rs: list[Result], limit: int) -> list[Result]:
         """One row per place: the pieces of one street become the piece NEAREST what the query is measured
         from (the named area, the route, else the user), keeping the best piece's score; same-name
         same-category rows within collapse_m become the best one."""
@@ -1681,4 +1720,6 @@ class Engine:
                         break
             if not dup:
                 out.append(r)
+                if len(out) >= limit:  # nobody reads further: comparing every row with every row cost 80 % of a keystroke
+                    break
         return out
