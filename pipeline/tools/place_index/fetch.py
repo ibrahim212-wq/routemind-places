@@ -19,6 +19,7 @@ A source that fails is reported and skipped; build.py builds from whatever arriv
 from __future__ import annotations
 
 import argparse
+import http.client
 import io
 import json
 import os
@@ -67,7 +68,8 @@ def _retry(what: str, fn, tries: int = 5):
     for k in range(tries):
         try:
             return fn()
-        except OSError as e:  # pyarrow's S3 errors and urllib's are OSErrors
+        except (OSError, ValueError, http.client.HTTPException) as e:
+            # pyarrow's S3 errors and urllib's are OSErrors; a body cut off mid-stream is IncompleteRead or a JSONDecodeError
             if k == tries - 1:
                 raise
             pause = wait
@@ -239,14 +241,17 @@ SELECT ?item ?cls ?lat ?lng ?ar ?en ?sl ?pop WHERE {{
                 return json.load(r, strict=False)
         return _retry(f"wikidata {q} {path}", once, tries=2)["results"]["bindings"]
 
+    # A response cut off mid-stream is a ValueError (JSONDecodeError, 2026-11-02: the whole source lost and the weekly
+    # release refused) or an HTTPException (IncompleteRead): one class's failure, never the source's.
+    failed = (OSError, ValueError, http.client.HTTPException)
     for q in WD_CLASSES:
         try:
             bindings += ask(q, "wdt:P31/wdt:P279*")
-        except OSError:
+        except failed:
             try:
                 bindings += ask(q, "wdt:P31")
                 log("wikidata", q, "subclass tree too wide — direct instances only")
-            except OSError as e:
+            except failed as e:
                 skipped.append(q)
                 log("wikidata", q, "skipped:", str(e)[:120])
         time.sleep(1)  # the endpoint's etiquette: one query at a time, a pause between

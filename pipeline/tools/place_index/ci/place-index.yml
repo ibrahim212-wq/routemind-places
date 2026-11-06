@@ -23,6 +23,10 @@ on:
         description: "Publish the release when the gate passes"
         type: boolean
         default: true
+      keep_data:
+        description: "Keep the fetched raw sources as a 3-day artifact (coverage audits on a desk)"
+        type: boolean
+        default: false
 
 concurrency:
   group: place-index
@@ -95,6 +99,7 @@ jobs:
         run: |
           ARGS="--work $WORK --repo $GITHUB_REPOSITORY --keep 3 --keep-index"
           if [ "$PUBLISH" = "true" ]; then ARGS="$ARGS --publish"; fi
+          if [ "${{ inputs.keep_data }}" = "true" ]; then ARGS="$ARGS --keep-data"; fi
           python -m tools.place_index.weekly $ARGS
 
       - name: Verify the release as a phone sees it (download, sha256, open, benchmark ranks = the gate's)
@@ -126,6 +131,16 @@ jobs:
             /tmp/place-index/idx/bench.json
             /tmp/place-index/idx/manifest.json
             /tmp/place-index/summary.json
+
+      - name: Keep the raw sources (coverage audits)
+        if: ${{ always() && inputs.keep_data }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: place-index-data
+          retention-days: 3
+          if-no-files-found: ignore
+          compression-level: 1
+          path: /tmp/place-index/data
 
       - name: Keep the index (not published)
         if: ${{ success() && env.PUBLISH != 'true' }}

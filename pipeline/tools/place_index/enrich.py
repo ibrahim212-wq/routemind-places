@@ -213,6 +213,18 @@ GOV_IDS = {
 }
 
 
+# Gharbia and Monufia never matched GOV_IDS by name in places-2026-11-02: 16,856 POIs had no governorate.
+GOV_CAPITAL = {
+    "cairo": (30.0444, 31.2357), "giza": (30.0131, 31.2089), "alexandria": (31.2001, 29.9187), "qalyubia": (30.4597, 31.1842),
+    "dakahlia": (31.0409, 31.3785), "sharqia": (30.5877, 31.5020), "gharbia": (30.7865, 31.0004), "monufia": (30.5586, 31.0100),
+    "beheira": (31.0342, 30.4682), "kafr_el_sheikh": (31.1107, 30.9388), "damietta": (31.4165, 31.8133),
+    "port_said": (31.2653, 32.3019), "ismailia": (30.5965, 32.2715), "suez": (29.9668, 32.5498), "faiyum": (29.3084, 30.8428),
+    "beni_suef": (29.0661, 31.0994), "minya": (28.1099, 30.7503), "asyut": (27.1783, 31.1859), "sohag": (26.5591, 31.6957),
+    "qena": (26.1551, 32.7160), "luxor": (25.6872, 32.6396), "aswan": (24.0889, 32.8998), "red_sea": (27.2579, 33.8116),
+    "new_valley": (25.4390, 30.5586), "matrouh": (31.3543, 27.2373), "north_sinai": (31.1316, 33.7984), "south_sinai": (28.2400, 33.6200),
+}
+
+
 class GovLocator:
     def __init__(self, division_area_parquet: str):
         import pyarrow.parquet as pq
@@ -229,12 +241,15 @@ class GovLocator:
                 for k, v in GOV_IDS.items():
                     if tn.normalize(k) == tn.normalize(nm or ""):
                         gid = v
+            poly = shapely.from_wkb(r["geometry"])
+            if not gid:  # another spelling of the name («محافظة الغربية», "Al Gharbiyah"): the polygon holding the capital
+                gid = next((g for g, (lat, lng) in GOV_CAPITAL.items() if poly.contains(shapely.Point(lng, lat))), None)
             if not gid:
                 continue
             common = (r["names"] or {}).get("common") or {}
             common = dict(common) if not isinstance(common, dict) else common
             self.names[gid] = (nm, common.get("en") or gid.replace("_", " ").title())
-            self.polys.append(shapely.from_wkb(r["geometry"]))
+            self.polys.append(poly)
             self.ids.append(gid)
         self.tree = STRtree(self.polys)
 
