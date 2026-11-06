@@ -13,3 +13,4 @@
 {"at": "2026-11-06T14:06:54Z", "status": "success", "version": "2026-11-06", "tag": null, "places": 716537, "files": 280, "mb": 137.5, "hit1": 0.922, "hit5": 0.986, "minutes": 80.8, "failed_sources": [], "app_commit": "b53c164ea683682b0a71078b7300bcd65036e097"}
 {"at": "2026-11-06T17:16:45Z", "status": "cancelled", "app_commit": "28f3057c535700420deece06620a0ca737052a8b"}
 {"at": "2026-11-06T18:49:04Z", "status": "success", "version": "2026-11-06", "tag": "places-2026-11-06", "places": 829909, "files": 338, "mb": 155.8, "hit1": 0.919, "hit5": 0.991, "minutes": 85.1, "failed_sources": [], "app_commit": "0c798ffe78e914a0aff54872f48c642a8b47d608"}
+{"at": "2026-11-06T23:07:41Z", "status": "success", "version": "2026-11-06", "tag": "places-2026-11-06.2", "places": 829757, "files": 338, "mb": 157.1, "hit1": 0.916, "hit5": 0.991, "minutes": 88.4, "failed_sources": [], "app_commit": "8b7f033203a1495220e5a9cb41d318fd61d66580"}
