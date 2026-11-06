@@ -21,7 +21,9 @@ import time
 from collections import Counter
 
 from . import atp as ATP
+from . import engine as EG
 from . import enrich as E
+from . import longtail as LT
 from . import media as MD
 from . import merge as M
 from . import names as NM
@@ -213,6 +215,7 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
         import pickle
         with open(cache, "rb") as f:
             places, streets, report, div_area = pickle.load(f)
+        weak_recs = []
         log("reused merge cache", cache, len(places), len(streets))
         lex = E.load_lexicon(LEXICON)
     else:
@@ -231,7 +234,13 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
             d[why] = d.get(why, 0) + 1
         log("dropped", len(dropped), "rescued on evidence", len(rescued), json.dumps(report.get("rescue", {}))[:2000])
         recs = kept + rescued
-        del bcells, kept, dropped
+        back = {id(r) for r in rescued}
+        weak_recs = [r for r, _ in dropped if id(r) not in back]  # the long tail: findable by name, never listed (longtail.py)
+        E.unstack(weak_recs, {})
+        for r in weak_recs:
+            if r.kind == "poi":
+                r.cat = T.refine_by_name(r.cat, [n for n, _ in r.names])
+        del bcells, kept, dropped, back
         E.unstack(recs, report)
         log("stacked pins", json.dumps(report["stacked"]))
         for r in recs:
@@ -310,6 +319,21 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
     # search), before the generated names so those are only made where nothing reliable exists
     QL.lend_names(places, lex, report)
     log("chain names lent", json.dumps(report["chain_names_lent"]))
+    # the long tail and the places only addresses name; after the brands, so a doubtful row never makes a chain
+    weak = LT.weak_places(weak_recs, places + streets, report)
+    for p in weak:
+        c = ki.infer(p.cat, [x for x in (p.name_ar, p.name_en, *p.alt) if x])
+        if c:
+            p.cat = c
+    said, said_streets = LT.mentioned(places, streets, ki, bm, EG.Lexicon.load(LEXICON).generic, report)
+    for p in weak + said + said_streets:
+        p.gov = gov.locate(p.lat, p.lng)
+        a = al.locate(p.lat, p.lng)
+        if a:
+            p.area_ar, p.area_en = a.name_ar, a.name_en
+    places = places + weak + said
+    streets = streets + said_streets
+    log("long tail", json.dumps(report["longtail"]), json.dumps(report["mentioned"]))
     # an Arabic form for a Latin-only name and the reverse, learned from the index's own bilingual names (names.py);
     # after the brands, so a generated word never makes a place a chain's branch
     NM.generate_all(places, report)

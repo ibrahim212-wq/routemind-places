@@ -128,7 +128,8 @@
       "terms_ar": [
         "تحاليل",
         "معامل تحاليل",
-        "معمل",
+        "معمل تحاليل",
+        "مختبر",
         "تحليل دم"
       ],
       "terms_en": [
@@ -332,7 +333,10 @@
         "بنزينة",
         "بنزين",
         "محطة وقود",
-        "محطة",
+        "محطة بنزين",
+        "محطة بنزينه",
+        "محطات بنزين",
+        "محطات وقود",
         "سولار",
         "بنزينه"
       ],
@@ -931,18 +935,19 @@
       "prominence_class": "mall",
       "terms_ar": [
         "مولات",
-        "سنتر",
         "مركز تجاري",
-        "تسوق"
+        "مجمع تجاري",
+        "تسوق",
+        "سنتر تسوق"
       ],
       "terms_en": [
         "malls",
         "shopping",
-        "shopping center"
+        "shopping center",
+        "shopping centre"
       ],
       "terms_franco": [
         "mall",
-        "center",
         "mol",
         "mool"
       ],
@@ -1570,8 +1575,7 @@
       "terms_ar": [
         "جامعات",
         "كلية",
-        "كليات",
-        "معهد"
+        "كليات"
       ],
       "terms_en": [
         "universities",
@@ -13029,6 +13033,3806 @@
       "contexts": [],
       "provider_words": [
         "مترو"
+      ]
+    },
+    {
+      "id": "center_word",
+      "label_ar": "سنتر",
+      "label_en": "Center",
+      "categories": [
+        "tutoring",
+        "print_shop",
+        "mall",
+        "telecom_exchange",
+        "beauty_salon",
+        "medical_lab",
+        "electronics_store",
+        "mobile_shop"
+      ],
+      "products": [
+        "سنتر",
+        "center",
+        "centre",
+        "senter"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سنتر",
+        "center"
+      ]
+    },
+    {
+      "id": "tutoring_center",
+      "label_ar": "سنتر دروس",
+      "label_en": "Tutoring center",
+      "categories": [
+        "tutoring",
+        "institute"
+      ],
+      "products": [
+        "سنتر دروس",
+        "سنتر تعليمي",
+        "سنتر تقوية",
+        "سنتر ثانوية عامة",
+        "سنتر ثانوية",
+        "سنتر تعليم",
+        "سنتر مدرسين",
+        "سنتر اعدادي",
+        "tutoring center",
+        "tutoring centre",
+        "study center",
+        "education center",
+        "senter doros"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سنتر دروس",
+        "سنتر تعليمي",
+        "tutoring center"
+      ]
+    },
+    {
+      "id": "print_center",
+      "label_ar": "سنتر تصوير وطباعة",
+      "label_en": "Copy & print center",
+      "categories": [
+        "print_shop",
+        "bookshop"
+      ],
+      "products": [
+        "سنتر تصوير",
+        "سنتر طباعة",
+        "سنتر خدمات",
+        "سنتر نسخ",
+        "print center",
+        "copy center",
+        "copy centre",
+        "printing center"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سنتر تصوير",
+        "سنتر طباعة",
+        "copy center",
+        "print center"
+      ]
+    },
+    {
+      "id": "beauty_center",
+      "label_ar": "سنتر تجميل",
+      "label_en": "Beauty center",
+      "categories": [
+        "beauty_salon",
+        "spa"
+      ],
+      "products": [
+        "سنتر تجميل",
+        "مركز تجميل",
+        "سنتر حريمي",
+        "سنتر نسائي",
+        "beauty center",
+        "beauty centre",
+        "cosmetic center",
+        "ladies center"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سنتر تجميل",
+        "مركز تجميل",
+        "beauty center"
+      ]
+    },
+    {
+      "id": "markaz_word",
+      "label_ar": "مركز",
+      "label_en": "Center / district",
+      "categories": [
+        "clinic",
+        "institute",
+        "community_center",
+        "police",
+        "government_office",
+        "medical_lab",
+        "physiotherapy",
+        "cultural_center"
+      ],
+      "products": [
+        "مركز",
+        "markaz",
+        "marcaz"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مركز"
+      ]
+    },
+    {
+      "id": "training_center",
+      "label_ar": "مركز تدريب",
+      "label_en": "Training center",
+      "categories": [
+        "institute",
+        "tutoring"
+      ],
+      "products": [
+        "مركز تعليمي",
+        "مركز تعليم",
+        "مركز دروس",
+        "مركز تقوية",
+        "مركز كورسات",
+        "مركز تنمية بشرية",
+        "مركز دراسات",
+        "مركز ثقافي",
+        "learning center",
+        "education centre",
+        "study centre"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مركز تعليمي",
+        "مركز تدريب",
+        "مركز دراسات"
+      ]
+    },
+    {
+      "id": "service_center",
+      "label_ar": "مركز خدمة وصيانة",
+      "label_en": "Service center",
+      "categories": [
+        "appliance_store",
+        "car_repair",
+        "mobile_shop",
+        "electronics_store"
+      ],
+      "products": [
+        "مركز خدمة",
+        "مركز صيانة",
+        "مركز خدمة عملاء",
+        "مركز صيانة معتمد",
+        "service center",
+        "service centre",
+        "authorized service",
+        "maintenance center",
+        "markaz seyana"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مركز خدمة",
+        "مركز صيانة",
+        "service center"
+      ]
+    },
+    {
+      "id": "lab_word",
+      "label_ar": "معمل",
+      "label_en": "Lab / workshop",
+      "categories": [
+        "medical_lab",
+        "factory",
+        "radiology",
+        "print_shop"
+      ],
+      "products": [
+        "معمل",
+        "معامل",
+        "ma3mal",
+        "lab",
+        "labs",
+        "laboratory"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "معمل",
+        "معامل",
+        "laboratory"
+      ]
+    },
+    {
+      "id": "maktab_word",
+      "label_ar": "مكتب",
+      "label_en": "Office",
+      "categories": [
+        "lawyer",
+        "real_estate_agent",
+        "government_office",
+        "company",
+        "travel_agency",
+        "notary",
+        "shipping",
+        "furniture_store"
+      ],
+      "products": [
+        "مكتب",
+        "مكاتب",
+        "maktab",
+        "office",
+        "offices"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مكتب",
+        "office"
+      ]
+    },
+    {
+      "id": "mogamma_word",
+      "label_ar": "مجمع",
+      "label_en": "Complex",
+      "categories": [
+        "government_office",
+        "mall",
+        "school",
+        "hospital",
+        "compound",
+        "market"
+      ],
+      "products": [
+        "مجمع",
+        "مجمعات",
+        "mogamma",
+        "mogama3",
+        "complex"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مجمع",
+        "complex"
+      ]
+    },
+    {
+      "id": "station_word",
+      "label_ar": "محطة",
+      "label_en": "Station",
+      "categories": [
+        "gas_station",
+        "bus_station",
+        "train_station",
+        "metro_station"
+      ],
+      "products": [
+        "محطة",
+        "محطات",
+        "ma7atta",
+        "mahatta",
+        "station",
+        "stations"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "محطة",
+        "station"
+      ]
+    },
+    {
+      "id": "company_word",
+      "label_ar": "شركة",
+      "label_en": "Company",
+      "categories": [
+        "company",
+        "shipping",
+        "real_estate_agent",
+        "travel_agency"
+      ],
+      "products": [
+        "شركة",
+        "شركات",
+        "sharika",
+        "company",
+        "companies"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "شركة"
+      ]
+    },
+    {
+      "id": "super_word",
+      "label_ar": "سوبر",
+      "label_en": "Super",
+      "categories": [
+        "supermarket",
+        "gas_station",
+        "market"
+      ],
+      "products": [
+        "سوبر",
+        "super",
+        "soper"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سوبر",
+        "super"
+      ]
+    },
+    {
+      "id": "maintenance_word",
+      "label_ar": "صيانة",
+      "label_en": "Maintenance",
+      "categories": [
+        "car_repair",
+        "electrician",
+        "plumber",
+        "appliance_store",
+        "mobile_shop"
+      ],
+      "products": [
+        "صيانة",
+        "صيانات",
+        "تصليح",
+        "تصليحات",
+        "اصلاح",
+        "maintenance",
+        "repair",
+        "repairs",
+        "sayana",
+        "seyana",
+        "sayaneit",
+        "tasle7"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "صيانة",
+        "maintenance"
+      ]
+    },
+    {
+      "id": "workshop_word",
+      "label_ar": "ورشة",
+      "label_en": "Workshop",
+      "categories": [
+        "car_repair",
+        "carpenter",
+        "body_shop",
+        "tyre_shop"
+      ],
+      "products": [
+        "ورشة",
+        "ورش",
+        "workshop",
+        "workshops",
+        "warsha"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "ورشة",
+        "workshop"
+      ]
+    },
+    {
+      "id": "boutique_word",
+      "label_ar": "بوتيك",
+      "label_en": "Boutique",
+      "categories": [
+        "clothing_store",
+        "tailor",
+        "gift_shop"
+      ],
+      "products": [
+        "بوتيك",
+        "بوتيكات",
+        "boutique",
+        "boutiques",
+        "butik"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "بوتيك",
+        "boutique"
+      ]
+    },
+    {
+      "id": "club_word",
+      "label_ar": "نادي",
+      "label_en": "Club",
+      "categories": [
+        "sports_club",
+        "gym",
+        "cafe",
+        "community_center"
+      ],
+      "products": [
+        "club",
+        "clubs",
+        "nady"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "نادي",
+        "club"
+      ]
+    },
+    {
+      "id": "car_oil_change",
+      "label_ar": "غيار زيت",
+      "label_en": "Oil change",
+      "categories": [
+        "oil_change",
+        "car_repair",
+        "auto_parts"
+      ],
+      "products": [
+        "غيار زيت",
+        "تغيير زيت",
+        "زيت محرك",
+        "زيت موتور",
+        "زيت عربية",
+        "زيوت",
+        "فلتر زيت",
+        "فلتر هوا",
+        "فلتر بنزين",
+        "غيار زيوت",
+        "تغيير زيوت",
+        "oil change",
+        "engine oil",
+        "motor oil",
+        "lube",
+        "oil filter",
+        "ghayar zeit",
+        "zeit"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "غيار زيت",
+        "زيوت",
+        "oil change",
+        "lube",
+        "oil"
+      ]
+    },
+    {
+      "id": "car_mechanic",
+      "label_ar": "ميكانيكي",
+      "label_en": "Mechanic",
+      "categories": [
+        "car_repair",
+        "auto_parts",
+        "transmission_repair"
+      ],
+      "products": [
+        "ميكانيكي",
+        "ميكانيكا",
+        "ميكانيكي عربيات",
+        "ميكانيكي سيارات",
+        "ورشة عربيات",
+        "ورشة سيارات",
+        "ورشه ميكانيكي",
+        "مصلح عربيات",
+        "صيانة عربيات",
+        "صيانة سيارات",
+        "تصليح عربيات",
+        "تصليح سيارات",
+        "مركز صيانة سيارات",
+        "سمكري",
+        "سمكرى",
+        "سمكرة",
+        "سمكري عربيات",
+        "سمكرى عربيات",
+        "صاج عربيات",
+        "mechanic",
+        "car mechanic",
+        "auto repair",
+        "car repair",
+        "garage repair",
+        "car service",
+        "mekaneky",
+        "makaneky",
+        "mikaniki",
+        "warshet 3arabeyat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "ميكانيكا",
+        "ميكانيكي",
+        "صيانة سيارات",
+        "صيانة عربيات",
+        "ورشة سيارات",
+        "auto repair",
+        "car repair",
+        "garage",
+        "auto service"
+      ]
+    },
+    {
+      "id": "car_tow",
+      "label_ar": "ونش وانقاذ",
+      "label_en": "Tow truck & roadside",
+      "categories": [
+        "roadside_assistance",
+        "tyre_shop",
+        "car_repair"
+      ],
+      "products": [
+        "ونش",
+        "ونش عربيات",
+        "ونش سيارات",
+        "ونش انقاذ",
+        "ونش طريق",
+        "سحب عربية",
+        "سحب سيارة",
+        "انقاذ طريق",
+        "انقاذ سيارات",
+        "عربية عطلت",
+        "عربيتي عطلت",
+        "عربيتي وقفت",
+        "بنشر",
+        "بنشرجي",
+        "طوارئ طريق",
+        "tow truck",
+        "towing",
+        "roadside assistance",
+        "breakdown",
+        "winch",
+        "winsh",
+        "wensh",
+        "banshar"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "ونش",
+        "انقاذ",
+        "بنشر",
+        "towing",
+        "roadside"
+      ]
+    },
+    {
+      "id": "car_wash_need",
+      "label_ar": "غسيل عربيات",
+      "label_en": "Car wash",
+      "categories": [
+        "car_wash",
+        "gas_station"
+      ],
+      "products": [
+        "غسيل عربيات",
+        "غسيل عربية",
+        "غسيل سيارات",
+        "غسيل سيارة",
+        "مغسلة عربيات",
+        "مغسلة سيارات",
+        "مغسله عربيات",
+        "غسيل موتور",
+        "غسيل بالبخار",
+        "car wash",
+        "carwash",
+        "wash my car",
+        "ghasil 3arabeya",
+        "ghaseel sayarat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "غسيل سيارات",
+        "مغسلة سيارات",
+        "car wash",
+        "carwash"
+      ]
+    },
+    {
+      "id": "car_rental_need",
+      "label_ar": "ايجار عربيات",
+      "label_en": "Car rental",
+      "categories": [
+        "car_rental",
+        "travel_agency"
+      ],
+      "products": [
+        "ايجار عربيات",
+        "ايجار عربية",
+        "ايجار سيارات",
+        "ايجار سيارة",
+        "تاجير عربيات",
+        "تاجير عربية",
+        "تاجير سيارات",
+        "تاجير سيارة",
+        "عربية بسواق",
+        "عربيات بسواق",
+        "ليموزين",
+        "ليموزين مطار",
+        "rent a car",
+        "car rental",
+        "car hire",
+        "rent car",
+        "limousine",
+        "self drive",
+        "iga3r 3arabeya",
+        "egar 3arabeyat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "تاجير سيارات",
+        "ايجار سيارات",
+        "rent a car",
+        "car rental"
+      ]
+    },
+    {
+      "id": "parking_need",
+      "label_ar": "جراج",
+      "label_en": "Parking",
+      "categories": [
+        "parking"
+      ],
+      "products": [
+        "جراج",
+        "جراجات",
+        "موقف عربيات",
+        "ركن عربية",
+        "ركنة",
+        "اركن عربيتي",
+        "جراج مغطى",
+        "جراج متعدد الطوابق",
+        "سايس",
+        "parking",
+        "car park",
+        "parking garage",
+        "valet",
+        "garage parking",
+        "garag",
+        "rokn 3arabeya"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "جراج",
+        "موقف سيارات",
+        "parking",
+        "garage"
+      ]
+    },
+    {
+      "id": "car_insurance",
+      "label_ar": "تامين سيارات",
+      "label_en": "Car insurance",
+      "categories": [
+        "company",
+        "government_office"
+      ],
+      "products": [
+        "تامين سيارات",
+        "تامين سيارة",
+        "تامين عربية",
+        "تامين عربيات",
+        "تامين اجباري",
+        "تامين شامل",
+        "تامين ملاكي",
+        "car insurance",
+        "auto insurance",
+        "vehicle insurance"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "تامين",
+        "insurance"
+      ]
+    },
+    {
+      "id": "atm_cash",
+      "label_ar": "صراف الي",
+      "label_en": "ATM",
+      "categories": [
+        "atm",
+        "bank"
+      ],
+      "products": [
+        "صراف",
+        "صراف الي",
+        "ماكينة صراف",
+        "ماكينة فلوس",
+        "ماكينه سحب",
+        "ماكينة سحب",
+        "سحب فلوس",
+        "سحب نقدي",
+        "سحب كاش",
+        "ايداع نقدي",
+        "ماكينة ايداع",
+        "اتم",
+        "atm",
+        "cash machine",
+        "cash point",
+        "cashpoint",
+        "withdraw cash",
+        "cash withdrawal",
+        "cash deposit",
+        "sarraf",
+        "sarrafa ali"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "صراف",
+        "atm",
+        "ماكينة صراف"
+      ]
+    },
+    {
+      "id": "fawry_machine",
+      "label_ar": "فوري وماكينات دفع",
+      "label_en": "Fawry & payment kiosks",
+      "categories": [
+        "electricity_payment",
+        "supermarket",
+        "mobile_shop"
+      ],
+      "products": [
+        "فوري",
+        "ماكينة فوري",
+        "منفذ فوري",
+        "فوري باي",
+        "دفع فواتير",
+        "سداد فواتير",
+        "ماكينة دفع",
+        "مدفوعات",
+        "fawry",
+        "fawry machine",
+        "pay bills",
+        "bill payment",
+        "payment kiosk"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "فوري",
+        "fawry",
+        "مدفوعات",
+        "سداد"
+      ]
+    },
+    {
+      "id": "telecom_customer_service",
+      "label_ar": "خدمة عملاء المحمول",
+      "label_en": "Telecom customer service",
+      "categories": [
+        "telecom_exchange",
+        "mobile_shop"
+      ],
+      "products": [
+        "خدمة عملاء",
+        "فرع محمول",
+        "فرع شركة محمول",
+        "محل اتصالات",
+        "خدمة عملاء فودافون",
+        "خدمة عملاء اورنج",
+        "خدمة عملاء اتصالات",
+        "خدمة عملاء وي",
+        "فرع فودافون",
+        "فرع اورنج",
+        "فرع اتصالات",
+        "customer service",
+        "vodafone service",
+        "orange service",
+        "etisalat service",
+        "we service",
+        "telecom branch",
+        "service point"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "فودافون",
+        "اورنج",
+        "اتصالات",
+        "vodafone",
+        "orange",
+        "etisalat",
+        "خدمة عملاء",
+        "customer service"
+      ]
+    },
+    {
+      "id": "travel_agency_need",
+      "label_ar": "سفريات وسياحة",
+      "label_en": "Travel agency",
+      "categories": [
+        "travel_agency"
+      ],
+      "products": [
+        "سفريات",
+        "سياحة",
+        "مكتب سياحة",
+        "مكتب سفريات",
+        "شركة سياحة",
+        "حجز طيران",
+        "تذاكر طيران",
+        "تذكرة طيران",
+        "طيران",
+        "حجز فندق",
+        "رحلات",
+        "رحلة",
+        "عمرة",
+        "حج",
+        "رحلات نيلية",
+        "عمرة وحج",
+        "travel agency",
+        "travel agent",
+        "flights",
+        "flight tickets",
+        "tours",
+        "tourism",
+        "umrah",
+        "hajj",
+        "safareyat",
+        "siyaha"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سفريات",
+        "سياحة",
+        "travel",
+        "tours",
+        "tourism"
+      ]
+    },
+    {
+      "id": "accounting_office",
+      "label_ar": "محاسب",
+      "label_en": "Accountant",
+      "categories": [
+        "company",
+        "lawyer"
+      ],
+      "products": [
+        "محاسب",
+        "محاسبة",
+        "مكتب محاسبة",
+        "محاسب قانوني",
+        "مراجع حسابات",
+        "دفاتر حسابات",
+        "مكتب ضرائب",
+        "accountant",
+        "accounting",
+        "accounting office",
+        "bookkeeping",
+        "auditor",
+        "mo7aseb"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "محاسبة",
+        "محاسب",
+        "accounting",
+        "accountant"
+      ]
+    },
+    {
+      "id": "shipping_courier",
+      "label_ar": "شحن وتوصيل",
+      "label_en": "Shipping & courier",
+      "categories": [
+        "shipping",
+        "post_office"
+      ],
+      "products": [
+        "شركة شحن",
+        "مكتب شحن",
+        "شحن طرود",
+        "شحن بضايع",
+        "شحن بضائع",
+        "توصيل طرود",
+        "ارسال طرد",
+        "بوسطة",
+        "بوستة",
+        "مندوب شحن",
+        "shipping company",
+        "courier",
+        "parcel delivery",
+        "send package",
+        "freight",
+        "cargo",
+        "shipping office",
+        "booseta"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "شحن",
+        "شحن دولي",
+        "courier",
+        "shipping",
+        "cargo"
+      ]
+    },
+    {
+      "id": "contractors",
+      "label_ar": "مقاولات",
+      "label_en": "Contractors",
+      "categories": [
+        "company",
+        "real_estate_agent"
+      ],
+      "products": [
+        "مقاولات",
+        "مقاولات عامة",
+        "مقاولات وتشطيبات",
+        "مقاولات عقارات",
+        "شركة مقاولات",
+        "مقاول بناء",
+        "contracting",
+        "contractor",
+        "construction company",
+        "general contractor"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مقاولات",
+        "contracting",
+        "construction"
+      ]
+    },
+    {
+      "id": "property_rent_need",
+      "label_ar": "شقق للايجار",
+      "label_en": "Apartments for rent",
+      "categories": [
+        "real_estate_agent"
+      ],
+      "products": [
+        "شقق للايجار",
+        "شقق ايجار",
+        "شقة للايجار",
+        "شقة ايجار",
+        "شقق للبيع",
+        "شقة للبيع",
+        "ايجار شقة",
+        "ايجار شقق",
+        "سمسار",
+        "سماسرة",
+        "مكتب عقارات",
+        "عقارات",
+        "عقار",
+        "فيلا للبيع",
+        "اراضي للبيع",
+        "استوديو ايجار",
+        "apartment for rent",
+        "flat for rent",
+        "apartments for sale",
+        "real estate",
+        "broker",
+        "property for sale",
+        "sho2a2 igar",
+        "se4sar"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "عقارات",
+        "سمسار",
+        "real estate",
+        "properties"
+      ]
+    },
+    {
+      "id": "emergency_care",
+      "label_ar": "طوارئ واسعاف",
+      "label_en": "Emergency & ambulance",
+      "categories": [
+        "hospital",
+        "health_unit"
+      ],
+      "products": [
+        "اسعاف",
+        "عربية اسعاف",
+        "طوارئ",
+        "طوارئ مستشفى",
+        "استقبال وطوارئ",
+        "اسعافات اولية",
+        "حادثة",
+        "حالة طارئة",
+        "ambulance",
+        "emergency",
+        "emergency room",
+        "first aid",
+        "urgent care",
+        "is3af",
+        "taware2"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "طوارئ",
+        "اسعاف",
+        "emergency"
+      ]
+    },
+    {
+      "id": "duty_pharmacy",
+      "label_ar": "صيدلية نوبتجية",
+      "label_en": "Night pharmacy",
+      "categories": [
+        "pharmacy"
+      ],
+      "products": [
+        "نوبتجي",
+        "نوبتجية",
+        "صيدلية نوبتجية",
+        "صيدلية سهر",
+        "صيدلية 24",
+        "دوا بالليل",
+        "علاج بالليل",
+        "night pharmacy",
+        "on duty pharmacy",
+        "open 24 hours pharmacy",
+        "24 hour pharmacy",
+        "nobatgy"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "صيدلية",
+        "pharmacy"
+      ]
+    },
+    {
+      "id": "seafood_need",
+      "label_ar": "اكل بحري",
+      "label_en": "Seafood",
+      "categories": [
+        "seafood",
+        "restaurant"
+      ],
+      "products": [
+        "اكل بحري",
+        "مطعم بحري",
+        "ماكولات بحرية",
+        "سي فود",
+        "جمبري",
+        "كابوريا",
+        "كالاماري",
+        "سمك مشوي",
+        "سمك مقلي",
+        "سمك بلطي",
+        "سمك طازه",
+        "سمك طازج",
+        "seafood",
+        "sea food",
+        "shrimp",
+        "prawns",
+        "calamari",
+        "grilled fish",
+        "fish restaurant",
+        "a2l ba7ry"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "اسماك",
+        "سمك",
+        "سي فود",
+        "seafood",
+        "fish"
+      ]
+    },
+    {
+      "id": "grilled_chicken",
+      "label_ar": "فراخ مشوية ومشويات",
+      "label_en": "Grilled chicken & grill",
+      "categories": [
+        "grill",
+        "restaurant",
+        "fast_food"
+      ],
+      "products": [
+        "فراخ مشوية",
+        "فراخ على الفحم",
+        "فراخ بالفرن",
+        "دجاج مشوي",
+        "فرخة مشوية",
+        "مشويات",
+        "مشوي",
+        "كباب",
+        "كفتة",
+        "كباب وكفتة",
+        "ريش",
+        "ريش مشوية",
+        "ربع فرخة",
+        "نص فرخة",
+        "شاورما",
+        "grilled chicken",
+        "rotisserie",
+        "bbq",
+        "barbecue",
+        "kebab",
+        "kofta",
+        "shawarma",
+        "mashwiyat",
+        "fer5a mashweya"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مشويات",
+        "كباب",
+        "grill",
+        "bbq",
+        "kebab"
+      ]
+    },
+    {
+      "id": "feteer_pies",
+      "label_ar": "فطير وحواوشي",
+      "label_en": "Fiteer & hawawshi",
+      "categories": [
+        "restaurant",
+        "bakery",
+        "fast_food"
+      ],
+      "products": [
+        "فطير",
+        "فطيرة",
+        "فطائر",
+        "فطير مشلتت",
+        "حواوشي",
+        "حوايشي",
+        "فطير بالعسل",
+        "فطير بالجبنة",
+        "فطير بالسجق",
+        "مخبوزات",
+        "معجنات",
+        "فطيرجي",
+        "feteer",
+        "fiteer",
+        "fateer",
+        "hawawshi",
+        "pies",
+        "pastries"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "فطير",
+        "فطائر",
+        "مخبوزات",
+        "معجنات",
+        "feteer",
+        "bakery"
+      ]
+    },
+    {
+      "id": "tea_coffee",
+      "label_ar": "قهوة وشاي",
+      "label_en": "Coffee & tea",
+      "categories": [
+        "cafe"
+      ],
+      "products": [
+        "قهوة",
+        "قهوه",
+        "شاي",
+        "شاي وقهوة",
+        "قهوجي",
+        "قهوة بلدي",
+        "قهوة تركي",
+        "قهوة مختصة",
+        "كوفي شوب",
+        "كابتشينو",
+        "لاتيه",
+        "اسبريسو",
+        "نسكافيه",
+        "شاي بلبن",
+        "شاي كشري",
+        "مشروبات ساخنة",
+        "مشروبات",
+        "coffee",
+        "tea",
+        "coffee shop",
+        "espresso",
+        "latte",
+        "cappuccino",
+        "specialty coffee",
+        "hot drinks",
+        "ahwa",
+        "ahwa baladi",
+        "a7wa"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "قهوة",
+        "كوفي",
+        "كافيه",
+        "coffee",
+        "cafe",
+        "ahwa"
+      ]
+    },
+    {
+      "id": "juice_need",
+      "label_ar": "عصير",
+      "label_en": "Juice",
+      "categories": [
+        "juice_bar",
+        "cafe"
+      ],
+      "products": [
+        "عصير",
+        "عصاير",
+        "عصائر",
+        "عصير فريش",
+        "عصير قصب",
+        "عصير مانجو",
+        "عصير ليمون",
+        "عصير برتقال",
+        "عصير فراولة",
+        "سموذي",
+        "سموثي",
+        "كوكتيل",
+        "كوكتيل فواكه",
+        "قصب",
+        "سوبيا",
+        "تمر هندي",
+        "عرقسوس",
+        "juice",
+        "fresh juice",
+        "smoothie",
+        "sugarcane juice",
+        "milkshake",
+        "asir",
+        "3asir",
+        "asayer"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "عصير",
+        "عصائر",
+        "juice",
+        "fresh",
+        "smoothie"
+      ]
+    },
+    {
+      "id": "ahwa_shisha",
+      "label_ar": "قهوة وشيشة",
+      "label_en": "Ahwa & shisha",
+      "categories": [
+        "cafe"
+      ],
+      "products": [
+        "شيشة",
+        "شيشه",
+        "نرجيلة",
+        "ارجيلة",
+        "معسل",
+        "كافيه شيشة",
+        "قهوة شيشة",
+        "shisha",
+        "hookah",
+        "nargila",
+        "sheesha",
+        "cafe shisha",
+        "shesha"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "شيشة",
+        "shisha",
+        "hookah",
+        "sheesha"
+      ]
+    },
+    {
+      "id": "koshary_need",
+      "label_ar": "كشري وفول وطعمية",
+      "label_en": "Koshary, foul, ta3meya",
+      "categories": [
+        "koshary",
+        "foul_taameya"
+      ],
+      "products": [
+        "كشري",
+        "كشرى",
+        "كشري حلة",
+        "طبق كشري",
+        "koshary",
+        "koshari",
+        "kosheri",
+        "koshary restaurant"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "كشري",
+        "koshary"
+      ]
+    },
+    {
+      "id": "foul_need",
+      "label_ar": "فول وطعمية",
+      "label_en": "Foul & ta3meya",
+      "categories": [
+        "foul_taameya",
+        "restaurant"
+      ],
+      "products": [
+        "فول",
+        "طعمية",
+        "فلافل",
+        "فول وطعمية",
+        "فول وفلافل",
+        "فول مدمس",
+        "فول اسكندراني",
+        "فول بالزيت الحار",
+        "عربية فول",
+        "عربة فول",
+        "فوال",
+        "foul",
+        "ful",
+        "ta3meya",
+        "taameya",
+        "falafel",
+        "foul medames",
+        "breakfast egyptian"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "فول",
+        "فلافل",
+        "foul",
+        "falafel"
+      ]
+    },
+    {
+      "id": "fast_food_need",
+      "label_ar": "وجبات سريعة",
+      "label_en": "Fast food",
+      "categories": [
+        "fast_food",
+        "burger",
+        "pizza",
+        "restaurant"
+      ],
+      "products": [
+        "وجبات سريعة",
+        "ساندوتشات",
+        "ساندوتش",
+        "سندوتشات",
+        "سندوتش",
+        "برجر",
+        "همبرجر",
+        "بيتزا",
+        "كريسبي",
+        "دجاج مقلي",
+        "وجبة سريعة",
+        "fast food",
+        "sandwich",
+        "sandwiches",
+        "burger",
+        "pizza",
+        "fried chicken",
+        "takeaway",
+        "take away"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "وجبات سريعة",
+        "fast food",
+        "برجر",
+        "بيتزا",
+        "burger",
+        "pizza"
+      ]
+    },
+    {
+      "id": "baladi_bread",
+      "label_ar": "فرن عيش بلدي",
+      "label_en": "Baladi bread bakery",
+      "categories": [
+        "bakery"
+      ],
+      "products": [
+        "فرن عيش",
+        "فرن بلدي",
+        "فرن عيش بلدي",
+        "عيش بلدي",
+        "عيش فينو",
+        "عيش شامي",
+        "عيش سن",
+        "عيش مدعم",
+        "مخبز",
+        "مخابز",
+        "مخبز بلدي",
+        "فرن اوتوماتيك",
+        "bakery",
+        "baladi bread",
+        "aish baladi",
+        "egyptian bread",
+        "bread",
+        "3esh baladi",
+        "forn"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "فرن",
+        "مخبز",
+        "مخابز",
+        "bakery"
+      ]
+    },
+    {
+      "id": "sweets_need",
+      "label_ar": "حلويات",
+      "label_en": "Sweets",
+      "categories": [
+        "sweets",
+        "bakery",
+        "ice_cream"
+      ],
+      "products": [
+        "حلويات",
+        "حلواني",
+        "حلوانى",
+        "حلويات شرقية",
+        "حلويات شرقي",
+        "حلويات غربية",
+        "بسبوسة",
+        "كنافة",
+        "قطايف",
+        "بقلاوة",
+        "جاتوه",
+        "تورتة",
+        "تورتات",
+        "ميني بيتي فور",
+        "بيتي فور",
+        "كيك",
+        "جلاب",
+        "جيلاتي",
+        "sweets",
+        "desserts",
+        "dessert",
+        "pastry",
+        "cake",
+        "cakes",
+        "patisserie",
+        "baklava",
+        "konafa",
+        "basbousa",
+        "ice cream",
+        "helwayat",
+        "7alawaneyat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "حلويات",
+        "حلواني",
+        "ديسيرت",
+        "sweets",
+        "patisserie",
+        "desserts"
+      ]
+    },
+    {
+      "id": "butcher_need",
+      "label_ar": "جزار",
+      "label_en": "Butcher",
+      "categories": [
+        "butcher"
+      ],
+      "products": [
+        "جزار",
+        "جزارة",
+        "جزارين",
+        "لحمة",
+        "لحمه",
+        "لحوم",
+        "لحم",
+        "لحمة بلدي",
+        "لحمة مفرومة",
+        "كبدة",
+        "ممبار",
+        "كوارع",
+        "ضاني",
+        "كندوز",
+        "بتلو",
+        "butcher",
+        "butchery",
+        "meat shop",
+        "beef",
+        "lamb",
+        "mutton",
+        "meat",
+        "gazzar",
+        "lahma"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "جزارة",
+        "لحوم",
+        "جزار",
+        "butcher",
+        "meat"
+      ]
+    },
+    {
+      "id": "grocery_delivery",
+      "label_ar": "سوبر ماركت وتوصيل",
+      "label_en": "Supermarket & delivery",
+      "categories": [
+        "supermarket",
+        "market"
+      ],
+      "products": [
+        "سوبر ماركت",
+        "سوبرماركت",
+        "بقالة",
+        "بقال",
+        "بقالة قريبة",
+        "هايبر",
+        "هايبر ماركت",
+        "هايبرماركت",
+        "ماركت",
+        "تموين",
+        "بقالة تموين",
+        "مياه معدنية توصيل",
+        "توصيل مياه",
+        "توصيل بقالة",
+        "توصيل ديلفري",
+        "supermarket",
+        "super market",
+        "hypermarket",
+        "grocery",
+        "groceries",
+        "grocery store",
+        "convenience store",
+        "minimarket",
+        "baqala",
+        "bakala"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سوبر ماركت",
+        "بقالة",
+        "هايبر",
+        "supermarket",
+        "grocery"
+      ]
+    },
+    {
+      "id": "gold_buy",
+      "label_ar": "ذهب ومجوهرات",
+      "label_en": "Gold & jewellery",
+      "categories": [
+        "jewelry_store"
+      ],
+      "products": [
+        "ذهب",
+        "دهب",
+        "مجوهرات",
+        "جواهرجي",
+        "صايغ",
+        "صاغة",
+        "محل ذهب",
+        "ذهب عيار 21",
+        "ذهب عيار 18",
+        "عيار 21",
+        "عيار 18",
+        "فضة",
+        "الماظ",
+        "سعر الذهب",
+        "دبلة ذهب",
+        "gold",
+        "gold shop",
+        "jewelry",
+        "jewellery",
+        "jeweler",
+        "silver",
+        "diamond",
+        "dahab",
+        "mogawharat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "ذهب",
+        "دهب",
+        "مجوهرات",
+        "صاغة",
+        "gold",
+        "jewelry"
+      ]
+    },
+    {
+      "id": "sneakers",
+      "label_ar": "كوتشي وجزم",
+      "label_en": "Sneakers & shoes",
+      "categories": [
+        "shoe_store",
+        "sports_store"
+      ],
+      "products": [
+        "كوتشي",
+        "كوتشيات",
+        "كوتش رياضي",
+        "حذاء رياضي",
+        "احذية رياضية",
+        "جزمة رياضة",
+        "جزم",
+        "جزمة",
+        "جزمة رجالي",
+        "جزمة حريمي",
+        "صندل",
+        "شبشب",
+        "بوت",
+        "حذاء",
+        "احذية",
+        "صنادل",
+        "sneakers",
+        "sneaker",
+        "running shoes",
+        "trainers",
+        "shoes",
+        "shoe",
+        "sandals",
+        "boots",
+        "kotshi",
+        "gazma"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "احذية",
+        "جزم",
+        "حذاء",
+        "shoes",
+        "footwear"
+      ]
+    },
+    {
+      "id": "clothes_buy",
+      "label_ar": "هدوم وملابس",
+      "label_en": "Clothes",
+      "categories": [
+        "clothing_store"
+      ],
+      "products": [
+        "هدوم",
+        "ملابس",
+        "لبس",
+        "قميص",
+        "قمصان",
+        "بنطلون",
+        "بناطيل",
+        "جينز",
+        "تيشيرت",
+        "جاكيت",
+        "فستان",
+        "فساتين",
+        "عباية",
+        "بلوزة",
+        "جيبة",
+        "ملابس رجالي",
+        "ملابس حريمي",
+        "ملابس اطفال",
+        "ملابس شتوي",
+        "ملابس صيفي",
+        "اوت ليت",
+        "clothes",
+        "clothing",
+        "fashion",
+        "shirt",
+        "jeans",
+        "jacket",
+        "dress",
+        "outlet",
+        "apparel",
+        "hodoum",
+        "malabes"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "ملابس",
+        "ازياء",
+        "fashion",
+        "clothing",
+        "apparel"
+      ]
+    },
+    {
+      "id": "furniture_aafsh",
+      "label_ar": "عفش واثاث",
+      "label_en": "Furniture",
+      "categories": [
+        "furniture_store",
+        "home_goods_store"
+      ],
+      "products": [
+        "عفش",
+        "عفش بيت",
+        "اثاث",
+        "اثاث منزلي",
+        "موبيليا",
+        "اوض نوم",
+        "غرفة نوم",
+        "اوضة نوم",
+        "غرفة سفرة",
+        "انتريه",
+        "غرفة اطفال",
+        "غرفة معيشة",
+        "سفرة",
+        "مفروشات",
+        "محل اثاث",
+        "معرض اثاث",
+        "محل موبيليا",
+        "furniture",
+        "furniture shop",
+        "furniture store",
+        "bedroom set",
+        "living room",
+        "sofa",
+        "couch",
+        "3afsh",
+        "mobelya"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "اثاث",
+        "موبيليا",
+        "مفروشات",
+        "furniture"
+      ]
+    },
+    {
+      "id": "stationery",
+      "label_ar": "قرطاسية",
+      "label_en": "Stationery",
+      "categories": [
+        "bookshop",
+        "print_shop"
+      ],
+      "products": [
+        "قرطاسية",
+        "قرطاسيه",
+        "ادوات مكتبية",
+        "ادوات مدرسية",
+        "مستلزمات مدرسية",
+        "كراسات",
+        "كراريس",
+        "اقلام",
+        "شنط مدرسة",
+        "مكتبة",
+        "مكتبات",
+        "كتب",
+        "كتب مدرسية",
+        "كتب خارجية",
+        "روايات",
+        "مكتبة كتب",
+        "stationery",
+        "school supplies",
+        "office supplies",
+        "books",
+        "bookstore",
+        "book shop",
+        "notebooks",
+        "pens",
+        "maktaba"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مكتبة",
+        "قرطاسية",
+        "ادوات مكتبية",
+        "stationery",
+        "books"
+      ]
+    },
+    {
+      "id": "electric_appliances_need",
+      "label_ar": "اجهزة كهربائية",
+      "label_en": "Electrical appliances",
+      "categories": [
+        "appliance_store",
+        "electronics_store"
+      ],
+      "products": [
+        "اجهزة كهربائية",
+        "اجهزة كهربا",
+        "ادوات كهربائية",
+        "اجهزة منزلية",
+        "ادوات منزلية",
+        "اجهزة كهربائيه",
+        "electrical appliances",
+        "home appliances",
+        "electronics",
+        "appliances"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "اجهزة كهربائية",
+        "اجهزة منزلية",
+        "appliances",
+        "electronics"
+      ]
+    },
+    {
+      "id": "souvenirs",
+      "label_ar": "هدايا سياحية وتحف",
+      "label_en": "Souvenirs & antiques",
+      "categories": [
+        "gift_shop"
+      ],
+      "products": [
+        "هدايا سياحية",
+        "تحف",
+        "انتيكات",
+        "انتيكة",
+        "بردي",
+        "ورق بردي",
+        "تماثيل",
+        "خان الخليلي",
+        "هدايا فرعونية",
+        "souvenirs",
+        "souvenir",
+        "antiques",
+        "papyrus",
+        "handicrafts",
+        "bazaar",
+        "tourist gifts"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "تحف",
+        "بازار",
+        "هدايا سياحية",
+        "souvenirs",
+        "bazaar"
+      ]
+    },
+    {
+      "id": "carpenter_need",
+      "label_ar": "نجار",
+      "label_en": "Carpenter",
+      "categories": [
+        "carpenter",
+        "furniture_store"
+      ],
+      "products": [
+        "نجار",
+        "نجارة",
+        "نجارين",
+        "نجار موبيليا",
+        "نجار مسلح",
+        "نجار باب",
+        "نجار مطابخ",
+        "ورشة نجارة",
+        "ورشة خشب",
+        "خشب",
+        "اخشاب",
+        "خراط",
+        "خرط",
+        "carpenter",
+        "carpentry",
+        "woodwork",
+        "woodworking",
+        "joiner",
+        "timber",
+        "nagar",
+        "naggar"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "نجارة",
+        "نجار",
+        "اخشاب",
+        "carpentry",
+        "wood"
+      ]
+    },
+    {
+      "id": "blacksmith_need",
+      "label_ar": "حداد",
+      "label_en": "Blacksmith & metalwork",
+      "categories": [
+        "carpenter",
+        "hardware_store"
+      ],
+      "products": [
+        "حداد",
+        "حدادة",
+        "حدادين",
+        "حداد مسلح",
+        "حداد افرنجي",
+        "حداد ابواب",
+        "كريتال",
+        "ورشة حدادة",
+        "لحام",
+        "لحام اكسجين",
+        "مواسير حديد",
+        "blacksmith",
+        "welding",
+        "welder",
+        "ironwork",
+        "metalwork",
+        "steel doors",
+        "haddad"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "حدادة",
+        "حداد",
+        "لحام",
+        "welding",
+        "metalwork"
+      ]
+    },
+    {
+      "id": "barber_need",
+      "label_ar": "حلاق",
+      "label_en": "Barber",
+      "categories": [
+        "barber",
+        "beauty_salon"
+      ],
+      "products": [
+        "حلاق",
+        "حلاقة",
+        "حلاق رجالي",
+        "حلاقين",
+        "حلاقة رجالي",
+        "صالون حلاقة",
+        "حلاقة دقن",
+        "تحديد دقن",
+        "قص شعر رجالي",
+        "قصة شعر",
+        "barber",
+        "barbershop",
+        "barber shop",
+        "mens haircut",
+        "haircut",
+        "beard trim",
+        "hala2",
+        "7ala2",
+        "7elaa2",
+        "halla2",
+        "salon rigaly"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "حلاق",
+        "حلاقة",
+        "barber",
+        "barbershop"
+      ]
+    },
+    {
+      "id": "hairdresser_women",
+      "label_ar": "كوافير حريمي",
+      "label_en": "Ladies hairdresser",
+      "categories": [
+        "beauty_salon"
+      ],
+      "products": [
+        "كوافير",
+        "كوافيرة",
+        "كوافير حريمي",
+        "كوافير نسائي",
+        "حلاق نسائي",
+        "حلاق حريمي",
+        "حلاقة نسائي",
+        "حلاقة حريمي",
+        "صالون حريمي",
+        "صالون نسائي",
+        "صالون تجميل",
+        "مركز تجميل",
+        "سشوار",
+        "فرد شعر",
+        "صبغة",
+        "صبغة شعر",
+        "تسريحة",
+        "ميك اب",
+        "مكياج",
+        "ميكب",
+        "مانيكير",
+        "باديكير",
+        "coiffeur",
+        "hairdresser",
+        "hair salon",
+        "ladies salon",
+        "womens salon",
+        "beauty salon",
+        "makeup artist",
+        "manicure",
+        "pedicure",
+        "kwafeer",
+        "kwafeer 7rimy",
+        "kwafer",
+        "kuafir",
+        "salon 7arimy"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "كوافير",
+        "صالون",
+        "تجميل",
+        "salon",
+        "beauty",
+        "hair"
+      ]
+    },
+    {
+      "id": "laundry_ironing",
+      "label_ar": "مغسلة ومكوجي",
+      "label_en": "Laundry & ironing",
+      "categories": [
+        "laundry"
+      ],
+      "products": [
+        "مغسلة",
+        "مغسله",
+        "مغسلة ملابس",
+        "مغسله ملابس",
+        "غسيل ملابس",
+        "مكوجي",
+        "مكوى",
+        "كي",
+        "كي ملابس",
+        "دراي كلين",
+        "غسيل جاف",
+        "غسيل وكي",
+        "تنظيف بالبخار",
+        "غسيل بطاطين",
+        "غسيل ستائر",
+        "laundry",
+        "dry cleaning",
+        "dry cleaner",
+        "ironing",
+        "laundromat",
+        "washing clothes",
+        "maghsala",
+        "mekawagy",
+        "mkawgy"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مغسلة",
+        "مكوجي",
+        "دراي كلين",
+        "laundry",
+        "dry clean"
+      ]
+    },
+    {
+      "id": "tailor_need",
+      "label_ar": "ترزي وخياطة",
+      "label_en": "Tailor",
+      "categories": [
+        "tailor"
+      ],
+      "products": [
+        "ترزي",
+        "ترزى",
+        "خياط",
+        "خياطة",
+        "خياطه",
+        "خياط رجالي",
+        "خياطة حريمي",
+        "تفصيل",
+        "تفصيل بدل",
+        "تفصيل ملابس",
+        "تعديل ملابس",
+        "تقصير بنطلون",
+        "تظبيط ملابس",
+        "مشغل خياطة",
+        "مشغل",
+        "tailor",
+        "tailoring",
+        "seamstress",
+        "alterations",
+        "dressmaker",
+        "custom suits",
+        "tarzy",
+        "khayat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "ترزي",
+        "خياطة",
+        "تفصيل",
+        "tailor",
+        "tailoring"
+      ]
+    },
+    {
+      "id": "eyes_glasses_need",
+      "label_ar": "نضارة وعدسات",
+      "label_en": "Glasses & lenses",
+      "categories": [
+        "optician",
+        "clinic"
+      ],
+      "products": [
+        "نضارة",
+        "نضارات",
+        "نظارة",
+        "نظارات",
+        "نضارة طبية",
+        "نظارة طبية",
+        "نضارة شمس",
+        "عدسات",
+        "عدسات لاصقة",
+        "كشف نظر",
+        "قياس نظر",
+        "اطار نضارة",
+        "عدسات طبية",
+        "glasses",
+        "eyeglasses",
+        "sunglasses",
+        "contact lenses",
+        "optician",
+        "eye test",
+        "lenses",
+        "nadara",
+        "nazara"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "بصريات",
+        "نضارات",
+        "optics",
+        "optical",
+        "optician"
+      ]
+    },
+    {
+      "id": "doctor_generic",
+      "label_ar": "دكتور",
+      "label_en": "Doctor",
+      "categories": [
+        "clinic",
+        "hospital",
+        "dentist"
+      ],
+      "products": [
+        "دكتور",
+        "دكاترة",
+        "دكتورة",
+        "طبيب",
+        "اطباء",
+        "طبيبة",
+        "عيادات",
+        "كشف",
+        "حجز كشف",
+        "كشف مستعجل",
+        "استشاري",
+        "اخصائي",
+        "اخصائية",
+        "doctor",
+        "doctors",
+        "physician",
+        "specialist",
+        "consultant",
+        "appointment",
+        "doctor appointment",
+        "do2tor",
+        "doktor"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "دكتور",
+        "عيادة",
+        "clinic",
+        "doctor",
+        "dr"
+      ]
+    },
+    {
+      "id": "dental_need",
+      "label_ar": "دكتور اسنان",
+      "label_en": "Dentist",
+      "categories": [
+        "dentist"
+      ],
+      "products": [
+        "اسنان",
+        "ضرس",
+        "ضروس",
+        "دكتور اسنان",
+        "دكتورة اسنان",
+        "عيادة اسنان",
+        "عياده اسنان",
+        "طبيب اسنان",
+        "حشو عصب",
+        "تقويم اسنان",
+        "زراعة اسنان",
+        "تبييض اسنان",
+        "خلع ضرس",
+        "تركيبات اسنان",
+        "dentist",
+        "dental",
+        "dental clinic",
+        "orthodontist",
+        "braces",
+        "teeth whitening",
+        "dental implant",
+        "root canal",
+        "asnan",
+        "snan"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "اسنان",
+        "dental",
+        "dentist",
+        "dentistry"
+      ]
+    },
+    {
+      "id": "kids_doctor_need",
+      "label_ar": "دكتور اطفال",
+      "label_en": "Pediatrician",
+      "categories": [
+        "clinic",
+        "hospital"
+      ],
+      "products": [
+        "دكتور اطفال",
+        "دكتورة اطفال",
+        "عيادة اطفال",
+        "عياده اطفال",
+        "طبيب اطفال",
+        "حديثي الولادة",
+        "حضانات مستشفى",
+        "تطعيمات اطفال",
+        "pediatrician",
+        "pediatric",
+        "paediatric",
+        "kids doctor",
+        "child doctor",
+        "children doctor",
+        "atfal doctor",
+        "do2tor atfal"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "اطفال",
+        "pediatric",
+        "children"
+      ]
+    },
+    {
+      "id": "physio_need",
+      "label_ar": "علاج طبيعي",
+      "label_en": "Physiotherapy",
+      "categories": [
+        "physiotherapy",
+        "clinic"
+      ],
+      "products": [
+        "علاج طبيعي",
+        "فيزيو",
+        "فيزيوثيرابي",
+        "فيزيو ثيرابي",
+        "تاهيل",
+        "تأهيل",
+        "مساج علاجي",
+        "جلسات علاج طبيعي",
+        "اخصائي علاج طبيعي",
+        "عمود فقري",
+        "physio",
+        "physiotherapy",
+        "physical therapy",
+        "rehab",
+        "rehabilitation",
+        "3ilag tabe3y",
+        "physiotherapi"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "علاج طبيعي",
+        "تاهيل",
+        "physio",
+        "rehab"
+      ]
+    },
+    {
+      "id": "xray_scan_need",
+      "label_ar": "اشعة",
+      "label_en": "Radiology",
+      "categories": [
+        "radiology",
+        "medical_lab",
+        "hospital"
+      ],
+      "products": [
+        "اشعة",
+        "اشعه",
+        "اشعة سينية",
+        "اشعة تلفزيونية",
+        "سونار",
+        "رنين",
+        "رنين مغناطيسي",
+        "اشعة مقطعية",
+        "مقطعية",
+        "ماموجرام",
+        "قياس كثافة",
+        "اشعة اسنان",
+        "مركز اشعة",
+        "معمل اشعة",
+        "x ray",
+        "xray",
+        "x rays",
+        "mri",
+        "ct scan",
+        "ultrasound",
+        "sonar",
+        "mammogram",
+        "radiology",
+        "ash3a",
+        "sonar mri"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "اشعة",
+        "اشعه",
+        "radiology",
+        "scan",
+        "imaging"
+      ]
+    },
+    {
+      "id": "lab_tests_need",
+      "label_ar": "تحاليل",
+      "label_en": "Lab tests",
+      "categories": [
+        "medical_lab"
+      ],
+      "products": [
+        "تحاليل",
+        "تحليل",
+        "تحليل دم",
+        "تحليل بول",
+        "تحليل سكر",
+        "تحليل حمل",
+        "تحليل كوليسترول",
+        "تحليل فيروس",
+        "تحليل pcr",
+        "صورة دم",
+        "وظائف كبد",
+        "وظائف كلى",
+        "غدة درقية",
+        "تحاليل منزلية",
+        "سحب عينة",
+        "تحاليل بالبيت",
+        "blood test",
+        "lab test",
+        "lab tests",
+        "urine test",
+        "pregnancy test",
+        "cbc",
+        "home sampling",
+        "tahalil",
+        "ta7alil",
+        "ta7aleel"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "تحاليل",
+        "معامل",
+        "lab",
+        "laboratory",
+        "diagnostics"
+      ]
+    },
+    {
+      "id": "private_lessons",
+      "label_ar": "دروس خصوصية",
+      "label_en": "Private lessons",
+      "categories": [
+        "tutoring",
+        "institute"
+      ],
+      "products": [
+        "دروس خصوصية",
+        "دروس خصوصي",
+        "دروس خصوصيه",
+        "درس خصوصي",
+        "مدرس خصوصي",
+        "مدرسين",
+        "مدرس",
+        "مدرسة خصوصية",
+        "مجموعات تقوية",
+        "تقوية",
+        "دروس",
+        "ثانوية عامة",
+        "مدرس رياضيات",
+        "مدرس انجليزي",
+        "مدرس عربي",
+        "مدرس فيزياء",
+        "مدرس كيمياء",
+        "مدرس احياء",
+        "مدرس لغة",
+        "private lessons",
+        "private tutor",
+        "tutor",
+        "tutors",
+        "tutoring",
+        "home tutor",
+        "study group",
+        "doros",
+        "doros khososeya",
+        "modares"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "دروس",
+        "تقوية",
+        "مدرسين",
+        "tutoring",
+        "tutor",
+        "lessons"
+      ]
+    },
+    {
+      "id": "nursery_need",
+      "label_ar": "حضانة",
+      "label_en": "Nursery",
+      "categories": [
+        "kindergarten",
+        "school"
+      ],
+      "products": [
+        "حضانة",
+        "حضانات",
+        "حضانه",
+        "حضانة اطفال",
+        "روضة",
+        "روضات",
+        "كي جي",
+        "رياض اطفال",
+        "دار حضانة",
+        "مدرسة حضانة",
+        "حضانة ومدرسة",
+        "nursery",
+        "daycare",
+        "day care",
+        "kindergarten",
+        "preschool",
+        "kg",
+        "playschool",
+        "ha dana"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "حضانة",
+        "روضة",
+        "nursery",
+        "kindergarten",
+        "preschool"
+      ]
+    },
+    {
+      "id": "english_courses_need",
+      "label_ar": "كورسات لغات",
+      "label_en": "Language courses",
+      "categories": [
+        "institute",
+        "tutoring"
+      ],
+      "products": [
+        "كورسات انجليزي",
+        "كورس انجليزي",
+        "كورسات لغات",
+        "كورس لغة",
+        "كورسات المانى",
+        "كورسات فرنساوي",
+        "ايلتس",
+        "ستيب",
+        "تويفل",
+        "محادثة انجليزي",
+        "تعلم انجليزي",
+        "لغات",
+        "انجليزي",
+        "المانى",
+        "فرنساوي",
+        "ايطالي لغة",
+        "english course",
+        "english courses",
+        "language course",
+        "ielts",
+        "toefl",
+        "learn english",
+        "language school",
+        "french course",
+        "german course",
+        "courses"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "لغات",
+        "كورسات",
+        "language",
+        "courses",
+        "academy"
+      ]
+    },
+    {
+      "id": "computer_courses_need",
+      "label_ar": "كورسات كمبيوتر وبرمجة",
+      "label_en": "Computer courses",
+      "categories": [
+        "institute",
+        "tutoring"
+      ],
+      "products": [
+        "كورس كمبيوتر",
+        "كورسات كمبيوتر",
+        "كورس برمجة",
+        "كورسات برمجة",
+        "تعلم برمجة",
+        "كورس جرافيك",
+        "كورس اكسل",
+        "كورس ماركتينج",
+        "icdl",
+        "كورس ديجيتال ماركتنج",
+        "ديجيتال ماركتنج",
+        "سوفت وير",
+        "programming course",
+        "coding bootcamp",
+        "coding course",
+        "computer course",
+        "excel course",
+        "graphic design course",
+        "digital marketing course"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "كمبيوتر",
+        "برمجة",
+        "computer",
+        "coding",
+        "academy"
+      ]
+    },
+    {
+      "id": "plumber_need",
+      "label_ar": "سباك",
+      "label_en": "Plumber",
+      "categories": [
+        "plumber",
+        "hardware_store"
+      ],
+      "products": [
+        "سباك",
+        "سباكة",
+        "سباكه",
+        "سباكين",
+        "سباك صحي",
+        "تسليك",
+        "تسليك مواسير",
+        "تسليك بالوعة",
+        "كسر ماسورة",
+        "ماسورة مكسورة",
+        "تسريب مية",
+        "تسريب مياه",
+        "بالوعة",
+        "بلاعة",
+        "محبس",
+        "خلاط",
+        "حنفية",
+        "ادوات صحية",
+        "ادوات صحيه",
+        "محل ادوات صحية",
+        "صرف صحي",
+        "مواسير",
+        "plumber",
+        "plumbing",
+        "drain",
+        "unclog",
+        "leak",
+        "water leak",
+        "pipes",
+        "sanitary ware",
+        "sabbak",
+        "sabak",
+        "sa2ya"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سباكة",
+        "ادوات صحية",
+        "plumbing",
+        "sanitary"
+      ]
+    },
+    {
+      "id": "electrician_need",
+      "label_ar": "كهربائي",
+      "label_en": "Electrician",
+      "categories": [
+        "electrician",
+        "hardware_store"
+      ],
+      "products": [
+        "كهربائي",
+        "كهربجي",
+        "كهربائى",
+        "كهربائيين",
+        "كهرباء",
+        "كهربا",
+        "ادوات كهربائية",
+        "اسلاك",
+        "مفاتيح كهرباء",
+        "لوحة كهرباء",
+        "قاطع",
+        "كابلات",
+        "ماس كهربائي",
+        "الكهربا قطعت",
+        "تمديدات كهرباء",
+        "تأسيس كهرباء",
+        "electrician",
+        "electrical",
+        "wiring",
+        "electric works",
+        "cables",
+        "switchboard",
+        "short circuit",
+        "kahraba2y",
+        "kahrabaey",
+        "kahraba"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "كهرباء",
+        "كهربائي",
+        "ادوات كهربائية",
+        "electrical",
+        "electric"
+      ]
+    },
+    {
+      "id": "painter_need",
+      "label_ar": "نقاش ودهانات",
+      "label_en": "Painter",
+      "categories": [
+        "hardware_store"
+      ],
+      "products": [
+        "نقاش",
+        "نقاشة",
+        "نقاشين",
+        "دهان",
+        "دهانات",
+        "بويه",
+        "بوية",
+        "محارة",
+        "محارة وبياض",
+        "بياض",
+        "معجون",
+        "ورق حائط",
+        "ورق جدران",
+        "جبس بورد",
+        "جبس",
+        "ديكور جبس",
+        "تشطيب شقة",
+        "تشطيبات",
+        "تشطيب",
+        "painter",
+        "painting",
+        "house painter",
+        "plastering",
+        "gypsum",
+        "drywall",
+        "wallpaper",
+        "finishing",
+        "nak2ash",
+        "na22ash"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "نقاشة",
+        "دهانات",
+        "تشطيبات",
+        "paints",
+        "painting",
+        "finishing"
+      ]
+    },
+    {
+      "id": "ac_tech_need",
+      "label_ar": "فني تكييف",
+      "label_en": "AC technician",
+      "categories": [
+        "electrician",
+        "appliance_store"
+      ],
+      "products": [
+        "فني تكييف",
+        "فني تكييفات",
+        "صيانة تكييف",
+        "تركيب تكييف",
+        "شحن فريون",
+        "غسيل تكييف",
+        "تنظيف تكييف",
+        "مكيف",
+        "مكيفات",
+        "تكييف",
+        "تكييفات",
+        "تبريد وتكييف",
+        "سبليت",
+        "تكييف مركزي",
+        "تكييف شباك",
+        "ac technician",
+        "ac repair",
+        "air conditioner repair",
+        "air condition",
+        "air conditioning",
+        "ac",
+        "hvac",
+        "freon refill",
+        "ac cleaning",
+        "takyeef",
+        "fanny takyeef",
+        "mokayyaf"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "تكييف",
+        "تبريد",
+        "مكيفات",
+        "hvac",
+        "air conditioning"
+      ]
+    },
+    {
+      "id": "appliance_tech_need",
+      "label_ar": "صيانة غسالات وثلاجات",
+      "label_en": "Washer / fridge repair",
+      "categories": [
+        "appliance_store",
+        "electrician"
+      ],
+      "products": [
+        "صيانة غسالات",
+        "صيانة ثلاجات",
+        "صيانة تلاجات",
+        "صيانة بوتجاز",
+        "صيانة تلفزيون",
+        "صيانة شاشات",
+        "صيانة اجهزة",
+        "فني غسالات",
+        "فني ثلاجات",
+        "فني تلاجات",
+        "فني بوتاجاز",
+        "فني تلفزيون",
+        "فني اجهزة",
+        "فني سخانات",
+        "فني اجهزة كهربائية",
+        "غسالتي بايظة",
+        "تلاجتي بايظة",
+        "washing machine repair",
+        "fridge repair",
+        "refrigerator repair",
+        "tv repair",
+        "appliance technician",
+        "appliance repair"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "صيانة",
+        "توكيل",
+        "service",
+        "appliance repair"
+      ]
+    },
+    {
+      "id": "aluminum_glass_need",
+      "label_ar": "المونيتال وزجاج وشيش",
+      "label_en": "Aluminum, glass, blinds",
+      "categories": [
+        "hardware_store",
+        "carpenter"
+      ],
+      "products": [
+        "المونيتال",
+        "المونيوم",
+        "شبابيك المونيوم",
+        "سلك",
+        "سلك شبابيك",
+        "شيش",
+        "شيش حصيرة",
+        "شيش بلاستيك",
+        "شيش المونيوم",
+        "ستائر شيش",
+        "زجاج",
+        "قزاز",
+        "ازاز",
+        "زجاج سيكوريت",
+        "سيكوريت",
+        "مراية",
+        "مرايات",
+        "ابواب زجاج",
+        "aluminum",
+        "aluminium",
+        "windows",
+        "blinds",
+        "shutters",
+        "roller shutters",
+        "glass",
+        "tempered glass",
+        "mirror",
+        "shesh",
+        "shish ha3eera"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "المونيتال",
+        "المونيوم",
+        "زجاج",
+        "شيش",
+        "aluminum",
+        "glass"
+      ]
+    },
+    {
+      "id": "tiles_marble_need",
+      "label_ar": "سيراميك ورخام",
+      "label_en": "Tiles & marble",
+      "categories": [
+        "hardware_store",
+        "home_goods_store"
+      ],
+      "products": [
+        "سيراميك",
+        "بورسلين",
+        "رخام",
+        "جرانيت",
+        "بلاط",
+        "ارضيات",
+        "باركيه",
+        "ارضيات خشب",
+        "انترلوك",
+        "سيراميك حمام",
+        "سيراميك مطبخ",
+        "تركيب سيراميك",
+        "بلاط ارضيات",
+        "رخام ومرمر",
+        "مرمر",
+        "ceramic",
+        "ceramics",
+        "porcelain",
+        "marble",
+        "granite",
+        "tiles",
+        "tile",
+        "flooring",
+        "parquet",
+        "interlock",
+        "sirameek",
+        "ra5am"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سيراميك",
+        "رخام",
+        "جرانيت",
+        "ceramic",
+        "marble",
+        "tiles"
+      ]
+    },
+    {
+      "id": "building_materials_need",
+      "label_ar": "مواد بناء",
+      "label_en": "Building materials",
+      "categories": [
+        "hardware_store"
+      ],
+      "products": [
+        "مواد بناء",
+        "مواد بنا",
+        "اسمنت",
+        "سمنت",
+        "حديد تسليح",
+        "رمل وزلط",
+        "زلط",
+        "طوب",
+        "طوب احمر",
+        "طوب اسمنتي",
+        "خرسانة",
+        "خرسانه",
+        "عزل",
+        "عزل مائي",
+        "بلوك",
+        "عدد",
+        "عدد وادوات",
+        "ادوات بناء",
+        "building materials",
+        "construction materials",
+        "cement",
+        "steel",
+        "bricks",
+        "sand",
+        "concrete",
+        "hardware",
+        "tools",
+        "mawad bena"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مواد بناء",
+        "عدد",
+        "ادوات",
+        "hardware",
+        "building materials"
+      ]
+    },
+    {
+      "id": "hardware_need",
+      "label_ar": "عدد وادوات",
+      "label_en": "Hardware & tools",
+      "categories": [
+        "hardware_store"
+      ],
+      "products": [
+        "ادوات يدوية",
+        "عدد يدوية",
+        "مفكات",
+        "شنيور",
+        "دريل",
+        "مسامير",
+        "براغي",
+        "قفل",
+        "اقفال",
+        "كوالين",
+        "ادوات حدائق",
+        "خراطيم",
+        "hardware store",
+        "hardware",
+        "tools",
+        "power tools",
+        "drill",
+        "nails",
+        "screws",
+        "locks",
+        "ladder",
+        "adwat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "عدد",
+        "ادوات",
+        "hardware",
+        "tools"
+      ]
+    },
+    {
+      "id": "agri_supplies",
+      "label_ar": "تقاوي واسمدة ومبيدات",
+      "label_en": "Agri supplies",
+      "categories": [
+        "hardware_store",
+        "pet_store",
+        "veterinary"
+      ],
+      "products": [
+        "تقاوي",
+        "بذور",
+        "اسمدة",
+        "سماد",
+        "مبيدات",
+        "مبيد حشري",
+        "مستلزمات زراعية",
+        "ادوات زراعية",
+        "شتلات",
+        "مشتل",
+        "نباتات زينة",
+        "نباتات",
+        "ري بالتنقيط",
+        "اعلاف",
+        "علف",
+        "علف مواشي",
+        "علف طيور",
+        "كتاكيت",
+        "seeds",
+        "fertilizer",
+        "fertilisers",
+        "pesticide",
+        "agricultural supplies",
+        "nursery plants",
+        "plants",
+        "animal feed",
+        "poultry feed",
+        "chicks",
+        "tawa2y",
+        "ta2awy"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "زراعية",
+        "تقاوي",
+        "اسمدة",
+        "اعلاف",
+        "agricultural",
+        "seeds"
+      ]
+    },
+    {
+      "id": "vet_need",
+      "label_ar": "بيطري",
+      "label_en": "Veterinarian",
+      "categories": [
+        "veterinary",
+        "pet_store"
+      ],
+      "products": [
+        "بيطري",
+        "دكتور بيطري",
+        "عيادة بيطرية",
+        "طبيب بيطري",
+        "بيطرى",
+        "مستشفى بيطري",
+        "علاج مواشي",
+        "علاج حيوانات",
+        "بيطره",
+        "بيطرة",
+        "vet",
+        "veterinarian",
+        "veterinary",
+        "vet clinic",
+        "animal doctor",
+        "animal hospital",
+        "bayTary",
+        "bytary"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "بيطري",
+        "بيطرية",
+        "vet",
+        "veterinary"
+      ]
+    },
+    {
+      "id": "ration_need",
+      "label_ar": "تموين",
+      "label_en": "Ration office",
+      "categories": [
+        "government_office",
+        "supermarket"
+      ],
+      "products": [
+        "مكتب تموين",
+        "مكتب التموين",
+        "بطاقة تموين",
+        "بطاقات تموين",
+        "كارت تموين",
+        "تموين",
+        "ضم مواليد تموين",
+        "صرف تموين",
+        "اضافة مولود تموين",
+        "ration office",
+        "ration card",
+        "supply office",
+        "tamween",
+        "tamwen"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "تموين",
+        "tamween"
+      ]
+    },
+    {
+      "id": "civil_registry_need",
+      "label_ar": "سجل مدني",
+      "label_en": "Civil registry",
+      "categories": [
+        "civil_registry",
+        "government_office"
+      ],
+      "products": [
+        "سجل مدني",
+        "بطاقة رقم قومي",
+        "بطاقة",
+        "بطاقة شخصية",
+        "رقم قومي",
+        "قسم سجل مدني",
+        "شهادة ميلاد",
+        "شهادة وفاة",
+        "قيد عائلي",
+        "بدل فاقد بطاقة",
+        "استخراج بطاقة",
+        "تجديد بطاقة",
+        "مستخرجات",
+        "مستخرج رسمي",
+        "civil registry",
+        "national id",
+        "id card",
+        "birth certificate",
+        "death certificate",
+        "family record",
+        "sijil madany",
+        "sagl madany"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سجل مدني",
+        "civil registry"
+      ]
+    },
+    {
+      "id": "real_estate_registry_need",
+      "label_ar": "شهر عقاري",
+      "label_en": "Real estate registry",
+      "categories": [
+        "real_estate_registry",
+        "notary"
+      ],
+      "products": [
+        "شهر عقاري",
+        "الشهر العقاري",
+        "توثيق",
+        "توثيق عقود",
+        "مكتب توثيق",
+        "توكيل",
+        "توكيلات",
+        "توكيل عام",
+        "توكيل رسمي",
+        "تصديق",
+        "عقد بيع",
+        "تسجيل عقار",
+        "تسجيل شقة",
+        "توثيق وتوكيل",
+        "توكيل وتوثيق",
+        "notary",
+        "notary public",
+        "power of attorney",
+        "property registry",
+        "real estate registry",
+        "real estate publicity",
+        "shahr 3a2ary",
+        "tawkeel"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "شهر عقاري",
+        "توثيق",
+        "notary",
+        "registry"
+      ]
+    },
+    {
+      "id": "traffic_dept_need",
+      "label_ar": "مرور وجوازات",
+      "label_en": "Traffic & passport office",
+      "categories": [
+        "traffic_department",
+        "government_office"
+      ],
+      "products": [
+        "مرور",
+        "ادارة المرور",
+        "وحدة مرور",
+        "رخصة قيادة",
+        "رخصة سواقة",
+        "تجديد رخصة",
+        "رخصة عربية",
+        "ترخيص عربية",
+        "ترخيص عربيه",
+        "ترخيص سيارة",
+        "ترخيص",
+        "رخصة",
+        "نمرة عربية",
+        "لوحات",
+        "مخالفة",
+        "مخالفات",
+        "driving licence",
+        "driving license",
+        "car license",
+        "license renewal",
+        "traffic office",
+        "traffic unit",
+        "traffic department",
+        "morour"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مرور",
+        "ترخيص",
+        "traffic"
+      ]
+    },
+    {
+      "id": "passport_need",
+      "label_ar": "جوازات",
+      "label_en": "Passports",
+      "categories": [
+        "government_office",
+        "police"
+      ],
+      "products": [
+        "جوازات",
+        "جواز سفر",
+        "جواز",
+        "مجمع جوازات",
+        "تجديد جواز",
+        "استخراج جواز",
+        "ختم جواز",
+        "جوازات وهجرة",
+        "هجرة",
+        "تاشيرة",
+        "تأشيرة",
+        "passport",
+        "passports",
+        "passport office",
+        "passport renewal",
+        "visa",
+        "immigration",
+        "gawazat",
+        "gawaz safar"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "جوازات",
+        "passport",
+        "immigration"
+      ]
+    },
+    {
+      "id": "social_insurance_need",
+      "label_ar": "تأمينات ومعاشات",
+      "label_en": "Social insurance",
+      "categories": [
+        "government_office"
+      ],
+      "products": [
+        "تامينات",
+        "التامينات",
+        "تامينات اجتماعية",
+        "مكتب تامينات",
+        "تامين اجتماعي",
+        "معاش",
+        "معاشات",
+        "معاش تقاعد",
+        "تامين صحي",
+        "التأمين الصحي",
+        "social insurance",
+        "pension",
+        "pensions",
+        "health insurance office",
+        "tamenat",
+        "ta2meenat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "تامينات",
+        "تأمينات",
+        "social insurance"
+      ]
+    },
+    {
+      "id": "tax_office_need",
+      "label_ar": "ضرائب",
+      "label_en": "Tax office",
+      "categories": [
+        "government_office"
+      ],
+      "products": [
+        "ضرائب",
+        "الضرائب",
+        "مأمورية ضرائب",
+        "مامورية ضرائب",
+        "مصلحة الضرائب",
+        "ضرائب عقارية",
+        "ضريبة",
+        "ضريبة مبيعات",
+        "بطاقة ضريبية",
+        "ضرائب دخل",
+        "tax office",
+        "tax authority",
+        "taxes",
+        "tax",
+        "tax card",
+        "daraeb"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "ضرائب",
+        "ضريبية",
+        "tax"
+      ]
+    },
+    {
+      "id": "utilities_bills_need",
+      "label_ar": "كهرباء ومياه وغاز",
+      "label_en": "Electricity, water, gas offices",
+      "categories": [
+        "electricity_payment",
+        "government_office"
+      ],
+      "products": [
+        "فاتورة الكهرباء",
+        "فاتورة كهرباء",
+        "فاتورة الكهربا",
+        "فاتورة كهربا",
+        "دفع فاتورة الكهرباء",
+        "دفع فاتورة كهربا",
+        "شحن عداد",
+        "شحن كهربا",
+        "عداد كهرباء",
+        "شركة الكهرباء",
+        "كهرباء الجيزة",
+        "عداد كارت",
+        "فاتورة مياه",
+        "فاتورة المياه",
+        "شركة المياه",
+        "عداد مياه",
+        "فاتورة غاز",
+        "عداد غاز",
+        "شركة الغاز",
+        "تغيير عداد",
+        "electricity bill",
+        "pay electricity",
+        "electricity office",
+        "water bill",
+        "gas bill",
+        "prepaid meter",
+        "meter recharge",
+        "electricity",
+        "fatoret el kahraba",
+        "kahraba bill"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "كهرباء",
+        "مياه",
+        "غاز",
+        "electricity",
+        "water company"
+      ]
+    },
+    {
+      "id": "police_report_need",
+      "label_ar": "قسم شرطة ونيابة",
+      "label_en": "Police & prosecution",
+      "categories": [
+        "police",
+        "courthouse"
+      ],
+      "products": [
+        "محضر",
+        "عمل محضر",
+        "تحرير محضر",
+        "بلاغ",
+        "نيابة",
+        "نيابه",
+        "محكمة",
+        "شكوى",
+        "فيش",
+        "فيش وتشبيه",
+        "صحيفة حالة جنائية",
+        "صحيفة جنائية",
+        "police report",
+        "file a report",
+        "prosecution",
+        "court",
+        "complaint",
+        "criminal record",
+        "police clearance",
+        "mahda",
+        "fish w tashbeeh"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "نيابة",
+        "محكمة",
+        "prosecution",
+        "court"
+      ]
+    },
+    {
+      "id": "wedding_hall_need",
+      "label_ar": "قاعة افراح",
+      "label_en": "Wedding hall",
+      "categories": [
+        "event_venue",
+        "hotel"
+      ],
+      "products": [
+        "قاعة افراح",
+        "قاعه افراح",
+        "قاعات افراح",
+        "قاعة فرح",
+        "قاعة مناسبات",
+        "قاعة حفلات",
+        "قاعة",
+        "قاعات",
+        "حفل زفاف",
+        "زفاف",
+        "قاعة عزاء",
+        "سرادق",
+        "صالة افراح",
+        "قاعة كتب كتاب",
+        "كتب كتاب",
+        "wedding hall",
+        "wedding venue",
+        "banquet hall",
+        "event hall",
+        "event venue",
+        "ballroom",
+        "party hall",
+        "weddings",
+        "wedding",
+        "qa3et afrah",
+        "ka3et afrah"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "قاعة",
+        "افراح",
+        "قاعات",
+        "wedding",
+        "hall",
+        "ballroom"
+      ]
+    },
+    {
+      "id": "photographer_need",
+      "label_ar": "تصوير",
+      "label_en": "Photographer",
+      "categories": [
+        "print_shop",
+        "event_venue"
+      ],
+      "products": [
+        "مصور",
+        "مصور فوتوغرافي",
+        "مصور فرح",
+        "تصوير فرح",
+        "تصوير مناسبات",
+        "تصوير فيديو",
+        "فيديوجرافر",
+        "استوديو تصوير",
+        "ستوديو",
+        "استديو",
+        "تصوير فوتوغرافي",
+        "تصوير جوي",
+        "درون",
+        "صور شخصية",
+        "صور بطاقة",
+        "صور باسبور",
+        "تصوير باسبور",
+        "تصوير مولود",
+        "سيشن",
+        "photographer",
+        "photography",
+        "videographer",
+        "photo studio",
+        "studio",
+        "wedding photographer",
+        "passport photo",
+        "photo session",
+        "drone",
+        "musawwer",
+        "mosawer"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "تصوير",
+        "مصور",
+        "استوديو",
+        "studio",
+        "photography"
+      ]
+    },
+    {
+      "id": "event_supplies_need",
+      "label_ar": "فراشة وديجي وتجهيزات",
+      "label_en": "Event rentals, DJ",
+      "categories": [
+        "event_venue",
+        "gift_shop"
+      ],
+      "products": [
+        "فراشة",
+        "فراشه",
+        "فراشة افراح",
+        "فراشة مناسبات",
+        "ايجار كراسي",
+        "ايجار ترابيزات",
+        "ايجار خيمة",
+        "خيمة",
+        "خيام",
+        "تأجير خيام",
+        "صوان",
+        "دي جي",
+        "ديجي",
+        "اجهزة صوت",
+        "صوتيات حفلات",
+        "اضاءة حفلات",
+        "تاجير سماعات",
+        "كوشة",
+        "تنظيم افراح",
+        "ويدنج بلانر",
+        "كوشة وزفة",
+        "dj",
+        "event rentals",
+        "tent rental",
+        "chair rental",
+        "sound system rental",
+        "wedding planner",
+        "event planner",
+        "party planner",
+        "wedding decor",
+        "farasha",
+        "faresha"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "فراشة",
+        "ديجي",
+        "تنظيم حفلات",
+        "dj",
+        "events",
+        "rentals"
+      ]
+    },
+    {
+      "id": "swimming_pool_need",
+      "label_ar": "مسبح",
+      "label_en": "Swimming pool",
+      "categories": [
+        "sports_club",
+        "gym",
+        "hotel"
+      ],
+      "products": [
+        "مسبح",
+        "مسابح",
+        "حمام سباحة",
+        "حمامات سباحة",
+        "سباحة",
+        "بسين",
+        "بيسين",
+        "تعليم سباحة",
+        "اكاديمية سباحة",
+        "نادي سباحة",
+        "swimming pool",
+        "pool",
+        "swimming",
+        "swimming lessons",
+        "swim club",
+        "masba7",
+        "basin"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سباحة",
+        "مسبح",
+        "swimming",
+        "pool",
+        "aqua"
+      ]
+    },
+    {
+      "id": "diving_center_need",
+      "label_ar": "غوص ورياضات مائية",
+      "label_en": "Diving & water sports",
+      "categories": [
+        "sports_club",
+        "beach"
+      ],
+      "products": [
+        "غوص",
+        "غطس",
+        "دايف سنتر",
+        "دايفنج",
+        "سنوركلنج",
+        "سنوركل",
+        "جيت سكي",
+        "بنانا بوت",
+        "رياضات مائية",
+        "باراسيلينج",
+        "كايت سيرف",
+        "ونش بحري",
+        "dive center",
+        "dive centre",
+        "diving",
+        "scuba",
+        "snorkeling",
+        "jet ski",
+        "water sports",
+        "kitesurf",
+        "parasailing",
+        "diving club"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "دايف",
+        "غوص",
+        "diving",
+        "dive",
+        "scuba",
+        "watersports"
+      ]
+    },
+    {
+      "id": "beach_hotel_need",
+      "label_ar": "فندق وشاليه على البحر",
+      "label_en": "Beach hotel & chalet",
+      "categories": [
+        "hotel",
+        "real_estate_agent",
+        "beach"
+      ],
+      "products": [
+        "فندق",
+        "فنادق",
+        "فندق بالبحر",
+        "فندق على البحر",
+        "منتجع",
+        "ريزورت",
+        "شاليه",
+        "شاليهات",
+        "شاليه ايجار",
+        "شاليهات ايجار",
+        "شاليه على البحر",
+        "فيلا ساحل",
+        "قرية سياحية",
+        "بيت شباب",
+        "بنسيون",
+        "hotel",
+        "hotels",
+        "resort",
+        "beach hotel",
+        "beach resort",
+        "chalet",
+        "chalets",
+        "hostel",
+        "guesthouse",
+        "guest house",
+        "bnb",
+        "villa rental",
+        "fondo2",
+        "fo2a",
+        "shalehat"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "فندق",
+        "منتجع",
+        "شاليهات",
+        "hotel",
+        "resort",
+        "chalet"
+      ]
+    },
+    {
+      "id": "cinema_need",
+      "label_ar": "سينما",
+      "label_en": "Cinema",
+      "categories": [
+        "cinema",
+        "theater",
+        "mall"
+      ],
+      "products": [
+        "سينما",
+        "سنيما",
+        "فيلم",
+        "افلام",
+        "تذاكر سينما",
+        "حجز سينما",
+        "مسرح",
+        "مسرحية",
+        "اوبرا",
+        "حفلة غنائية",
+        "cinema",
+        "movie",
+        "movies",
+        "movie theater",
+        "movie theatre",
+        "film",
+        "theatre",
+        "theater",
+        "opera",
+        "cinema tickets",
+        "sinema"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سينما",
+        "مسرح",
+        "cinema",
+        "theatre",
+        "theater"
+      ]
+    },
+    {
+      "id": "gym_need",
+      "label_ar": "جيم",
+      "label_en": "Gym",
+      "categories": [
+        "gym",
+        "sports_club"
+      ],
+      "products": [
+        "جيم",
+        "جيمنازيوم",
+        "صالة رياضية",
+        "صالة حديد",
+        "صالة جيم",
+        "نادي صحي",
+        "هيلث كلوب",
+        "لياقة",
+        "لياقة بدنية",
+        "كروسفت",
+        "كروس فيت",
+        "يوجا",
+        "بيلاتس",
+        "زومبا",
+        "ملاكمة",
+        "كاراتيه",
+        "تايكوندو",
+        "كيك بوكسينج",
+        "تمرين",
+        "gym",
+        "gyms",
+        "fitness",
+        "fitness center",
+        "health club",
+        "workout",
+        "crossfit",
+        "yoga",
+        "pilates",
+        "zumba",
+        "boxing",
+        "karate",
+        "taekwondo",
+        "personal trainer",
+        "jim",
+        "gym 7arimy"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "جيم",
+        "لياقة",
+        "gym",
+        "fitness",
+        "crossfit",
+        "yoga"
+      ]
+    },
+    {
+      "id": "hmmam_baths_need",
+      "label_ar": "مساج وسبا وحمام مغربي",
+      "label_en": "Massage, spa, hammam",
+      "categories": [
+        "spa",
+        "beauty_salon"
+      ],
+      "products": [
+        "مساج",
+        "مساج استرخاء",
+        "سبا",
+        "حمام مغربي",
+        "حمام تركي",
+        "حمام بخار",
+        "ساونا",
+        "جاكوزي",
+        "تدليك",
+        "مساج حريمي",
+        "مساج رجالي",
+        "massage",
+        "spa",
+        "moroccan bath",
+        "turkish bath",
+        "hammam",
+        "sauna",
+        "jacuzzi",
+        "body massage",
+        "masag",
+        "massaj"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سبا",
+        "مساج",
+        "spa",
+        "massage",
+        "wellness"
       ]
     }
   ],

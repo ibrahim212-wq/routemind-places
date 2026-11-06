@@ -25,7 +25,8 @@ import json
 import os
 import sys
 import time
-from collections import Counter, defaultdict
+import zlib
+from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
 
 from .. import engine as E
@@ -116,6 +117,21 @@ def right(item: dict, r, lat: float, lng: float) -> bool:
     return r.scat in item.get("scats", ()) or any(names_match([w], row) for w in item.get("words", ()))
 
 
+def distinctive_cut(q: str, generic: set) -> str | None:
+    """The text up to 3 letters into the first word that tells places apart: a kind word («مستشفى») and the article «ال» say nothing
+    about WHICH place, so «مستشفى المنشاوي» is cut at «مستشفى المنش» and «الاهرامات» at «الاهرا». None when it is the whole text."""
+    pos = 0
+    for w in q.split(" "):
+        toks = tn.tokens(w)
+        key = tn.stems(toks[0])[-1] if toks else ""
+        if key and key not in generic and not tn.is_stopword(toks[0]):
+            lead = 2 if w.startswith("ال") and len(w) > 4 else 0
+            cut = q[:pos + lead + 3]
+            return None if len(cut) >= len(q) else cut
+        pos += len(w) + 1
+    return None
+
+
 def quality(rs: list, oks: list[bool]) -> dict:
     keys = Counter()
     for r in rs[:5]:
@@ -137,7 +153,7 @@ def do_item(task) -> dict:
     out = {"gov": gov, "i": idx, "t": t, "q": q, "style": item.get("style"), "at": item["at"], "kind": item.get("kind")}
     rs, ms = search(q, lat, lng)
     oks = [right(item, r, lat, lng) for r in rs]
-    out.update(rank=_rank(oks), ms=round(ms, 1), n=len(rs), p5=sum(oks[:5]) / 5.0, **quality(rs, oks))
+    out.update(rank=_rank(oks), ms=round(ms, 1), n=len(rs), p5=sum(oks[:5]) / 5.0, p_shown=sum(oks[:5]) / max(1, len(oks[:5])), **quality(rs, oks))
     out["top"] = [{"ar": r.name_ar, "en": r.name_en, "s": r.scat, "k": r.kind, "d": round(r.dist), "ok": oks[i]}
                   for i, r in enumerate(rs[:5])]
     if tn.script_of(tn.normalize(q)) == "ar":
@@ -160,6 +176,12 @@ def do_item(task) -> dict:
             if L == 3:
                 out["top3ch"] = [{"ar": r.name_ar, "en": r.name_en, "s": r.scat, "d": round(r.dist)} for r in rs2[:3]]
         out["pre"] = pre
+        cut = distinctive_cut(text, _W["eng"].lx.generic)
+        if cut is None:
+            out["pre_d"] = out["rank"]
+        else:
+            rs3, _ = search(cut, lat, lng)
+            out["pre_d"] = _rank([right(item, r, lat, lng) for r in rs3])
     return out
 
 
@@ -170,7 +192,13 @@ def _has_arabic(s) -> bool:
     return any("؀" <= c <= "ۿ" for c in head)
 
 
-def load(limit: int | None, govs: set | None, sure_high_only: bool = False):
+def _split_of(q: str) -> str:
+    """Failures of the dev split may be read and fixed; the held split is only ever summed (crc of the query text, so one text
+    is on one side in every governorate)."""
+    return "dev" if zlib.crc32(tn.normalize(q).encode("utf8")) % 10 < 7 else "held"
+
+
+def load(limit: int | None, govs: set | None, sure_high_only: bool = False, split: str = "all"):
     base = os.path.join(HERE, "redteam")
     tasks = []
     for fn in sorted(os.listdir(base)):
@@ -189,8 +217,10 @@ def load(limit: int | None, govs: set | None, sure_high_only: bool = False):
                 continue
             if sure_high_only and it.get("sure") not in (None, "high"):
                 continue
+            if split != "all" and _split_of(it["q"]) != split:
+                continue
             tasks.append((gov, i, it, anchors))
-    tasks.sort(key=lambda t: (hash(t[2]["q"]) % 1000, t[0], t[1]))
+    tasks.sort(key=lambda t: (zlib.crc32(t[2]["q"].encode("utf8")) % 1000, t[0], t[1]))  # a stable sample across runs
     return tasks[:limit] if limit else tasks
 
 
@@ -213,9 +243,12 @@ def summarize(rows: list[dict]) -> dict:
                 f = lambda r, L=L: r["pre"][str(L)]
                 g[f"p{L}_h1"] = hit(have, 1, f)
                 g[f"p{L}_h3"] = hit(have, 3, f)
+                g["pd_h1"] = hit(have, 1, lambda r: r.get("pre_d"))
+                g["pd_h3"] = hit(have, 3, lambda r: r.get("pre_d"))
         return g
 
-    s = {"named": group(named), "intent": {"n": len(intents), "h1": hit(intents, 1), "p5": _r(sum(r["p5"] for r in intents) / len(intents)) if intents else None}}
+    s = {"named": group(named), "intent": {"n": len(intents), "h1": hit(intents, 1), "p5": _r(sum(r["p5"] for r in intents) / len(intents)) if intents else None,
+                                           "p_shown": _r(sum(r["p_shown"] for r in intents) / len(intents)) if intents else None}}
     s["by_type"] = {t: group([r for r in named if r["t"] == t]) for t in ("place", "chain", "street")}
     s["by_style"] = {st: group([r for r in named if r.get("style") == st]) for st in sorted({r.get("style") or "?" for r in named})}
     s["by_gov"] = {g: group([r for r in named if r["gov"] == g]) for g in sorted({r["gov"] for r in rows})}
@@ -242,9 +275,10 @@ def main(argv=None) -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--gov")
     ap.add_argument("--no-prefix", action="store_true")
+    ap.add_argument("--split", default="all", choices=["all", "dev", "held"])
     a = ap.parse_args(argv)
     os.makedirs(a.out, exist_ok=True)
-    tasks = load(a.limit, set(a.gov.split(",")) if a.gov else None)
+    tasks = load(a.limit, set(a.gov.split(",")) if a.gov else None, split=a.split)
     work = [(g, i, it, an, not a.no_prefix) for g, i, it, an in tasks]
     print(f"[redteam] {len(work)} items, mode {a.mode}", flush=True)
     t0 = time.time()

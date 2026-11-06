@@ -549,6 +549,20 @@ FSQ_LEAF = {
     "Stadium": "stadium", "Sports Club": "sports_club", "Night Club": "nightclub", "Bar": "bar",
     "Lounge": "lounge", "Hookah Bar": "ahwa", "Veterinarian": "veterinary", "Medical Lab": "medical_lab",
     "Event Space": "event_venue", "Wedding Hall": "event_venue", "Tea Room": "ahwa",
+    # the levels above a leaf, and the taxonomy's own names for the same things (a row's labels are read leaf first)
+    "Cafe, Coffee, and Tea House": "cafe", "Cafes, Coffee, and Tea Houses": "cafe", "Donut Shop": "sweets", "Snack Place": "fast_food",
+    "Sandwich Spot": "fast_food", "Food Court": "restaurant", "Food Truck": "fast_food", "Food and Beverage Retail": "grocery",
+    "Fruit and Vegetable Store": "greengrocer", "Fish Market": "seafood", "Meat and Seafood Store": "butcher",
+    "Health and Medicine": "clinic", "Physician": "doctor", "Physical Therapy Clinic": "physiotherapy", "Drugstore": "pharmacy",
+    "Primary and Secondary School": "school", "Preschool": "kindergarten", "Language School": "institute", "Trade School": "institute",
+    "Tutoring Service": "institute", "Driving School": "institute", "Education": "institute",
+    "Retail": "shop", "Fashion Retail": "clothes", "Computers and Electronics Retail": "electronics",
+    "Automotive Service": "car_repair", "Automotive Retail": "auto_parts", "Beauty Salon": "beauty_salon", "Hair Salon": "beauty_salon",
+    "Nail Salon": "beauty_salon", "Health and Beauty Service": "beauty_salon", "Cosmetics Store": "cosmetics", "Florist": "florist",
+    "Gift Store": "gifts", "Toy Store": "toys", "Sporting Goods Retail": "sports_store", "Pet Supplies Store": "pets",
+    "Eyecare Store": "optician", "Stationery Store": "bookshop", "Non-Profit Organization": "ngo", "Organization": "ngo",
+    "Lodging": "hotel", "Resort": "hotel", "Hostel": "hotel", "Soccer Field": "sports_field", "Swimming Pool": "sports_club",
+    "Sports and Recreation": "sports_club", "Business and Professional Services": "office", "Office": "office",
 }
 
 
@@ -597,10 +611,16 @@ def fsq_places(parquet_path: str, inside, drops: dict | None = None) -> Iterator
         labels = row.get("fsq_category_labels") or []
         cat = "place"
         for lab in labels:
-            leaf = lab.split(">")[-1].strip()
-            if leaf in FSQ_LEAF:
-                cat = FSQ_LEAF[leaf]
+            # the most specific level the table knows: "Dining and Drinking > Restaurant > Syrian Restaurant" is a restaurant
+            for part in reversed([x.strip() for x in lab.split(">")]):
+                if part in FSQ_LEAF:
+                    cat = FSQ_LEAF[part]
+                    break
+            if cat != "place":
                 break
+        if cat == "place" and labels:
+            k = "label:" + labels[0].split(">")[-1].strip()
+            drops[k] = drops.get(k, 0) + 1  # kept, under no kind: the build report says which labels the table lacks
         nm = [(row["name"], "primary")]
         ar, la = R.split_scripts(row["name"])
         if ar and la:

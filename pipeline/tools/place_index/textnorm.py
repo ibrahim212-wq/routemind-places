@@ -447,3 +447,14 @@ def max_edits(tok: str) -> int:
     if is_arabic_token(tok):
         return 0 if n < 3 else (1 if n < 7 else 2)
     return 0 if n < 4 else (1 if n < 8 else 2)
+
+
+def squeeze_latin(q: str) -> str:
+    """A doubled Latin letter is one: people type "harrods" for "Harods" and "kinnaird" for "Kinaird". Arabic is left alone."""
+    if not q or not q[0].isascii():
+        return q
+    out = []
+    for ch in q:
+        if not out or out[-1] != ch or ch.isdigit():
+            out.append(ch)
+    return "".join(out)

@@ -332,7 +332,9 @@ def fetch_fsq_hf(data: str, token: str) -> dict:
                 pf = pq.ParquetFile(fh)
                 md = pf.metadata
                 names = [md.schema.column(k).name for k in range(md.num_columns)]
-                cols = [c for c in FSQ_COLS if c in names]
+                # a list column's LEAF is called "element": `names` cannot see fsq_category_labels, which is how every
+                # direct Foursquare row lost its category (places-2026-10-31 … 2026-11-02: ~50 k POIs filed under "place")
+                cols = [c for c in FSQ_COLS if c in pf.schema_arrow.names]
                 ilat, ilng = names.index("latitude"), names.index("longitude")
                 groups = []
                 for g in range(md.num_row_groups):
