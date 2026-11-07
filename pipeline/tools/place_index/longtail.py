@@ -30,6 +30,7 @@ DERIVED_BIT = 2048
 WEAK_CONF_MAX = 0.3
 WEAK_POP_MAX = 0.2
 SAME_PLACE_M = 150.0
+HISTORY_SAME_M = 600.0    # a name gone from the release and on record this near is that place, moved or re-pinned (history.py)
 GROUP_M = 400.0           # mentions of one name this close are one place
 KNOWN_M = 1200.0          # a mention of a place on record this near is that place: it already counted (enrich.mentions)
 STREET_KNOWN_M = 3000.0   # a street of that name this near is that street
@@ -98,10 +99,10 @@ class _Known:
         return False
 
 
-def weak_places(weak_recs: list, known: list, report: dict) -> list:
+def weak_places(weak_recs: list, known: list, report: dict, radius: float = SAME_PLACE_M, key: str = "longtail") -> list:
     """The dropped rows as places of their own, minus what is already on record under the same name."""
     if not weak_recs:
-        report["longtail"] = {"weak_rows": 0, "weak_places": 0}
+        report[key] = {"weak_rows": 0, "weak_places": 0}
         return []
     ps = M.merge(weak_recs)
     k = _Known(known)
@@ -110,13 +111,13 @@ def weak_places(weak_recs: list, known: list, report: dict) -> list:
         if p.kind != "poi":
             continue
         words = _words(p.name_ar or p.name_en or "")
-        if not words or k.has(words, p.lat, p.lng, SAME_PLACE_M):
+        if not words or k.has(words, p.lat, p.lng, radius):
             continue
         p.srcs |= LONGTAIL_BIT
         p.conf = min(p.conf, WEAK_CONF_MAX)
         p.pop = min(p.pop, WEAK_POP_MAX)
         out.append(p)
-    report["longtail"] = {"weak_rows": len(weak_recs), "weak_merged": len(ps), "weak_places": len(out)}
+    report[key] = {"weak_rows": len(weak_recs), "weak_merged": len(ps), "weak_places": len(out)}
     return out
 
 

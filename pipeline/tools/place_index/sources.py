@@ -65,6 +65,8 @@ def overture_places(parquet_path: str, inside) -> Iterator[R.Record]:
     cols = ["id", "geometry", "confidence", "websites", "socials", "phones", "brand", "addresses",
             "names", "sources", "operating_status", "taxonomy"]
     pf = pq.ParquetFile(parquet_path)
+    # a release before `taxonomy` says `categories` (history.py reads those)
+    cols = [c for c in cols + ["categories"] if c in pf.schema_arrow.names]
     for batch in pf.iter_batches(batch_size=20000, columns=cols):
         for row in batch.to_pylist():
             if row.get("operating_status") == "permanently_closed":
@@ -97,6 +99,8 @@ def overture_places(parquet_path: str, inside) -> Iterator[R.Record]:
             if bprim:
                 nm.append((bprim, "brand"))
             tax = row.get("taxonomy") or {}
+            if not tax.get("primary"):
+                tax = {"primary": (row.get("categories") or {}).get("primary")}
             cat = T.overture_cat(tax.get("primary"), tax.get("hierarchy"))
             src, datasets = _ov_src(row.get("sources"))
             a0 = addrs[0] if addrs else {}

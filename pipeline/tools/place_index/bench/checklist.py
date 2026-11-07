@@ -43,10 +43,10 @@ TOWN = [
     ("hospital", "مستشفى {n}", {"hospital"}, ("مستشفي", "hospital")),
     ("post", "مكتب بريد {n}", {"post_office"}, ("بريد", "post")),
     ("court", "محكمة {n}", {"courthouse"}, ("محكمه", "محاكم", "court")),
-    ("council", "مجلس مدينة {n}", set(), ("مجلس", "council", "محليه", "ومدينه")),
+    ("council", "مجلس مدينة {n}", {"city_council"}, ("مجلس", "council", "محليه", "ومدينه")),
 ]
 GOVERNORATE = [
-    ("gov_building", "ديوان عام محافظة {n}", set(), ("ديوان", "governorate")),
+    ("gov_building", "ديوان عام محافظة {n}", {"governorate_office"}, ("ديوان", "governorate")),
     ("security", "مديرية امن {n}", set(), ("امن", "security")),
     ("health_dir", "مديرية الصحة {n}", set(), ("صحه", "صحيه", "health")),
     ("edu_dir", "مديرية التربية والتعليم {n}", set(), ("تربيه", "تعليم", "education")),
@@ -115,6 +115,9 @@ def entries(world: dict) -> list[dict]:
     return out
 
 
+NOT_THE_PLACE = {"bridge", "tunnel", "road", "bus_stop", "parking"}
+
+
 def row_ok(e: dict, scat: str | None, words: set[str]) -> bool:
     return scat in e["kinds"] or bool({key(w) for w in words} & {key(w) for w in e["words"]})
 
@@ -176,7 +179,8 @@ def main() -> None:
         rank = None
         for i, x in enumerate(rs[:5]):
             w = set(norm(x.name_ar)) | set(norm(x.name_en))
-            if right(e, x.lat, x.lng, x.scat, w):
+            # «شارع مجلس المدينه» and «كوبرى المجلس» hold the kind's word and are not the council
+            if x.kind == 0 and x.scat not in NOT_THE_PLACE and right(e, x.lat, x.lng, x.scat, w):
                 rank = i + 1
                 break
         res.append({"t": e["t"], "level": e["level"], "g": e["g"], "id": e["id"], "n": e["n"], "q": e["q"],

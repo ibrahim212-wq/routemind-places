@@ -139,6 +139,62 @@ def seats(places: list[M.Place], report: dict) -> None:
     report["seats_by_name"] = dict(n)
 
 
+# Pages and listings often carry their town as a name: a hotel «المهندسين», a bank «مصر الجديدة | Banque Misr», a school
+# «القاهرة». They answer the town's own name above the town and say nothing of what they are. The real other name stays;
+# with none the row goes. Places that do bear a town's name are kept: its station, its square, its ruins, its beach.
+AREA_NAMED_M = 10000.0
+_BEARS_ITS_TOWN = {"train_station", "metro_station", "lrt_station", "monorail_station", "bus_station", "port", "airport",
+                   "square", "historic_site", "monument", "natural", "beach", "island", "mountain", "lake", "attraction",
+                   "museum", "viewpoint", "landmark", "park", "garden", "compound", "mall", "university", "college",
+                   "townhall", "governorate_office", "police", "courthouse", "post_office", "civil_registry",
+                   "traffic_department", "road", "bridge"}
+
+
+def _area_key(nm: str | None) -> str:
+    return tn.normalize(nm or "").replace(" ", "")
+
+
+def _same_sound(a: str, b: str) -> bool:
+    return bool(set(tn.skeletons(a)) & set(tn.skeletons(b)))
+
+
+def area_named(places: list[M.Place], report: dict) -> None:
+    near: dict[str, list[tuple[float, float]]] = defaultdict(list)
+    for p in places:
+        if p.kind == "area":
+            for nm in (p.name_ar, p.name_en):
+                k = _area_key(nm)
+                if len(k) >= 4:
+                    near[k].append((p.lat, p.lng))
+
+    def names_town(p: M.Place, nm: str | None) -> bool:
+        k = _area_key(nm)
+        return k in near and any(_hav(p.lat, p.lng, a, b) < AREA_NAMED_M for a, b in near[k])
+
+    kept: list[M.Place] = []
+    n: Counter = Counter()
+    for p in places:
+        if p.kind != "poi" or p.cat in _BEARS_ITS_TOWN or p.srcs & R.SOURCE_BITS.get(R.SRC_OSM, 0):
+            kept.append(p)
+            continue
+        ar, en = names_town(p, p.name_ar), names_town(p, p.name_en)
+        if not ar and not en:
+            kept.append(p)
+            continue
+        other = p.name_en if ar else p.name_ar
+        if (ar and en) or not other or _same_sound(_area_key(p.name_ar), _area_key(p.name_en)):
+            n["removed"] += 1  # nothing but the town's name, in one script or both
+            continue
+        if ar:
+            p.name_ar = None
+        else:
+            p.name_en = None
+        n["name_dropped"] += 1
+        kept.append(p)
+    places[:] = kept
+    report["area_named"] = dict(n)
+
+
 def police(places: list[M.Place], report: dict) -> None:
     n = 0
     for p in places:

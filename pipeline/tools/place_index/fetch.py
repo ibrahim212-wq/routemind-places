@@ -54,11 +54,14 @@ def _s3(region: str):
     return fs.S3FileSystem(**kw)
 
 
-def overture_latest(s3) -> str:
+def overture_releases(s3) -> list[str]:
     import pyarrow.fs as fs
     infos = s3.get_file_info(fs.FileSelector("overturemaps-us-west-2/release/"))
-    rels = sorted(i.path.rsplit("/", 1)[-1] for i in infos if i.type == fs.FileType.Directory)
-    return rels[-1]
+    return sorted(i.path.rsplit("/", 1)[-1] for i in infos if i.type == fs.FileType.Directory)
+
+
+def overture_latest(s3) -> str:
+    return overture_releases(s3)[-1]
 
 
 def _retry(what: str, fn, tries: int = 5):
@@ -83,12 +86,12 @@ def _retry(what: str, fn, tries: int = 5):
             wait *= 2
 
 
-def _extract(s3, release: str, theme: str, typ: str, out: str) -> int:
+def _extract(s3, release: str, theme: str, typ: str, out: str, root: str = "overturemaps-us-west-2/release/") -> int:
     import pyarrow as pa
     import pyarrow.compute as pc
     import pyarrow.fs as fs
     import pyarrow.parquet as pq
-    base = f"overturemaps-us-west-2/release/{release}/theme={theme}/type={typ}/"
+    base = f"{root}{release}/theme={theme}/type={typ}/"
     tables = []
 
     def read_one(path):
@@ -308,7 +311,15 @@ def fetch_fsq(data: str) -> dict:
     return {"rows": t.num_rows}
 
 
-def fetch_fsq_hf(data: str, token: str) -> dict:
+def fsq_hf_releases() -> list[str]:
+    """Every dated release of the Hugging Face copy, oldest first (`dt=YYYY-MM-DD`)."""
+    req = urllib.request.Request(f"https://huggingface.co/api/datasets/{FSQ_HF_REPO}", headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        files = [s["rfilename"] for s in json.load(r).get("siblings", [])]
+    return sorted({f.split("/")[1] for f in files if f.startswith("release/dt=") and "/places/parquet/" in f})
+
+
+def fetch_fsq_hf(data: str, token: str, rel: str | None = None, out: str = "fsq.parquet") -> dict:
     """The newest `release/dt=…/places/parquet/*.parquet` of the Hugging Face copy, read by range requests:
     only the row groups whose latitude / longitude statistics touch Egypt's box (all of them when a file
     carries no statistics), then only the Egyptian rows."""
@@ -322,7 +333,7 @@ def fetch_fsq_hf(data: str, token: str) -> dict:
     rels = sorted({f.split("/")[1] for f in files if f.startswith("release/dt=") and "/places/parquet/" in f})
     if not rels:
         raise RuntimeError("no places release in the Hugging Face listing")
-    rel = os.environ.get("FSQ_RELEASE") or rels[-1]
+    rel = rel or os.environ.get("FSQ_RELEASE") or rels[-1]
     parts = sorted(f for f in files if f.startswith(f"release/{rel}/places/parquet/") and f.endswith(".parquet"))
     fs = HfFileSystem(token=token)
     tables, scanned, read = [], 0, 0
@@ -359,7 +370,7 @@ def fetch_fsq_hf(data: str, token: str) -> dict:
     if not tables:
         raise RuntimeError(f"no Egyptian rows in {rel}")
     T = pa.concat_tables(tables, promote_options="default")
-    pq.write_table(T, os.path.join(data, "fsq.parquet"), compression="zstd")
+    pq.write_table(T, os.path.join(data, out), compression="zstd")
     return {"rows": T.num_rows, "release": rel, "files": len(parts), "row_groups": scanned, "row_groups_read": read,
             "via": "huggingface"}
 
@@ -390,7 +401,13 @@ def fetch_atp(data: str) -> dict:
     return fetch(data)
 
 
-FETCHERS = {"overture": fetch_overture, "geofabrik": fetch_geofabrik, "hot": fetch_hot,
+def fetch_history(data: str) -> dict:
+    """After overture and fsq: it needs their current rows (history.py)."""
+    from . import history
+    return history.run(data)
+
+
+FETCHERS = {"overture": fetch_overture, "history": fetch_history, "geofabrik": fetch_geofabrik, "hot": fetch_hot,
             "wikidata": fetch_wikidata, "geonames": fetch_geonames, "fsq": fetch_fsq, "learning": fetch_learning,
             "atp": fetch_atp}
 

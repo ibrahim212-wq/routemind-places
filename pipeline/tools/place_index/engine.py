@@ -67,7 +67,8 @@ TUNING = {
     "area_trailing_max_m": 40000.0, "area_trailing_small_m": 15000.0, "refine_m": 10000.0, "expansion_factor": 0.96,  # a trailing word names an area only this near (or a city)
     "w_street": (0.48, 0.34, 0.10, 0.08, 0.00),  # street queries: the same street name is in every town
     "street_half_m": 2500.0, "short_skel_factor": 0.6, "q_skel2": 0.55, "q_skel_fuzzy": 0.62,
-    "road_word_boost": 0.06, "soft_branch_text": 0.75, "detect_brand_min": 3, "street_home_m": 50000.0, "street_famous_pop": 0.7,
+    "road_word_boost": 0.06, "soft_branch_text": 0.75, "detect_brand_min": 3, "street_home_m": 50000.0, "street_famous_pop": 0.7, "own_word_df": 400, "area_name_bonus": 0.10, "area_name_pop": 0.3,
+    "hot_pop": 0.7, "hot_street_pop": 0.9, "hot_only_len": 2, "hot_enough": 3,
     "street_unasked": 0.06,        # a street the query did not ask for («6 اكتوبر» is the city, not the bridge)
     "rel_plain_text": 0.85,        # «X جنب Y»: the plain reading wins when a place's own name (with the word) is the query
     "rel_mark_text": 0.75,         # … and the landmark must be found this well to search around it
@@ -430,6 +431,8 @@ class Index:
 
 
 class Engine:
+    _own_word = False
+
     def __init__(self, index: Index, lexicon: Lexicon, tuning: dict | None = None):
         self.ix = index
         self.lx = lexicon
@@ -1063,13 +1066,20 @@ class Engine:
         self._saw_exact = False
         typing = kind == "name" and not p.street and bool(p.residual) and len("".join(p.residual)) <= T["typing_len"]
         self._typing_now = typing
+        self._own_word = kind == "name"  # a name's own word only: beside a kind («فاميه عربية») the word is a context, and every name holding it would crowd out the shops
         scope = dbs or self._text_scope(alat, alng)
         cands: dict[tuple[str, int], dict] = {}
 
         # text — a category word that is part of a name («مول مصر», «مستشفى السلام») is the most
         # selective word there is inside a tile, so it may drive retrieval too
-        if p.residual:
+        hot = self._hot_ids(p.residual) if typing and "national" in scope else []
+        only_hot = len(p.residual) == 1 and len(p.residual[0]) <= T["hot_only_len"] and len(hot) >= T["hot_enough"]
+        if p.residual and not only_hot:
             self._text_candidates(p.cat_words + p.residual if kind == "cat_name" else p.residual, scope, cands)
+        for pid in hot:
+            c = cands.setdefault(("national", pid), {})
+            c["_db"] = "national"
+            c["text"] = True
         for exp in p.expansions:
             self._text_candidates(exp, scope, cands, prefix=False)  # another WHOLE name of the entity: no completions
         # category / brand / need: the kinds that sell it, and the shops whose own names say they do
@@ -1208,6 +1218,8 @@ class Engine:
                 if p.road_word and row["cat"] in ("road", "highway", "axis", "bridge"):
                     s += T["road_word_boost"]
             s += T["tier_gap"] * min(tier, 2) + (T["exact_bonus"] if tier == 3 else 0.0)
+            if tier == 3 and row["kind"] == 1 and kind == "name" and row["pop"] >= T["area_name_pop"]:
+                s += T["area_name_bonus"]  # the town itself before the shops that took its name
             if tier == 3:
                 self._saw_exact = True
             out.append(Result(db, pid, row["pid"], row["kind"], row["cat"], row["scat"], row["lat"], row["lng"],
@@ -1222,8 +1234,29 @@ class Engine:
         out.sort(key=_rank)
         if kind == "name":
             out = self._detected_brand(out, alat, alng, tau)
+        if typing and not self._saw_exact:  # a name typed whole («قدورة», «الجونة») asks for its branches: only a word still being typed wants variety
+            return self._typing_variety(out, limit)
         out = self._collapse(out, limit)
         return self._famous_street(out) if p.street else out
+
+    def _typing_variety(self, out: list[Result], limit: int) -> list[Result]:
+        """While a word is being typed five rows of one chain answer nothing the first did not: one of each first, the rest after."""
+        seen: set[str] = set()
+        first: list[Result] = []
+        rest: list[Result] = []
+        for r in out:
+            if r.row.get("grp"):  # the pieces of one street are _collapse's
+                first.append(r)
+                continue
+            k = r.row.get("brand") or "n:" + tn.normalize(r.name_ar or r.name_en or "")
+            (rest if k in seen else first).append(r)
+            seen.add(k)
+        res = self._collapse(first, limit)
+        if len(res) < limit:
+            res = res + self._collapse(rest, limit - len(res))
+        for i in range(1, len(res)):
+            res[i].score = min(res[i].score, res[i - 1].score)
+        return res
 
     def _famous_street(self, out: list[Result]) -> list[Result]:
         """among namesakes the street the city knows stays beside the one round the corner."""
@@ -1363,9 +1396,67 @@ class Engine:
         return {"walkable": T["tau_walkable"], "local": T["tau_local"], "destination": T["tau_destination"],
                 "landmark": T["tau_landmark"]}.get(cls, T["tau_local"])
 
+    # Between two keystrokes nearly everything read is read again: kept here, the answer unchanged (speed, criterion 4).
+    MEMO_ROWS, MEMO_TERMS, MEMO_POSTINGS = 8000, 8000, 400000
+
     def _row(self, db: str, pid: int):
+        memo = self.__dict__.setdefault("_row_memo", {})
+        k = (db, pid)
+        if k in memo:
+            return memo[k]
         r = self.ix.cons[db].execute("SELECT * FROM place WHERE id = ?", (pid,)).fetchone()
-        return dict(r) if r else None
+        r = dict(r) if r else None
+        if len(memo) >= self.MEMO_ROWS:
+            memo.clear()
+        memo[k] = r
+        return r
+
+    def _hot_ids(self, words: list[str]) -> list[int]:
+        """The places the country knows answer the first letters: a completion list by frequency never reaches «الاهرامات» from «الا»."""
+        hot = self.__dict__.get("_hot")
+        if hot is None:
+            hot = self._hot = {}
+            T = self.T
+            for r in self.ix.cons["national"].execute(
+                    "SELECT id, name_ar, name_en FROM place WHERE (kind != 2 AND pop >= ?) OR (kind = 2 AND pop >= ?) ORDER BY id",
+                    (T["hot_pop"], T["hot_street_pop"])):
+                for nm in (r["name_ar"], r["name_en"]):
+                    for t in tn.tokens(nm or ""):
+                        if not tn.is_stopword(t):
+                            for k in tn.stems(t):
+                                if k:
+                                    hot.setdefault(k[0], []).append((k, r["id"]))
+        ids: set[int] = set()
+        for q in words:
+            for f in [q] + tn.stems(q)[1:]:
+                if len(f) >= 2:
+                    for k, pid in hot.get(f[0], ()):
+                        if k.startswith(f):
+                            ids.add(pid)
+        return sorted(ids)
+
+    def _terms_of(self, db: str, q: str, last: bool) -> list[tuple[str, int]]:
+        memo = self.__dict__.setdefault("_terms_memo", {})
+        k = (db, q, last)
+        if k not in memo:
+            if len(memo) >= self.MEMO_TERMS:
+                memo.clear()
+            memo[k] = self._terms(self.ix.cons[db], q, last)
+        return memo[k]
+
+    def _postings(self, db: str, t: str) -> list[tuple[int, int]]:
+        memo = self.__dict__.setdefault("_post_memo", {})
+        k = (db, t)
+        if k not in memo:
+            rows = [(r[0], r[1]) for r in self.ix.cons[db].execute(
+                "SELECT id, f FROM tok WHERE t = ? ORDER BY id LIMIT ?", (t, self.T["max_postings"]))]
+            n = self.__dict__.get("_post_n", 0) + len(rows)
+            if n > self.MEMO_POSTINGS:
+                memo.clear()
+                n = len(rows)
+            self._post_n = n
+            memo[k] = rows
+        return memo[k]
 
     # ── text retrieval ──────────────────────────────────────────────────────
     # A query word's INDEX forms (what the tile stores) find candidates; its MATCH against a
@@ -1438,7 +1529,7 @@ class Engine:
         for wi, q in enumerate(words):
             terms = []
             for db in scope:
-                for t, df in self._terms(self.ix.cons[db], q, prefix and wi == n - 1):
+                for t, df in self._terms_of(db, q, prefix and wi == n - 1):
                     terms.append((db, t, df))
             total = sum(df for _, _, df in terms)
             per_word.append((wi, terms, total))
@@ -1462,9 +1553,17 @@ class Engine:
         pre: dict[tuple[str, int], float] = {}
         for wi, terms, _ in drivers:
             for db, t, _ in terms:
-                for pid, f in self.ix.cons[db].execute("SELECT id, f FROM tok WHERE t = ? ORDER BY id LIMIT ?", (t, T["max_postings"])):
+                for pid, f in self._postings(db, t):
                     k = (db, pid)
                     pre[k] = pre.get(k, 0.0) + (1.0 if (f & 3) == 0 else 0.6)
+        # a word's own form is read however common its sound-alike: «qir» is in 6 names though «~kr» is in thousands
+        for wi, terms, _ in usable:
+            if self._own_word and prefix and wi < n:
+                for db, t, df in terms:
+                    if t == words[wi] and df <= T["own_word_df"]:
+                        for pid, f in self._postings(db, t):
+                            k = (db, pid)
+                            pre[k] = pre.get(k, 0.0) + 1.0
         if len(usable) >= 2 and usable[0][2] > T["driver_df"]:
             # every word is common («أبو السيد», «حلواني العبد»: each word is in thousands of names, the
             # place in a few): a place holding BOTH of the two rarest words outranks one holding the

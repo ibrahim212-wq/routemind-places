@@ -50,6 +50,8 @@ def keep_reason(rec: R.Record) -> str | None:
     """None = kept; else why the row is dropped (build_report `dropped`): a Meta row that is almost certainly an
     online-only shop or a personal page, or a Foursquare row nobody refreshed in years. rescue() may still bring
     a dropped row back on independent evidence."""
+    if rec.extra.get("history"):  # gone from the current release: the long tail, whatever else it has (history.py)
+        return "history"
     if rec.src == R.SRC_FSQ and rec.extra.get("stale"):
         return "fsq_stale"
     if rec.src not in (R.SRC_META, R.SRC_OVT_OTHER):
@@ -180,7 +182,7 @@ def rescue(dropped: list[tuple[R.Record, str]], kept: list[R.Record], bcells: se
         web = (r.website or "").lower()
         online = any(h in web for h in ONLINE_HOSTS)
         how = None
-        if confirmed(r):
+        if why != "history" and confirmed(r):
             how = "confirmed_by_another_source"
         elif (why == "fsq_stale" and not online and not any(_ONLINE_NAME.search(n) for n, _ in r.names)
               and pins[(round(r.lat, 5), round(r.lng, 5))] < STACK_MIN):

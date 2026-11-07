@@ -158,6 +158,17 @@ def load(data: str, sources: set[str], osm_mode: str, report: dict):
     if "atp" in sources and have(os.path.join(data, "atp_eg.ndjson")):
         recs += optional("allplaces", lambda: ATP.atp_places(os.path.join(data, "atp_eg.ndjson"), inside))
     recs = one_identity(recs, report)
+    if "hist" in sources:
+        # what earlier releases carried and this one does not (history.py): after one_identity, so a current row is never
+        # replaced by its old copy; enrich.keep_reason sends every one of them to the long tail
+        gone = []
+        if os.path.exists(os.path.join(ov_dir, "places_history.parquet")):
+            gone += optional("history overture", lambda: S.overture_places(os.path.join(ov_dir, "places_history.parquet"), inside))
+        if os.path.exists(os.path.join(data, "fsq_history.parquet")):
+            gone += optional("history foursquare", lambda: S.fsq_places(os.path.join(data, "fsq_history.parquet"), inside, {}))
+        for r in gone:
+            r.extra["history"] = True
+        recs += gone
     if "wd" in sources and have(os.path.join(data, "wikidata.json")):
         recs += optional("wikidata", lambda: S.wikidata_places(os.path.join(data, "wikidata.json"), inside))
     if "gn" in sources and have(os.path.join(data, "EG.txt")):
@@ -286,6 +297,8 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
     log("police by name", report["police_by_name"])
     QL.seats(places, report)
     log("seats by name", report["seats_by_name"])
+    QL.area_named(places, report)
+    log("named after their area", report["area_named"])
     for p in places + streets:
         p.gov = gov.locate(p.lat, p.lng)
         if p.kind != "area":
@@ -327,7 +340,9 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
     QL.lend_names(places, lex, report)
     log("chain names lent", json.dumps(report["chain_names_lent"]))
     # the long tail and the places only addresses name; after the brands, so a doubtful row never makes a chain
-    weak = LT.weak_places(weak_recs, places + streets, report)
+    old = [r for r in weak_recs if r.extra.get("history")]
+    weak = LT.weak_places([r for r in weak_recs if not r.extra.get("history")], places + streets, report)
+    weak += LT.weak_places(old, places + streets + weak, report, LT.HISTORY_SAME_M, "history")
     for p in weak:
         c = ki.infer(p.cat, [x for x in (p.name_ar, p.name_en, *p.alt) if x])
         if c:
@@ -406,7 +421,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--sources", default="osm,overture,div,fsq,wd,gn,ugc,sel")
+    ap.add_argument("--sources", default="osm,overture,div,fsq,wd,gn,ugc,sel,hist")
     ap.add_argument("--osm", default="pbf", choices=["pbf", "hot"])
     ap.add_argument("--version", default=dt.date.today().isoformat())
     ap.add_argument("--cache", help="pickle of the merged places: written after a merge, reused when present")
