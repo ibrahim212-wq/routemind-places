@@ -74,7 +74,7 @@ GROUPS = [
     {"park", "garden", "playground", "zoo", "amusement_park"},
     {"historic_site", "monument", "attraction", "museum", "viewpoint", "landmark", "mosque", "church",
      "monastery", "place_of_worship"},
-    {"government", "townhall", "ministry", "police", "traffic_department", "civil_registry", "notary",
+    {"government", "townhall", "governorate_office", "ministry", "police", "traffic_department", "civil_registry", "notary",
      "courthouse", "post_office", "telecom_exchange", "electricity_office", "water_office"},
     {"sports_club", "stadium", "gym", "swimming_pool", "sports_field"},
     {"barber", "hair_salon", "beauty_salon", "spa"},
@@ -83,6 +83,19 @@ GROUPS = [
 ]
 # Families: a fine category in one family never describes a place filed in another, except
 # through the family's own generic category (a Meta "shop" can be a pharmacy; it is never a hotel).
+# The words that say what a place IS: an alternative name saying another kind than the place's own names is another place.
+KIND_WORDS = {"مسجد": "worship", "جامع": "worship", "كنيسه": "worship", "mosque": "worship", "church": "worship",
+              "مستشفي": "hospital", "hospital": "hospital", "مدرسه": "school", "school": "school",
+              "صيدليه": "pharmacy", "pharmacy": "pharmacy", "بنك": "bank", "bank": "bank", "مطعم": "food", "restaurant": "food",
+              "كافيه": "cafe", "cafe": "cafe", "شرطه": "police", "police": "police", "كوبري": "bridge", "bridge": "bridge",
+              "حديقه": "park", "park": "park", "ديوان": "gov", "محكمه": "court", "court": "court", "فندق": "hotel", "hotel": "hotel"}
+
+
+def _other_kind(words: set[str], own: set[str]) -> bool:
+    says = {KIND_WORDS[w] for w in words if w in KIND_WORDS}
+    return bool(says and own and not (says & own))
+
+
 FAMILY_OF_GROUP = {0: "health", 1: "food", 2: "food", 3: "retail", 4: "retail", 5: "retail", 6: "retail",
                    7: "auto", 8: "edu", 9: "money", 10: "lodging", 11: "leisure", 12: "culture", 13: "gov",
                    14: "leisure", 15: "services", 16: "transport"}
@@ -529,6 +542,7 @@ def build_place(cl: Cluster) -> Place:
     name_en = _pick_name(ms, "latin")
     seen = {tn.normalize(x) for x in (name_ar, name_en) if x}
     covered = {s for x in (name_ar, name_en) if x for t in tn.tokens(x) for s in tn.stems(t)}
+    own_kinds = {KIND_WORDS[s] for s in covered if s in KIND_WORDS}
     alt = []
     # the alternatives most members agree on first, a rescued row's last: only six are kept, and a chimera
     # cluster's stragglers pushed «مجمع التحرير» off Tahrir Square in places-2026-10-31.4
@@ -545,6 +559,8 @@ def build_place(cl: Cluster) -> Place:
         words = {tn.stems(t)[-1] for t in tn.tokens(text) if not tn.is_stopword(t)}
         if words and words <= covered:
             continue  # says nothing the two display names do not already say
+        if _other_kind(words, own_kinds):
+            continue  # «ديوان عام محافظة الفيوم» beside the zoo: a straggler of a cluster, never another name of the zoo
         covered |= {s for t in tn.tokens(text) for s in tn.stems(t)}
         alt.append(text)
     srcs = 0

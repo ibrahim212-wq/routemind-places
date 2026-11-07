@@ -69,7 +69,7 @@ NATIONAL_CAT_POP = 0.5
 NATIONAL_CATS = {"airport", "hospital", "university", "college", "mall", "hypermarket", "museum", "historic_site",
                  "attraction", "stadium", "ministry", "embassy", "train_station", "metro_station", "lrt_station",
                  "monorail_station", "bus_station", "port", "zoo", "amusement_park", "resort", "beach", "courthouse",
-                 "traffic_department", "civil_registry", "townhall", "monastery", "sports_club", "theater",
+                 "traffic_department", "civil_registry", "townhall", "governorate_office", "monastery", "sports_club", "theater",
                  "cultural_center", "square", "compound", "industrial_zone", "island", "mountain", "lake", "toll_gate"}
 
 

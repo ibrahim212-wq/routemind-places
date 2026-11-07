@@ -839,7 +839,10 @@
         "جمبري",
         "كاليماري",
         "فسخاني",
-        "فسيخ"
+        "فسيخ",
+        "اكل بحري",
+        "مأكولات بحرية",
+        "مطعم اكل بحري"
       ],
       "terms_en": [
         "fish",
@@ -1296,6 +1299,9 @@
         "كارت الكهربا",
         "عداد كهرباء",
         "فاتورة الكهرباء",
+        "فاتورة الكهربا",
+        "دفع فاتورة الكهربا",
+        "ادفع فاتورة الكهربا",
         "محطة كهرباء دفع"
       ],
       "terms_en": [
@@ -1461,6 +1467,64 @@
       "terms_franco": [
         "seggel madany",
         "mogamma3"
+      ],
+      "quick_chip": false
+    },
+    {
+      "id": "city_council",
+      "label_ar": "مجلس مدينة",
+      "label_en": "City council",
+      "proximity_class": "destination",
+      "google_type": "city_hall",
+      "google_keyword": "مجلس مدينة",
+      "prominence_class": "government",
+      "terms_ar": [
+        "مجلس المدينة",
+        "مجلس مركز",
+        "مجلس مركز ومدينة",
+        "مجلس الحي",
+        "مجلس حي",
+        "الوحدة المحلية",
+        "وحدة محلية"
+      ],
+      "terms_en": [
+        "city council",
+        "town council",
+        "city hall",
+        "town hall"
+      ],
+      "terms_franco": [
+        "maglis madina",
+        "magles madina",
+        "magles el madina"
+      ],
+      "quick_chip": false
+    },
+    {
+      "id": "governorate_office",
+      "label_ar": "ديوان عام المحافظة",
+      "label_en": "Governorate building",
+      "proximity_class": "destination",
+      "google_type": "local_government_office",
+      "google_keyword": "ديوان عام المحافظة",
+      "prominence_class": "government",
+      "terms_ar": [
+        "ديوان عام محافظة",
+        "ديوان عام",
+        "ديوان المحافظة",
+        "ديوان محافظة",
+        "مبنى المحافظة",
+        "مبنى محافظة",
+        "الديوان العام"
+      ],
+      "terms_en": [
+        "governorate building",
+        "governorate office",
+        "governorate hq"
+      ],
+      "terms_franco": [
+        "diwan el mohafza",
+        "mabna el mohafza"
       ],
       "quick_chip": false
     },
@@ -1786,7 +1850,11 @@
         "توكيل",
         "وكيل سيارات",
         "معرض عربيات",
-        "توكيل سيارات"
+        "توكيل سيارات",
+        "معرض سيارات",
+        "عربيات مستعملة",
+        "عربية مستعملة",
+        "سيارات مستعملة"
       ],
       "terms_en": [
         "car showroom",
@@ -1810,6 +1878,9 @@
         "ايجار عربيات",
         "تأجير عربيات",
         "ايجار سيارات",
+        "تأجير سيارات",
+        "ايجار عربية",
+        "تأجير عربية",
         "ليموزين"
       ],
       "terms_en": [
@@ -1890,7 +1961,10 @@
         "فاكهاني",
         "خضار وفاكهة",
         "فكهاني",
-        "خضرى"
+        "خضرى",
+        "فاكهة",
+        "فواكه",
+        "خضروات"
       ],
       "terms_en": [
         "vegetables",
@@ -2407,6 +2481,9 @@
       "terms_ar": [
         "صالون تجميل",
         "كوافير حريمي",
+        "كوافير نسائي",
+        "حلاق حريمي",
+        "حلاق نسائي",
         "ميكب ارتست",
         "مركز تجميل",
         "اظافر",
@@ -6563,6 +6640,27 @@
         "اجهزة منزلية",
         "home appliances",
         "small appliances"
+      ]
+    },
+    {
+      "id": "mineral_water",
+      "label_ar": "مياه معدنية",
+      "label_en": "Mineral water",
+      "categories": [
+        "supermarket",
+        "market"
+      ],
+      "products": [
+        "مياه معدنية",
+        "مية معدنية",
+        "ازازة مية",
+        "mineral water",
+        "bottled water"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "مياه معدنية",
+        "mineral water"
       ]
     },
     {

@@ -169,7 +169,7 @@ GROUPS = {
     "hotel": {"hotel", "hostel", "resort", "guest_house"},
     "civic": {"university", "school", "college", "hospital", "library", "government_office", "ministry", "embassy",
               "courthouse", "cultural_center", "theater", "cinema", "stadium", "sports_club", "park", "zoo",
-              "train_station", "metro_station", "airport", "office", "ngo", "institute", "townhall",
+              "train_station", "metro_station", "airport", "office", "ngo", "institute", "townhall", "governorate_office", "city_council",
               "building", "event_venue"},
 }
 

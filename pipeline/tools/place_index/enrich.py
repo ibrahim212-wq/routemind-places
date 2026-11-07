@@ -443,6 +443,8 @@ class BrandMatcher:
             for a in aliases:
                 # stopwords stay: "el abd" is two words, and "Abd" alone is half the names in Egypt
                 toks = tuple(tn.tokens(a))
+                if toks and toks[0] in NICKNAMES_ONLY and len(toks) == 1:
+                    continue
                 if toks and (len(toks) > 1 or len(tn.stems(toks[0])[-1]) >= 3):
                     self.by_last[tn.stems(toks[-1])[-1]].append((toks, b["id"], b.get("category_id") or ""))
         for v in self.by_last.values():
@@ -520,14 +522,19 @@ class BrandMatcher:
             return bool(bcat) and ((scat is not None and _brand_cat_ok(bcat, scat))
                                    or (known and M.cats_compatible(bcat, cat) and cat not in M.UNIVERSAL_CATS))
 
-        in_names = {bid for n in names for _, bid, *_ in self._spans(n)}
+        # a chain the row's own name ties it to, by the same test a name passes alone
+        in_names = {bid for n in names for alias, bid, bcat, alone, first, other in self._spans(n)
+                    if not other and (len(alias) > 1 or alone or (first and agrees(bcat)))}
+        # «مصر» under a source's "مصر للبترول": the name is the chain's name cut short
+        src_words = set(tn.tokens(source_brand or ""))
+        cut_short = bool(src_words) and any(set(tn.tokens(n)) < src_words for n in names)
         best = None
         for name, trusted in [(n, False) for n in names] + ([(source_brand, True)] if source_brand else []):
             for alias, bid, bcat, alone, first, other in self._spans(name):
                 if known and bcat and not agrees(bcat) and not (alone and bcat in OWN_NAME_KINDS):
                     continue  # another kind of place under the same word; a place called ONLY a bank's name is that bank («CIB» filed as a cultural centre)
-                if trusted and not known and bid not in in_names:
-                    continue  # a source's brand on a "building" / "place" the name never ties to the chain
+                if trusted and bid not in in_names and not cut_short:
+                    continue  # a source's brand the name never ties to the chain: «داندى مول» Carrefour, «كلية حقوق جامعة شبين» a bank
                 if len(alias) == 1 and not (alone or (first and agrees(bcat))):
                     continue  # one word inside a longer name: a person, a family, a street («رشدي شحاته», even when a source says brand)
                 if not trusted:
@@ -541,6 +548,8 @@ class BrandMatcher:
         return best[1] if best else None
 
 
+# what people call a chain, never what a place of that name is: «برجر ماك», "Mac Cosmetics" (the parser still reads them)
+NICKNAMES_ONLY = {"ماك", "mac"}
 # a name in these trades belongs to one licensed company, whatever a source filed the row under
 OWN_NAME_KINDS = {"bank", "atm", "pharmacy", "gas_station", "medical_lab", "radiology"}
 

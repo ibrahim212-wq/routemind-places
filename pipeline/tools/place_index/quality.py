@@ -77,6 +77,13 @@ def lend_names(places: list[M.Place], lexicon: dict, report: dict) -> None:
             if not p.name_en and en:
                 p.name_en = en
                 lent["en"] += 1
+            # a branch that says only part of its chain's name shows the whole of it: «مصر» → «مصر للبترول»
+            for attr, whole in (("name_ar", ar), ("name_en", en)):
+                own = getattr(p, attr)
+                if own and whole and set(tn.tokens(own)) < set(tn.tokens(whole)):
+                    p.alt = list(p.alt) + [own]
+                    setattr(p, attr, whole)
+                    lent["completed"] += 1
     report["chain_names_lent"] = dict(lent)
 
 
@@ -98,6 +105,38 @@ def says_police(names: list[str]) -> bool:
         if len(w) >= 2 and w[0] == "قسم" and (w[1] in _ORDINALS or tn.is_digits(w[1])):
             return True
     return False
+
+
+# The seats of local government are often filed with no city in the name: «مجلس المدينة», «الوحدة المحلية»,
+# «مبنى المحافظة». Their name's head says what they are, so «مجلس مدينة منيا القمح» can be read as a kind in a town.
+_SEAT_FROM = {"government", "townhall", "office", "place", "landmark", "company", "ngo", "attraction", "historic_site"}
+_COUNCIL_HEADS = {("مجلس", "مدينه"), ("مجلس", "مركز"), ("مجلس", "حي"), ("وحده", "محليه"), ("city", "council"), ("town", "council"),
+                  ("city", "hall"), ("town", "hall")}
+_GOVERNORATE_HEADS = {("ديوان", "عام"), ("ديوان", "محافظه"), ("مبني", "محافظه"), ("governorate", "building"),
+                      ("governorate", "office")}
+
+
+def seat_kind(cat: str, names: list[str]) -> str | None:
+    for nm in names:
+        w = [tn.stems(t)[-1] for t in tn.tokens(nm) if not tn.is_stopword(t)]
+        if len(w) < 2:
+            continue
+        if (w[0], w[1]) in _COUNCIL_HEADS:
+            return "townhall"
+        if (w[0], w[1]) in _GOVERNORATE_HEADS or (w[0] == "محافظه" and cat in ("government", "townhall", "office")):
+            return "governorate_office"
+    return None
+
+
+def seats(places: list[M.Place], report: dict) -> None:
+    n: Counter = Counter()
+    for p in places:
+        if p.kind == "poi" and p.cat in _SEAT_FROM:
+            k = seat_kind(p.cat, [x for x in (p.name_ar, p.name_en) if x])
+            if k and k != p.cat:
+                p.cat = k
+                n[k] += 1
+    report["seats_by_name"] = dict(n)
 
 
 def police(places: list[M.Place], report: dict) -> None:

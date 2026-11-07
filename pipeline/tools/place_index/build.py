@@ -284,6 +284,8 @@ def run(data: str, out: str, sources: set[str], osm_mode: str, version: str, cac
     log("kind from the name", sum(inferred.values()))
     QL.police(places, report)  # «قسم شرطة …», «قسم ثان المحلة» merged with a civil registry is the police station
     log("police by name", report["police_by_name"])
+    QL.seats(places, report)
+    log("seats by name", report["seats_by_name"])
     for p in places + streets:
         p.gov = gov.locate(p.lat, p.lng)
         if p.kind != "area":

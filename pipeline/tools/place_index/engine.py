@@ -51,7 +51,7 @@ TUNING = {
     "w_name": (0.52, 0.14, 0.24, 0.10, 0.00),
     "w_category": (0.04, 0.52, 0.24, 0.14, 0.06),
     "w_cat_name": (0.46, 0.16, 0.12, 0.08, 0.18),
-    "w_brand": (0.16, 0.56, 0.10, 0.14, 0.04),
+    "w_brand": (0.16, 0.56, 0.02, 0.14, 0.04),  # a chain's branches are interchangeable: the nearest, however famous the far one
     "w_area": (0.60, 0.10, 0.30, 0.00, 0.00),
     # proximity
     "tau_walkable": 900.0, "tau_local": 2500.0, "tau_destination": 9000.0, "tau_landmark": 30000.0,
@@ -67,7 +67,7 @@ TUNING = {
     "area_trailing_max_m": 40000.0, "area_trailing_small_m": 15000.0, "refine_m": 10000.0, "expansion_factor": 0.96,  # a trailing word names an area only this near (or a city)
     "w_street": (0.48, 0.34, 0.10, 0.08, 0.00),  # street queries: the same street name is in every town
     "street_half_m": 2500.0, "short_skel_factor": 0.6, "q_skel2": 0.55, "q_skel_fuzzy": 0.62,
-    "road_word_boost": 0.06, "soft_branch_text": 0.75, "detect_brand_min": 3,
+    "road_word_boost": 0.06, "soft_branch_text": 0.75, "detect_brand_min": 3, "street_home_m": 50000.0, "street_famous_pop": 0.7,
     "street_unasked": 0.06,        # a street the query did not ask for («6 اكتوبر» is the city, not the bridge)
     "rel_plain_text": 0.85,        # «X جنب Y»: the plain reading wins when a place's own name (with the word) is the query
     "rel_mark_text": 0.75,         # … and the landmark must be found this well to search around it
@@ -127,9 +127,11 @@ AREA_WORDS = {"كفر", "عزبه", "قريه", "مدينه", "حي", "منطق�
 NAME_TYPE_SCATS = {"bridge", "square"}
 # A category search includes the kinds that ARE that category («مطعم» finds a koshary place); only true
 # is-a families — the lexicon's prominence classes are not (a cemetery is not a mosque).
-SCAT_FAMILY = {"restaurant": ("restaurant", "koshary", "grill", "seafood", "pizza", "burger", "fast_food", "foul_taameya")}
+SCAT_FAMILY = {"restaurant": ("restaurant", "koshary", "grill", "seafood", "pizza", "burger", "fast_food", "foul_taameya"),
+               "government_office": ("government_office", "city_council", "governorate_office"),
+               "body_shop": ("body_shop", "car_repair")}  # sources file the panel beater under the garage
 # Kinds whose places share names without being one chain («مسجد التوحيد», «مدرسة السلام»): no chain strength.
-NO_CHAIN_SCATS = {"mosque", "church", "school", "kindergarten", "cemetery", "police", "government_office", "courthouse",
+NO_CHAIN_SCATS = {"mosque", "church", "school", "kindergarten", "cemetery", "police", "government_office", "city_council", "governorate_office", "courthouse",
                   "civil_registry", "post_office", "university", "hospital", "health_unit"}
 # «صيدلية فاتحة دلوقتي»: words that ask for a place open now — consumed (never searched as a name) and
 # reported as `open_now` for the app, which alone can read hours against the clock.
@@ -227,6 +229,11 @@ class Lexicon:
     fuzzy: dict = field(default_factory=dict)  # first letter → single-word lexicon keys (≥ 4 letters), code-point order
     needs: list = field(default_factory=list)  # «شاشه عربيات» → the shop kinds that sell it (lexicon `needs`)
     max_window: int = 4
+    words: set = field(default_factory=set)  # every word of a kind's or a need's phrases: real words, whatever a chain sounds like
+
+    def __post_init__(self):
+        self.words = {w for k in self.cat_terms for w in k.split(" ")} | {
+            w for nd in self.needs for seq in list(nd["products"]) + list(nd["contexts"]) for w in seq}
 
     @staticmethod
     def load(path: str) -> "Lexicon":
@@ -508,7 +515,9 @@ class Engine:
                     if any(used[i:i + n]):
                         continue
                     k = " ".join(keys[i:i + n])
-                    if allow_brand and k in self.lx.brands and not (n == 1 and i in self._skip_brand):
+                    # the word after «شارع» is that street's name: «شارع المحطه», «طريق المطار», «شارع كارفور»
+                    after_street = i > 0 and toks[i - 1] in STREET_WORDS
+                    if allow_brand and k in self.lx.brands and not (n == 1 and i in self._skip_brand) and not after_street:
                         return "brand", i, n, self.lx.brands[k]
                     # a lone word that says what KIND of place («مطار», «مول») is the category when
                     # other words follow, never the lexicon's one landmark of that kind («المطار»)
@@ -520,7 +529,7 @@ class Engine:
                             and not (n == 1 and p.near and k in self.lx.cat_terms):
                         return "entity", i, n, self.lx.entities[k]
                     if allow_cat and k in self.lx.cat_terms and self.lx.cat_terms[k][0] not in NAME_TYPE_SCATS \
-                            and not (n == 1 and free > 1 and k in NAME_TYPE_WORDS):
+                            and not (n == 1 and free > 1 and k in NAME_TYPE_WORDS) and not after_street:
                         return "cat", i, n, self.lx.cat_terms[k]
             return None
 
@@ -577,7 +586,7 @@ class Engine:
                 p.street = True
                 if t in ROAD_WORDS:
                     p.road_word = True
-            if not used[i] and keys[i] in NAME_TYPE_WORDS and len(toks) > 1:
+            if not used[i] and keys[i] in NAME_TYPE_WORDS and len(toks) > 1 and not (i > 0 and toks[i - 1] in STREET_WORDS):
                 p.typed = True
         # the entity: an anchor when the query asks for a kind / chain near it, else its other
         # names join the search («الدايري» → «الطريق الدائري», «cfc» → «كايرو فيستيفال سيتي»)
@@ -587,7 +596,9 @@ class Engine:
             i, n = entity_span
             others = [j for j in range(len(toks)) if not used[j] and toks[j] not in STREET_WORDS
                       and toks[j] not in IN_WORDS and not (i <= j < i + n)]
-            if not no_area and (p.scat or p.brand or (others and ent["kind"] != "road")):
+            # «شارع التحرير المحله»: the word after the street word names the street, the town is the WHERE
+            if not no_area and (p.scat or p.brand or (others and ent["kind"] != "road"
+                                                      and not (i > 0 and toks[i - 1] in STREET_WORDS))):
                 # «صيدلية جنب سيتي ستارز», «شارع 9 المعادي»: the entity is WHERE, the rest is WHAT
                 p.area = {"name": ent["ar"], "lat": ent["lat"], "lng": ent["lng"], "radius": ent["radius"],
                           "cat": ent["kind"], "road": ent["kind"] == "road"}
@@ -609,6 +620,13 @@ class Engine:
                         seen.add(k2)
                         p.expansions.append(tt)
                 p.expansions = p.expansions[:8]
+            # the famous street of your own city is the one you mean; of another city, «شارع الحريه» is the one here
+            if others or haversine(lat, lng, ent["lat"], ent["lng"]) > self.T["street_home_m"]:
+                for j, t in enumerate(toks):
+                    if not used[j] and t in STREET_WORDS:
+                        p.street = True
+                        if t in ROAD_WORDS:
+                            p.road_word = True
         # area: «في X» anywhere, or a trailing X after a category / brand / street word
         rest = [i for i in range(len(toks)) if not used[i]]
         self._parsed_target = bool(p.scat or p.brand)
@@ -643,7 +661,8 @@ class Engine:
         def at(seq, banned):
             n = len(seq)
             for i in range(len(keys) - n + 1):
-                if all(not used[i + j] and (i + j) not in banned for j in range(n)) and tuple(keys[i:i + n]) == seq:
+                if all(not used[i + j] and (i + j) not in banned for j in range(n)) and tuple(keys[i:i + n]) == seq \
+                        and not (i > 0 and p.tokens[i - 1] in STREET_WORDS):
                     return i
             return -1
         best = None
@@ -698,8 +717,9 @@ class Engine:
         in the national file's vocabulary, one edit budget from a single-word lexicon key with the same
         first letter. The closest wins; ties go to the first in code-point order."""
         lx = self.lx
-        if len(k) < self.T["fuzzy_key_min"] or k.isdigit() or k in lx.cat_terms or k in lx.brands or k in lx.entities:
-            return None
+        if len(k) < self.T["fuzzy_key_min"] or k.isdigit() or k in lx.cat_terms or k in lx.brands or k in lx.entities \
+                or k in lx.words:
+            return None  # «عربيات» is a word of «ايجار عربيات», never a typo of the restaurant «عربياتا»
         key = ("fuzzy", k, tok)
         if key in self._area_cache:
             return self._area_cache[key]
@@ -935,7 +955,9 @@ class Engine:
         if any(r.tier >= 2 for r in out) or len(p.tokens) < 2:
             return out
         q = self.parse(raw, lat, lng)  # the first reading: the retries before this one changed `p`
+        name_town = False
         if q.kind == "name" and not q.brand and not q.scat and q.area is None and len(q.residual) >= 2:
+            name_town = True
             q = self.parse(raw, lat, lng, read_area=True)
             if q.area is None:
                 return out
@@ -954,6 +976,9 @@ class Engine:
         if near:
             q.near = True
         got = [r for r in self._search(q, lat, lng, limit, None, dest, dbs, explain) if r.tier >= 2]
+        if name_town:
+            # a chain's branch elsewhere answers «بلبن قنا»; another town's «ديوان عام محافظة» does not answer Matrouh's
+            got = [r for r in got if r.row.get("brand") or r.adist <= self.T["area_reach_m"]]
         # a row of the asked kind whose name carries most of the words («مستشفى اسيوط الجامعي» → «مستشفى جامعة أسيوط») stays above the kind's other rows
         good = [r for r in out if scat and r.text >= self.T["relax_text"] and (r.scat == scat or r.scat in SCAT_FAMILY.get(scat, ()))]
         seen = {r.pid for r in good}
@@ -1149,7 +1174,8 @@ class Engine:
                     tier = max(tier, 2)
                 if text < T["min_text_name"]:
                     continue
-                if row["kind"] == 2 and p.street:
+                if p.street and (row["kind"] == 2 or tier == 3):
+                    # a place filed under the street's whole name competes as the street does: nearest, not most famous
                     w = T["w_street"]
                     prox = 1.0 / (1.0 + d / T["street_half_m"])
                 elif typing and tier < 3 and self._last_q < T["q_stem"]:
@@ -1196,7 +1222,27 @@ class Engine:
         out.sort(key=_rank)
         if kind == "name":
             out = self._detected_brand(out, alat, alng, tau)
-        return self._collapse(out, limit)
+        out = self._collapse(out, limit)
+        return self._famous_street(out) if p.street else out
+
+    def _famous_street(self, out: list[Result]) -> list[Result]:
+        """among namesakes the street the city knows stays beside the one round the corner."""
+        T = self.T
+        if len(out) < 3 or out[0].kind != 2 or out[0].tier != 3:
+            return out
+        nk = tn.normalize(out[0].name_ar or out[0].name_en or "")
+        best = -1
+        for i in range(2, len(out)):
+            r = out[i]
+            if r.kind == 2 and r.tier == 3 and r.dist <= T["street_home_m"] and r.row["pop"] >= T["street_famous_pop"] \
+                    and tn.normalize(r.name_ar or r.name_en or "") == nk and (best < 0 or r.row["pop"] > out[best].row["pop"]):
+                best = i
+        if best < 0 or out[1].row["pop"] >= out[best].row["pop"]:
+            return out
+        r = out.pop(best)
+        r.score = max(r.score, out[1].score)
+        out.insert(1, r)
+        return out
 
     def _typing_cut(self, cands: dict, scope: list, lat: float, lng: float) -> dict:
         """While a word is being typed thousands of names start with it and ten are read. Every candidate is ranked on what needs no
