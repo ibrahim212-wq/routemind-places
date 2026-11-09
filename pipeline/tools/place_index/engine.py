@@ -105,6 +105,7 @@ TUNING = {
     "longtail_penalty": 0.25,      # a long-tail row (longtail.py) answers under every stronger real match
     "join_terms": 12,              # terms per word in the two-word join: the word's own forms, then its commonest completions
     "kind_near_m": 15000.0,        # a kind's rows beyond this lose to any row inside it
+    "kind_name_town_m": 8000.0,    # «مجلس مدينة أجا»: a place IN the town whose own name holds the kind's words answers too
     "kind_far_cut": 0.6,
     "relax_text": 0.55,            # _relaxed: a row of the asked kind with this much of the words keeps its place
     "relax_step": 0.001,
@@ -1120,6 +1121,10 @@ class Engine:
                 self._text_candidates(list(ph), nscope, cands, prefix=False)
         elif p.scat and kind == "category":
             self._category_candidates(p.scat, alat, alng, scope, cands, p, route)
+            if p.area and len(p.cat_words) >= 2:
+                # a kind of several words in a town («مجلس مدينة أجا», «مكتب بريد ببا»): the town's place NAMED for it answers
+                # even filed under another kind or in the long tail («مجلس المدينه», cat place — checklist r23: 76 councils)
+                self._text_candidates(p.cat_words, self.ix.near(alat, alng, T["kind_name_town_m"]), cands, prefix=False)
         if p.complete is not None:
             self._category_candidates(p.complete[0], alat, alng, scope, cands, p, route)
         if p.brand:
@@ -1149,6 +1154,7 @@ class Engine:
             if p.area and kind != "name" and not p.area_soft and d > max(p.area["radius"] * 2.2, 4000):
                 continue
             catm = 0.0
+            named_kind = False
             if p.need is not None:
                 catm = self._need_match(p.need, row, db)
             elif p.scat:
@@ -1159,7 +1165,9 @@ class Engine:
                 elif kind == "cat_name" and p.cat_words and self._names_have(p.cat_words, row):
                     catm = T["cat_in_name"]  # «Zepter Rehab City - Cloud 9 Mall» answers «cloud9 mall»
             if kind == "category":
-                if (p.need is not None and catm <= 0.0) or (p.need is None and catm < 1.0):
+                if p.need is None and catm < 1.0 and p.area and len(p.cat_words) >= 2 and d <= T["kind_name_town_m"]                         and row["kind"] == 0 and self._names_have(p.cat_words, row):  # a street named for it is not it
+                    catm, named_kind = T["cat_in_name"], True  # the town's place named for the kind (below a row filed as it)
+                if (p.need is not None and catm <= 0.0) or (p.need is None and catm < 1.0 and not named_kind):
                     continue
                 if p.need is not None:
                     w = T["w_need"]
@@ -1236,7 +1244,7 @@ class Engine:
                     tier = 2  # «baz» is a far village's whole name, not what is being typed
             s = w[0] * text_part + w[1] * prox + w[2] * row["pop"] + w[3] * row["conf"] + w[4] * catm
             if row["srcs"] & LONGTAIL_BIT:
-                if kind in ("category", "brand"):
+                if kind in ("category", "brand") and not named_kind:
                     continue
                 s -= T["longtail_penalty"]
             if kind == "name" and row["kind"] == 2 and not p.street:
