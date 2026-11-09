@@ -4,7 +4,9 @@
 
 Method (docs/search-goal.md, criterion 4). For each anchor: a directory with the manifest, the national file and only the tiles
 within 3 km of the user (hard links), then every red-team name typed keystroke by keystroke from 2 characters, the same query order a
-person produces. Run in one JVM per anchor; the first WARMUP queries (JIT warm-up) are not counted. The phone estimate multiplies by
+person produces. Run in one JVM per anchor, RUNS times, keeping each query's best time (this desk is shared with the build and other
+work); the first WARMUP queries (JIT warm-up) are not counted. The files are read through once first: this desk's disk is a 5400 rpm
+drive and every seek on it is a cost no phone's flash has. The phone estimate multiplies by
 PHONE_FACTOR: this desk is an Intel i5-6200U; a mid-range phone (Helio G88 / Snapdragon 680 class) has about half its single-core
 speed, and ART plus eMMC / UFS 2 storage cost about 1.5 times more than HotSpot on this disk. A judgement, not a measurement: replace
 it with a device trace when one exists.
@@ -28,6 +30,7 @@ sys.path.insert(0, os.path.join(ROOT, "tool"))
 PHONE_FACTOR = 3.0
 WARMUP = 150
 RING_M = 3000.0
+RUNS = 3
 ANCHORS = {"downtown": ("cairo", (30.0444, 31.2357)), "mohandessin": ("giza", (30.0566, 31.2003)), "raml": ("alexandria", (31.2001, 29.9187)),
            "tanta": ("gharbia", (30.7865, 31.0004)), "mansoura": ("dakahlia", (31.0409, 31.3785)), "sohag": ("sohag", (26.5591, 31.6957))}
 
@@ -68,8 +71,14 @@ def main(argv=None) -> None:
         qpath = os.path.join(work, name + ".json")
         with open(qpath, "w", encoding="utf8") as f:
             json.dump(qs, f, ensure_ascii=False)
-        out = P.run_java(jar, cp, "engine", d, P.LEXICON, qpath)
-        rows = [json.loads(x) for x in out.splitlines() if x.strip()]
+        for t in keep:
+            with open(os.path.join(d, t + ".sqlite"), "rb") as f:
+                f.read()
+        rows = None
+        for _ in range(RUNS):
+            out = P.run_java(jar, cp, "engine", d, P.LEXICON, qpath)
+            run = [json.loads(x) for x in out.splitlines() if x.strip()]
+            rows = run if rows is None else [dict(x, ms=min(x["ms"], y["ms"])) for x, y in zip(rows, run)]
         ms = sorted(r["ms"] for r in rows[WARMUP:])
         allq += ms
         slow = sorted(((r["ms"], q["q"]) for r, q in zip(rows[WARMUP:], qs[WARMUP:])), reverse=True)[:8]

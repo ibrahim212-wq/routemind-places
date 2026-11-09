@@ -1,0 +1,357 @@
+{
+ "constants": {
+  "MIN_CHARS": 3,
+  "PAUSE_MS": 500,
+  "KEPT_CHARS": 2,
+  "MAX_ASKS": 5,
+  "WEAK_TEXT": 0.75,
+  "MIN_KIND_RESULTS": 3,
+  "MEMORY_MAX_S": 600
+ },
+ "sessions": [
+  {
+   "name": "short text is never asked",
+   "steps": [
+    {
+     "q": "تو",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "Tو",
+     "n": 0,
+     "t": 0,
+     "c": "none",
+     "want": null
+    }
+   ]
+  },
+  {
+   "name": "weak at the third character",
+   "steps": [
+    {
+     "q": "توم",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "تومه",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    }
+   ]
+  },
+  {
+   "name": "weak name match, partial tiles",
+   "steps": [
+    {
+     "q": "harrods",
+     "n": 2,
+     "t": 0.5,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "harrods p",
+     "n": 3,
+     "t": 0.8,
+     "c": "partial",
+     "want": "weak"
+    }
+   ]
+  },
+  {
+   "name": "kind answer: few places is weak, many is not",
+   "steps": [
+    {
+     "q": "سباك",
+     "n": 2,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "صيدلية",
+     "n": 9,
+     "t": 0,
+     "c": "full",
+     "want": null
+    }
+   ]
+  },
+  {
+   "name": "strong then kept typing two characters",
+   "steps": [
+    {
+     "q": "كشري",
+     "n": 8,
+     "t": 0.95,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "كشري ت",
+     "n": 8,
+     "t": 0.9,
+     "c": "full",
+     "want": "kept"
+    },
+    {
+     "q": "كشري تو",
+     "n": 8,
+     "t": 0.9,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "كشري تومه",
+     "n": 8,
+     "t": 0.9,
+     "c": "full",
+     "want": "kept"
+    }
+   ]
+  },
+  {
+   "name": "strong then one character is not enough",
+   "steps": [
+    {
+     "q": "مول",
+     "n": 9,
+     "t": 0.9,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "مولا",
+     "n": 9,
+     "t": 0.9,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "مولات",
+     "n": 9,
+     "t": 0.9,
+     "c": "full",
+     "want": "kept"
+    }
+   ]
+  },
+  {
+   "name": "a tap ends the session",
+   "steps": [
+    {
+     "q": "كشري",
+     "n": 8,
+     "t": 0.95,
+     "c": "full",
+     "want": null
+    },
+    {
+     "tap": true
+    },
+    {
+     "q": "كشري تومه",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": null
+    }
+   ]
+  },
+  {
+   "name": "same text twice is asked once",
+   "steps": [
+    {
+     "q": "بلبن",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "بلبن ",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "BLBN",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "blbn",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": null
+    }
+   ]
+  },
+  {
+   "name": "edited back starts a new run",
+   "steps": [
+    {
+     "q": "مطعم",
+     "n": 9,
+     "t": 0.9,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "مطعم كب",
+     "n": 9,
+     "t": 0.9,
+     "c": "full",
+     "want": "kept"
+    },
+    {
+     "q": "مطع",
+     "n": 9,
+     "t": 0.9,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "مطعم س",
+     "n": 9,
+     "t": 0.9,
+     "c": "full",
+     "want": "kept"
+    },
+    {
+     "q": "مطعم سم",
+     "n": 9,
+     "t": 0.9,
+     "c": "full",
+     "want": null
+    }
+   ]
+  },
+  {
+   "name": "cap on asks per session",
+   "steps": [
+    {
+     "q": "abc0x",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "abc1x",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "abc2x",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "abc3x",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "abc4x",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "abc5x",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "abc6x",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": null
+    }
+   ]
+  },
+  {
+   "name": "coverage none is weak even with rows",
+   "steps": [
+    {
+     "q": "زمالك",
+     "n": 4,
+     "t": 0.99,
+     "c": "none",
+     "want": "weak"
+    }
+   ]
+  },
+  {
+   "name": "weak then strong then kept",
+   "steps": [
+    {
+     "q": "سنتر",
+     "n": 1,
+     "t": 0.4,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "q": "سنتر ت",
+     "n": 6,
+     "t": 0.9,
+     "c": "full",
+     "want": null
+    },
+    {
+     "q": "سنتر تعل",
+     "n": 6,
+     "t": 0.9,
+     "c": "full",
+     "want": "kept"
+    }
+   ]
+  },
+  {
+   "name": "reset clears the session",
+   "steps": [
+    {
+     "q": "تومه",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    },
+    {
+     "reset": true
+    },
+    {
+     "q": "تومه",
+     "n": 0,
+     "t": 0,
+     "c": "full",
+     "want": "weak"
+    }
+   ]
+  }
+ ]
+}

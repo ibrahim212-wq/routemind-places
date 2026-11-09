@@ -19,6 +19,7 @@ import random
 import sqlite3
 
 from . import engine as E
+from . import live_gate
 from . import textnorm as tn
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -298,6 +299,7 @@ def write_router_fixture() -> None:
     with open(p, encoding="utf-8") as f:
         d = json.load(f)
     d["router"] = router_fixture()
+    d["live_gate"] = live_gate.fixture()
     with open(p, "w", encoding="utf-8") as f:
         json.dump(d, f, ensure_ascii=False, separators=(",", ":"))
 
@@ -323,7 +325,7 @@ def main(argv=None):
         ap.error("--index is required")
     with open(os.path.join(OUT, "text_cases.json"), "w", encoding="utf-8") as f:
         json.dump({"norm_version": tn.NORM_VERSION, "cases": text_cases(a.index, a.cases), "damerau": damerau_cases(),
-                   "router": router_fixture()}, f, ensure_ascii=False, separators=(",", ":"))
+                   "router": router_fixture(), "live_gate": live_gate.fixture()}, f, ensure_ascii=False, separators=(",", ":"))
     if a.mini:
         print("[fixtures] mini", mini(a.index, os.path.join(OUT, "mini")))
 

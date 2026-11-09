@@ -80,6 +80,7 @@ TUNING = {
     # exact_bonus — a strong preference, never a wall: the famous palace beats the wedding hall named after it
     "tier_gap": 1.0, "exact_bonus": 0.06,
     "exact_short_len": 5, "exact_short_m": 30000.0,  # «baz»: a name this short is "the whole name" only this near
+    "exact_short_town_pop": 0.7,  # … unless it is a town this known: «دهب», «ملوي» typed whole are the towns, however far
     "lead_cov": 0.8,               # coverage credit when the query is the START of the name (search-as-you-type)
     "chain_min": 3, "chain_sat": 12.0, "chain_bonus": 0.05,  # a name many places share nearby is a chain
     "q_generic_prefix": 0.9,       # the word being typed completes a word that says what kind («مطع» → «مطعم»)
@@ -300,7 +301,7 @@ class Lexicon:
             prods = seq(nd.get("products", []))
             if cats and prods:
                 needs.append({"id": nd["id"], "cats": cats, "products": prods, "contexts": seq(nd.get("contexts", [])),
-                              "provider": seq(nd.get("provider_words", []))})
+                              "provider": seq(nd.get("provider_words", [])), "trade": bool(nd.get("trade"))})
         return Lexicon(cat_terms, prox, brands, intents, meds, tup(preps.get("near_me", [])),
                        tup(preps.get("along_route", [])), tup(preps.get("near_destination", [])), labels, generic,
                        entities, preps_set, brands_short, fuzzy, needs)
@@ -443,6 +444,7 @@ class Engine:
         self._area_names: dict = {}
         self._extra: list[str] = []
         self._wm_cls = 0      # word_match's match class of its last call
+        self._kind_as_name = False  # the kind fallback is running: its words are a kind's, read as a name
         self._tier = 0        # _text_score's match class of its last call
         self._multi = False   # the words being scored are more than one (word_match's transliteration rule)
         self._qlen = 0        # the words of the query being searched (_search), stopwords aside
@@ -504,6 +506,8 @@ class Engine:
         # عربية» is a car battery, not «بطارية» + a name
         if p.scat is None:
             self._need(p, keys, used, True)
+        if p.scat is None:
+            self._need(p, keys, used, False, True)  # «سباك», «شنطة مدرسة»: a tradesman, or a product's whole phrase, before any kind word in it
         # a word nobody wrote (no lexicon key, not in the national file) one typo from a lexicon word
         for i, t in enumerate(toks):
             if not used[i] and t not in STREET_WORDS and t not in IN_WORDS and not tn.is_stopword(t):
@@ -584,6 +588,8 @@ class Engine:
                     used[i] = True
         if p.scat is None and p.brand is None and p.entity is None:
             self._need(p, keys, used, False)  # «جزمه», «كفر موبايل»: a product alone
+        elif p.scat is not None and p.need is None and p.brand is None and p.entity is None:
+            self._need(p, keys, used, False, False, p.scat)  # «خاتم دهب»: the rest is a thing that kind sells, not a name
         for i, t in enumerate(toks):
             if not used[i] and t in STREET_WORDS:
                 p.street = True
@@ -657,7 +663,7 @@ class Engine:
             p.complete = self._completion(p.residual[0])
         return p
 
-    def _need(self, p: Parsed, keys: list, used: list, with_context: bool) -> None:
+    def _need(self, p: Parsed, keys: list, used: list, with_context: bool, trade: bool = False, kind: str | None = None) -> None:
         """The need the query names: a product phrase as one run of unused words and — for a need that has
         contexts — one of its context phrases elsewhere. The longest match wins (product + context words), ties the
         lexicon's order. Its words are consumed; p.scat is the first kind that sells it."""
@@ -670,9 +676,14 @@ class Engine:
             return -1
         best = None
         for nd in self.lx.needs:
-            if bool(nd["contexts"]) != with_context:
+            if bool(nd["contexts"]) != with_context or (kind is not None and kind not in nd["cats"]):
                 continue
             for prod in nd["products"]:
+                # the trade pass takes a product's whole phrase before any kind word in it — unless the phrase is itself a
+                # kind's own term or a lexicon place («مركز اشعة», «فرن عيش», «خان الخليلي»): those keep their reading
+                if trade and not nd["trade"] and (len(prod) < 2 or " ".join(prod) in self.lx.cat_terms
+                                                  or " ".join(prod) in self.lx.entities):
+                    continue
                 i = at(prod, ())
                 if i < 0:
                     continue
@@ -692,9 +703,16 @@ class Engine:
         _, nd, span = best
         for j in sorted(span):
             used[j] = True
+        if not with_context:  # «مرتبة سرير»: every word that is a product of this need, not a name beside it
+            for prod in nd["products"]:
+                i = at(prod, ())
+                if i >= 0:
+                    for j in range(i, i + len(prod)):
+                        span.add(j)
+                        used[j] = True
         p.need = nd
         p.scat, p.cat_conf = nd["cats"][0], 0.9
-        p.cat_words = [p.tokens[j] for j in sorted(span)]
+        p.cat_words = (p.cat_words if kind is not None else []) + [p.tokens[j] for j in sorted(span)]
 
     def _completion(self, w: str):
         """«مطع» → (restaurant, «مطعم»): the one word typed so far is the start of a word that says what kind of
@@ -937,7 +955,11 @@ class Engine:
         if not out and p.kind == "category" and p.cat_words:
             p.residual = [t for t in p.cat_words if not tn.is_stopword(t)]
             p.scat, p.cat_words = None, []
-            out = [r for r in self._search(p, lat, lng, limit, route, dest, dbs, explain) if r.dist <= self.T["kind_fallback_m"]]
+            self._kind_as_name = True
+            try:
+                out = [r for r in self._search(p, lat, lng, limit, route, dest, dbs, explain) if r.dist <= self.T["kind_fallback_m"]]
+            finally:
+                self._kind_as_name = False
         if not route:
             out = self._relaxed(raw, p, out, lat, lng, limit, dest, dbs, explain, near)
         # a category + name query knows from its own scoring whether a whole name was typed: most keystrokes are not one
@@ -1204,7 +1226,7 @@ class Engine:
                 if row["srcs"] & LONGTAIL_BIT and tier < 2:
                     continue
                 if tier == 3 and len(p.residual) == 1 and len(p.residual[0]) < T["exact_short_len"] and \
-                        d > T["exact_short_m"]:
+                        d > T["exact_short_m"] and not (row["kind"] == 1 and row["pop"] >= T["exact_short_town_pop"]):
                     tier = 2  # «baz» is a far village's whole name, not what is being typed
             s = w[0] * text_part + w[1] * prox + w[2] * row["pop"] + w[3] * row["conf"] + w[4] * catm
             if row["srcs"] & LONGTAIL_BIT:
@@ -1327,7 +1349,9 @@ class Engine:
 
     def _need_match(self, nd: dict, row: dict, db: str | None) -> float:
         """1.0 when the place's own name says it sells the need (every word of one provider phrase among its name
-        words), need_cat when it is of a kind that does, else 0."""
+        words), need_cat when it is of a kind that does, else 0. Only a place: «شارع المخبز» sells no bread."""
+        if row["kind"] != 0:
+            return 0.0
         stems = None
         for ph in nd["provider"]:
             if stems is None:
@@ -1444,6 +1468,28 @@ class Engine:
             memo[k] = self._terms(self.ix.cons[db], q, last)
         return memo[k]
 
+    def _load_postings(self, db: str, terms: list[tuple[str, int]]) -> None:
+        """The postings of many terms of one file in ONE statement, the terms' order kept: a keystroke asks up to prefix_terms
+        terms in every file, and a statement per term cost far more than the reading. A term over the cap keeps its own LIMIT."""
+        memo = self.__dict__.setdefault("_post_memo", {})
+        want = list(dict.fromkeys(t for t, df in terms if df <= self.T["max_postings"] and (db, t) not in memo))
+        if len(want) < 2:
+            return
+        for i in range(0, len(want), 400):
+            chunk = want[i:i + 400]
+            got: dict[str, list[tuple[int, int]]] = {}
+            marks = ",".join("?" * len(chunk))
+            for t, pid, f in self.ix.cons[db].execute(f"SELECT t, id, f FROM tok WHERE t IN ({marks}) ORDER BY t, id", chunk):
+                got.setdefault(t, []).append((pid, f))
+            for t in chunk:
+                rows = got.get(t, [])
+                n = self.__dict__.get("_post_n", 0) + len(rows)
+                if n > self.MEMO_POSTINGS:
+                    memo.clear()
+                    n = len(rows)
+                self._post_n = n
+                memo[(db, t)] = rows
+
     def _postings(self, db: str, t: str) -> list[tuple[int, int]]:
         memo = self.__dict__.setdefault("_post_memo", {})
         k = (db, t)
@@ -1480,10 +1526,11 @@ class Engine:
         is the word being typed, and — only when nothing else matched — its near spellings."""
         T = self.T
         out: dict[str, int] = {}
-        for f in self._index_forms(q):
-            r = con.execute("SELECT n FROM vocab WHERE t = ?", (f,)).fetchone()
-            if r:
-                out[f] = r[0]
+        forms = list(dict.fromkeys(self._index_forms(q)))
+        known = dict(con.execute(f"SELECT t, n FROM vocab WHERE t IN ({','.join('?' * len(forms))})", forms))
+        for f in forms:
+            if f in known:
+                out[f] = known[f]
         if last and len(q) >= 2:
             for t, n in con.execute("SELECT t, n FROM vocab WHERE t > ? AND t < ? ORDER BY n DESC, t LIMIT ?",
                                     (q, q + "\uffff", T["prefix_terms"])):
@@ -1552,6 +1599,8 @@ class Engine:
         drivers = drivers[:T["max_drivers"]]
         pre: dict[tuple[str, int], float] = {}
         for wi, terms, _ in drivers:
+            for db in scope:
+                self._load_postings(db, [(t, df) for d, t, df in terms if d == db])
             for db, t, _ in terms:
                 for pid, f in self._postings(db, t):
                     k = (db, pid)
@@ -1574,10 +1623,10 @@ class Engine:
                 tb = [t for d, t, _ in b if d == db][:T["join_terms"]]
                 if not ta or not tb:
                     continue
-                sql = ("SELECT DISTINCT x.id FROM tok x JOIN tok y ON y.id = x.id AND y.t IN ("
-                       + ",".join("?" * len(tb)) + ") WHERE x.t IN (" + ",".join("?" * len(ta))
-                       + ") ORDER BY x.id LIMIT ?")
-                for (pid,) in self.ix.cons[db].execute(sql, (*tb, *ta, T["max_postings"])):
+                # INTERSECT, not a join: the join sought every row of one word once per term of the other (110 ms on «بنك مصر», 10 ms now)
+                sql = ("SELECT id FROM tok WHERE t IN (" + ",".join("?" * len(ta)) + ") INTERSECT SELECT id FROM tok WHERE t IN ("
+                       + ",".join("?" * len(tb)) + ") ORDER BY 1 LIMIT ?")
+                for (pid,) in self.ix.cons[db].execute(sql, (*ta, *tb, T["max_postings"])):
                     k = (db, pid)
                     pre[k] = pre.get(k, 0.0) + 1.0
         if len(pre) > T["max_candidates"]:
@@ -1798,7 +1847,10 @@ class Engine:
             self._tier = 1
         else:
             # the whole name, when the query names something (a kind word alone, «جامعة», is never a whole name)
-            named = any(tn.stems(w)[-1] not in self.lx.generic for w in words)
+            # a kind word is no whole name («جامعة», «القلعه» while typing «قلعة…») — except where the engine read it as a name and the
+            # row is a KNOWN TOWN of that name («دهب» is Dahab, pop ≥ exact_short_town_pop); never inside the kind fallback
+            named = any(tn.stems(w)[-1] not in self.lx.generic for w in words) or (
+                not self._kind_as_name and row["kind"] == 1 and row["pop"] >= T["exact_short_town_pop"])
             self._tier = 3 if named and self._is_exact(words, row) else 2
         return text
 

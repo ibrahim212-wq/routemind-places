@@ -138,6 +138,20 @@ def p_here(q, lat, lng, k):
     return st, out
 
 
+def p_here_auto(q, lat, lng, k):
+    """HERE Autosuggest: the endpoint a typing list would call. Query / chain suggestions carry no position and are no answer."""
+    u = "https://autosuggest.search.hereapi.com/v1/autosuggest?" + urllib.parse.urlencode(
+        {"q": q, "at": f"{lat},{lng}", "limit": 5, "lang": "ar", "in": "countryCode:EGY", "apiKey": k["HERE_API_KEY"]})
+    st, j = _get(u)
+    out = []
+    for r in (j or {}).get("items", []):
+        p = r.get("position") or {}
+        if not p:
+            continue
+        out.append({"name": r.get("title"), "lat": p.get("lat"), "lng": p.get("lng"), "street": r.get("resultType") in ("street", "houseNumber")})
+    return st, out
+
+
 def p_huawei(q, lat, lng, k):
     u = "https://siteapi.cloud.huawei.com/mapApi/v1/siteService/searchByText?key=" + urllib.parse.quote(k["HUAWEI_API_KEY"], safe="")
     b = json.dumps({"query": q, "location": {"lat": lat, "lng": lng}, "radius": 50000, "language": "ar", "countryCode": "EG", "pageSize": 5}).encode()
@@ -179,7 +193,7 @@ def p_wikimapia(q, lat, lng, k):
     return st, out
 
 
-PROVIDERS = {"mapbox_box": p_mapbox_box, "mapbox_geo": p_mapbox_geo, "tomtom": p_tomtom, "here": p_here, "huawei": p_huawei,
+PROVIDERS = {"mapbox_box": p_mapbox_box, "mapbox_geo": p_mapbox_geo, "tomtom": p_tomtom, "here": p_here, "here_auto": p_here_auto, "huawei": p_huawei,
              "geoapify": p_geoapify, "foursquare": p_foursquare, "wikimapia": p_wikimapia}
 
 

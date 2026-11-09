@@ -6916,6 +6916,84 @@
       ]
     },
     {
+      "id": "plumber_trade",
+      "label_ar": "سباك",
+      "label_en": "Plumber",
+      "categories": [
+        "plumber",
+        "hardware_store"
+      ],
+      "products": [
+        "سباك",
+        "سباكين",
+        "سباكة",
+        "plumber",
+        "plumbers",
+        "sabbak",
+        "sabak"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "سباكة",
+        "سباك",
+        "ادوات صحية",
+        "plumbing",
+        "plumber"
+      ],
+      "trade": true
+    },
+    {
+      "id": "carpenter_trade",
+      "label_ar": "نجار",
+      "label_en": "Carpenter",
+      "categories": [
+        "carpenter",
+        "furniture_store"
+      ],
+      "products": [
+        "نجار",
+        "نجارين",
+        "نجارة",
+        "carpenter",
+        "carpenters",
+        "naggar"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "نجارة",
+        "ورشة نجارة",
+        "موبيليا",
+        "carpentry",
+        "carpenter"
+      ],
+      "trade": true
+    },
+    {
+      "id": "electrician_trade",
+      "label_ar": "كهربائي",
+      "label_en": "Electrician",
+      "categories": [
+        "electrician",
+        "hardware_store"
+      ],
+      "products": [
+        "كهربائي",
+        "كهربجي",
+        "كهربائية منازل",
+        "electrician",
+        "electricians",
+        "kahrabgy"
+      ],
+      "contexts": [],
+      "provider_words": [
+        "كهربائي",
+        "ادوات كهربائية",
+        "ادوات كهربا",
+        "electrician"
+      ],
+      "trade": true
+    },
+    {
       "id": "plumbing_install",
       "label_ar": "تركيب وتصليح سباكة",
       "label_en": "Plumbing install & repair",
