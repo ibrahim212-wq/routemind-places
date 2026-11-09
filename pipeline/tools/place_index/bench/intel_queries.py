@@ -1103,7 +1103,22 @@ IMK("new_valley", "other", "مطار الخارجة", "kharga_airport")
 IMK("new_valley", "landmark", "معبد هيبس", "hibis")
 IM("new_valley", "other", "الداخلة", ["الداخلة", "dakhla", "el dakhla"], (25.4950, 28.9790), 12000, area=True)
 
-SUITES = {"prefix": PREFIX, "exact": EXACT, "variant": VARIANT, "need": NEED, "script": SCRIPT, "important": IMPORTANT}
+# KIND + NAME (the owner's findings 2026-11-09): «كشري اشرف», «صيدليه الرضوان», and names that hold a kind word — generated from the
+# published index by kindname_build.py and frozen in kindname_set.json (every judge a real row)
+def _kindname() -> list[dict]:
+    import json
+    import os
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kindname_set.json")
+    if not os.path.exists(path):
+        return []
+    return [{"q": i["q"], "at": tuple(i["at"]), "g": i["group"], "gov": i["g"], "place": i["place"]}
+            for i in json.load(open(path, encoding="utf8"))["items"]]
+
+
+KINDNAME: list[dict] = _kindname()
+
+SUITES = {"prefix": PREFIX, "exact": EXACT, "variant": VARIANT, "need": NEED, "script": SCRIPT, "important": IMPORTANT,
+          "kindname": KINDNAME}
 KINDS = {"police", "government", "hospital", "university", "station", "stadium", "mall", "business_park", "compound",
          "hotel", "landmark", "ministry", "other"}
 

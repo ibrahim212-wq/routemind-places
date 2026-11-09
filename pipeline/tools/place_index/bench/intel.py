@@ -45,7 +45,7 @@ from .queries import ANCHORS
 from .run import LEXICON, names_match
 
 LENGTHS = (2, 3, 4, 5, 6, 8)
-SUITES = ("prefix", "exact", "variant", "need", "script", "important")
+SUITES = ("prefix", "exact", "variant", "need", "script", "important", "kindname")
 FAR_FROM = {"default": "downtown", "cairo": "raml"}  # where the far search of an important place is typed
 
 _W: dict = {}
@@ -441,6 +441,8 @@ def summarize(results: list[dict]) -> dict:
     out["script"] = _sum_script(results)
     if ok.get("important"):
         out["important"] = _sum_important(ok["important"])
+    if ok.get("kindname"):
+        out["kindname"] = _sum_ranked(ok["kindname"], (1, 3), key="g")
     return out
 
 
@@ -471,6 +473,10 @@ def print_summary(s: dict) -> None:
             continue
         print(f"\n{name.upper()}  " + "   ".join(
             f"{g}: n={d[g]['n']} " + " ".join(f"{k}={_fmt(d[g][k])}" for k in ks) for g in ("all", "ar", "latin") if g in d))
+    kn = s.get("kindname")
+    if kn:
+        print("\nKINDNAME  " + "   ".join(f"{g}: n={d['n']} hit1={_fmt(d['hit1'])} hit3={_fmt(d['hit3'])} mrr={_fmt(d['mrr'])}"
+                                       for g, d in [("all", kn["all"])] + list(kn.get("by_g", {}).items()) if d))
     sc = s.get("script")
     if sc:
         print("\nSCRIPT (Arabic queries: top-5 rows with an Arabic name)  " + "  ".join(
