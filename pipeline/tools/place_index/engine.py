@@ -69,6 +69,7 @@ TUNING = {
     "street_half_m": 2500.0, "short_skel_factor": 0.6, "q_skel2": 0.55, "q_skel_fuzzy": 0.62,
     "road_word_boost": 0.06, "soft_branch_text": 0.75, "detect_brand_min": 3, "street_home_m": 50000.0, "street_famous_pop": 0.7, "own_word_df": 400, "area_name_bonus": 0.10, "area_name_pop": 0.3,
     "hot_pop": 0.7, "hot_street_pop": 0.9, "hot_only_len": 2, "hot_enough": 3,
+    "hot_near_m": 5000.0,  # … and the tiles this near are read for those letters as well (hot-only never drops the place nearby)
     "street_unasked": 0.06,        # a street the query did not ask for («6 اكتوبر» is the city, not the bridge)
     "rel_plain_text": 0.85,        # «X جنب Y»: the plain reading wins when a place's own name (with the word) is the query
     "rel_mark_text": 0.75,         # … and the landmark must be found this well to search around it
@@ -1098,6 +1099,11 @@ class Engine:
         only_hot = len(p.residual) == 1 and len(p.residual[0]) <= T["hot_only_len"] and len(hot) >= T["hot_enough"]
         if p.residual and not only_hot:
             self._text_candidates(p.cat_words + p.residual if kind == "cat_name" else p.residual, scope, cands)
+        elif p.residual:
+            # the famous list alone never sees the place round the corner («mc» → the McDonald's 826 m away, pop .59, lost to Cairo's .71 ones): the tiles within hot_near_m are read too — never the national file's long postings
+            hot_scope = [db for db in self.ix.near(alat, alng, T["hot_near_m"]) if db != "national"]
+            if hot_scope:
+                self._text_candidates(p.residual, hot_scope, cands)
         for pid in hot:
             c = cands.setdefault(("national", pid), {})
             c["_db"] = "national"
